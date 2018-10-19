@@ -1,0 +1,14 @@
+/* You can add global styles to this file, and also import other style files */
+.spinning {
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  from {
+    transform: scale(1) rotate(0deg);
+  }
+
+  to {
+    transform: scale(1) rotate(360deg);
+  }
+}
