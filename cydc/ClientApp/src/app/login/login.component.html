@@ -13,8 +13,9 @@
                formControlName="rememberMe"> Remember me
       </label>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="!loginForm.valid">
-      <span class="spinning">💫</span>Sign in
+    <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="!loginForm.valid || requesting">
+      <fa-icon [icon]="'spinner'" [spin]="true" *ngIf="requesting"></fa-icon>
+      Sign in
     </button>
     <p class="mt-5 mb-3 text-muted">sdcb&copy; 2018</p>
   </form>

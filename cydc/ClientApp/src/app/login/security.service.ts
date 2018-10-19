@@ -18,7 +18,7 @@ export class SecurityService {
       localStorage.setItem("bearerToken", this.securityObject.bearerToken);
     }
 
-    return of(this.securityObject).pipe(delay(200));
+    return of(this.securityObject).pipe(delay(500));
   }
 
   logout(): void {
