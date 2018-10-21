@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +12,6 @@ export class AppComponent {
   title = 'app';
 
   constructor() {
-    library.add(fas);
+    library.add(faSpinner);
   }
 }
