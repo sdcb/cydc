@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,6 +10,7 @@ namespace cydc.Controllers
 {
     public class TestController : Controller
     {
+        [Authorize]
         public string Ps()
         {
             return Process.GetCurrentProcess().ProcessName;
