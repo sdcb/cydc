@@ -11,17 +11,11 @@
           <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
             <a class="nav-link text-dark" [routerLink]='["/"]'>Home</a>
           </li>
-          <li class="nav-item" [routerLinkActive]='["link-active"]'>
-            <a class="nav-link text-dark" [routerLink]='["/counter"]'>Counter</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]='["link-active"]'>
-            <a class="nav-link text-dark" [routerLink]='["/fetch-data"]'>
-              Fetch data
-              <strong>{{details()}}</strong>
-            </a>
-          </li>
-          <li class="nav-item" [routerLinkActive]='["link-active"]'>
+          <li *ngIf="!userService.userStatus.isLoggedIn" class="nav-item">
             <a class="nav-link text-dark" [routerLink]='["/user/login"]'>登录</a>
+          </li>
+          <li *ngIf="userService.userStatus.isLoggedIn" class="nav-item">
+            <a class="nav-link text-dark" [routerLink]='["/user/login"]'>已登录为：<span class="text-danger">{{userService.userStatus.claims.name}}</span></a>
           </li>
         </ul>
       </div>

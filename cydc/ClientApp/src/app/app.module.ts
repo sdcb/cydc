@@ -28,10 +28,7 @@ import { NotFoundComponent } from './shared/not-found/not-found.component';
     RouterModule.forRoot(routes)
   ],
   providers: [
-    {
-      provide: loginProvider,
-      useValue: loginResolver
-    }
+    { provide: loginProvider, useValue: loginResolver }
   ],
   bootstrap: [AppComponent]
 })

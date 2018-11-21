@@ -8,20 +8,6 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./nav-menu.component.css']
 })
 export class NavMenuComponent {
-  isExpanded = false;
-
   constructor(private userService: UserService, private http: HttpClient) {
-  }
-
-  details() {
-    return JSON.stringify(this.userService.userStatus);
-  }
-
-  collapse() {
-    this.isExpanded = false;
-  }
-
-  toggle() {
-    this.isExpanded = !this.isExpanded;
   }
 }

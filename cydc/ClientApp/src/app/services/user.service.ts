@@ -7,7 +7,7 @@ import { Observable, Subject, of } from 'rxjs';
 })
 export class UserService {
   userStatus: UserStatus = {
-    isLoggedIn: true,
+    isLoggedIn: false,
     claims: {}
   };
 
