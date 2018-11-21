@@ -8,7 +8,7 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  userStatus: UserStatus = null;
+  private userStatus: UserStatus | null = null;
 
   async getUserStatus() {
     if (this.userStatus !== null) return this.userStatus;
