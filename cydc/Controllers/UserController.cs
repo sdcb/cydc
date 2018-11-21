@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cydc.Controllers
@@ -15,6 +16,12 @@ namespace cydc.Controllers
                 IsLoggedIn = User.Identity.IsAuthenticated,
                 Claims = User.Claims.ToDictionary(k => k.Type, k => k.Value),
             };
+        }
+
+        [Authorize]
+        public IActionResult Login(string fromUrl)
+        {
+            return Redirect(fromUrl);
         }
     }
 

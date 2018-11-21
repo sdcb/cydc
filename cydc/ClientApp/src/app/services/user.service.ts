@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable, Subject, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+  userStatus: UserStatus = {
+    isLoggedIn: true,
+    claims: {}
+  };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.loadUserStatus();
+  }
 
-  private userStatus: UserStatus | null = null;
-
-  async getUserStatus() {
-    if (this.userStatus !== null) return this.userStatus;
-
-    console.log("get user status...");
+  private async loadUserStatus() {
     this.userStatus = await this.http.get<UserStatus>("/user/status").toPromise();
     return this.userStatus;
   }

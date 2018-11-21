@@ -5,13 +5,8 @@ import { UserService } from '../services/user.service';
   selector: 'app-home',
   templateUrl: './home.component.html',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   constructor(private user: UserService) {
     
-  }
-
-  async ngOnInit() {
-    let userStatus = await this.user.getUserStatus();
-    console.log(userStatus);
   }
 }
