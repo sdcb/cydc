@@ -1,9 +1,11 @@
+using cydc.Database;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sdcb.AspNetCore.Authentication.YeluCasSso;
@@ -29,6 +31,8 @@ namespace cydc
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddDbContext<CydcContext>(options => options.UseSqlServer(Configuration["CydcConnection"]));
 
             services.AddAuthentication(o =>
             {
