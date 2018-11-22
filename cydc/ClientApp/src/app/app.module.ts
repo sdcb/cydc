@@ -6,11 +6,12 @@ import { RouterModule, ActivatedRouteSnapshot } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
+import { NavMenuComponent } from './shared/nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { routes } from './app.routes';
 import { loginProvider, loginResolver } from './services/external-redirect';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
+import { OrderComponent } from './user/order/order.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { NotFoundComponent } from './shared/not-found/not-found.component';
     NavMenuComponent,
     HomeComponent,
     NotFoundComponent,
+    OrderComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

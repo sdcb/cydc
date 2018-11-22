@@ -1,0 +1,98 @@
+<div class="row" #alertArea>
+  <div class="col-sm">
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-lable="Close" (click)="alertArea.remove()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div [innerHtml]="siteNotification"></div>
+    </div>
+  </div>
+</div>
+<form (ngSubmit)="submit()">
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label>套餐：</label>
+        <div class="form-check" *ngFor="let menu of menus">
+          <label class="form-check-label" [title]="menu.title">
+            <input class="form-check-input" type="radio" name="menu" [value]="menu" [(ngModel)]="selected.menu">
+            (<b class="text-danger">{{menu.price}}</b>元)
+            {{menu.details}}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="form-group">
+        <label>点餐人：</label>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="person" [value]="true" [(ngModel)]="selected.isMe">
+            自己 <small class="text-danger">（{{userService.userStatus.claims.name}}）</small>
+          </label>
+        </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="person" [value]="false" [(ngModel)]="selected.isMe">
+            给别人点 <small class="text-danger">（扣自己钱）</small>
+          </label>
+          <input type="text" class="form-control form-control-sm inline" name="otherPersonName" placeholder="输入点餐人..."
+                 [(ngModel)]="selected.otherPersonName" [required]="!selected.isMe"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label>地点：</label>
+        <div class="container">
+          <div class="row">
+            <div class="form-check form-check-inline" *ngFor="let address of addresses">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" name="address" [value]="address" [(ngModel)]="selected.address">
+                {{address.location}}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="form-group">
+        <label>口味：</label>
+        <div class="container">
+          <div class="row">
+            <div class="form-check form-check-inline" *ngFor="let taste of tastes">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" name="taste" [value]="taste" [(ngModel)]="selected.taste">
+                {{taste.name}}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-group">
+        <label for="comments">备注：</label>
+        <textarea class="form-control" id="comments" name="comment" rows="2" [(ngModel)]="selected.comment"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-3">
+      <button type="submit" class="btn btn-primary btn-lg btn-block">确认</button>
+    </div>
+    
+
+    <!--<div class="col-sm">
+      <img src="https://cydc.starworks.cc/images/pay.png" />
+    </div>-->
+  </div>
+</form>
