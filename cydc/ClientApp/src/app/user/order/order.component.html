@@ -1,7 +1,7 @@
 <div class="row" #alertArea>
   <div class="col-sm">
     <div class="alert alert-info alert-dismissible fade show" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-lable="Close" (click)="alertArea.remove()">
+      <button type="button" class="close" data-dismiss="alert" aria-lable="Close">
         <span aria-hidden="true">&times;</span>
       </button>
       <div [innerHtml]="siteNotification"></div>
@@ -80,14 +80,14 @@
     <div class="col-6">
       <div class="form-group">
         <label for="comments">备注：</label>
-        <textarea class="form-control" id="comments" name="comment" rows="2" [(ngModel)]="selected.comment"></textarea>
+        <input type="text" maxlength="50" class="form-control" id="comments" name="comment" rows="2" [(ngModel)]="selected.comment" />
       </div>
     </div>
   </div>
 
   <div class="row justify-content-center">
     <div class="col-3">
-      <button type="submit" class="btn btn-primary btn-lg btn-block">确认</button>
+      <button type="submit" class="btn btn-primary btn-lg btn-block">提交</button>
     </div>
     
 
@@ -96,3 +96,56 @@
     </div>-->
   </div>
 </form>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" #confirmDialog>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">确认订单</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-bordered table-hover table-sm">
+          <tr *ngIf="selected.menu">
+            <td><b>套餐</b></td>
+            <td>{{selected.menu.title}}</td>
+          </tr>
+          <tr *ngIf="selected.menu">
+            <td><b>价格</b></td>
+            <td>{{selected.menu.price}}</td>
+          </tr>
+          <tr *ngIf="selected.menu">
+            <td><b>项目</b></td>
+            <td>{{selected.menu.details}}</td>
+          </tr>
+          <tr *ngIf="selected.taste">
+            <td><b>口味</b></td>
+            <td>{{selected.taste.name}}</td>
+          </tr>
+          <tr *ngIf="selected.address">
+            <td><b>地点</b></td>
+            <td>{{selected.address.location}}</td>
+          </tr>
+          <tr>
+            <td><b>点餐人</b></td>
+            <td>
+              <span *ngIf="selected.isMe">自己 <small class="text-danger">{{userService.userStatus.claims.name}}</small></span>
+              <span *ngIf="!selected.isMe">他人：<small class="text-danger">{{selected.otherPersonName}}</small></span>
+            </td>
+          </tr>
+          <tr>
+            <td><b>备注</b></td>
+            <td>{{selected.comment}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+        <button type="button" (click)="confirm()" class="btn btn-primary">确认</button>
+      </div>
+    </div>
+  </div>
+</div>

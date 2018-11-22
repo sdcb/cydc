@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from 'src/app/services/user.service';
+
+declare var $: any;
 
 @Component({
   selector: 'app-order',
@@ -21,6 +23,9 @@ export class OrderComponent implements OnInit {
     isMe: true,
     otherPersonName: <string | null>null, 
   };
+
+  @ViewChild("confirmDialog")
+  confirmDialog!: ElementRef;
 
   constructor(
     private http: HttpClient,
@@ -43,7 +48,12 @@ export class OrderComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.selected);
+    console.log("submit: ", this.selected);
+    $(this.confirmDialog.nativeElement).modal("show");
+  }
+
+  confirm() {
+    console.log("confirm: ", this.selected);
   }
 }
 
