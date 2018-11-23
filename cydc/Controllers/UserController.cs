@@ -23,11 +23,8 @@ namespace cydc.Controllers
             return new UserStatus
             {
                 IsLoggedIn = User.Identity.IsAuthenticated,
-                Claims = new 
-                {
-                    Name = User.FindFirst(x => x.Type == CasConstants.Name)?.Value, 
-                    IsAdmin = User.IsInRole("Admin")
-                }
+                Name = User.FindFirst(x => x.Type == CasConstants.Name)?.Value,
+                IsAdmin = User.IsInRole("Admin"), 
             };
         }
 
@@ -63,6 +60,8 @@ namespace cydc.Controllers
     {
         public bool IsLoggedIn { get; set; }
 
-        public object Claims { get; set; }
+        public string Name { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 }

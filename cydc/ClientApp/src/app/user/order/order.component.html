@@ -29,7 +29,7 @@
         <div class="form-check">
           <label class="form-check-label">
             <input class="form-check-input" type="radio" name="person" [value]="true" [(ngModel)]="selected.isMe">
-            自己 <small class="text-danger">（{{userService.userStatus.claims.name}}）</small>
+            自己 <small class="text-danger">（{{userService.userStatus.name}}）</small>
           </label>
         </div>
         <div class="form-check">
@@ -132,7 +132,7 @@
           <tr>
             <td><b>点餐人</b></td>
             <td>
-              <span *ngIf="selected.isMe">自己 <small class="text-danger">{{userService.userStatus.claims.name}}</small></span>
+              <span *ngIf="selected.isMe">自己 <small class="text-danger">{{userService.userStatus.name}}</small></span>
               <span *ngIf="!selected.isMe">他人：<small class="text-danger">{{selected.otherPersonName}}</small></span>
             </td>
           </tr>

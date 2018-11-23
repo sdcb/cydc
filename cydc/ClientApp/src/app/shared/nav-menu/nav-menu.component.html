@@ -15,7 +15,7 @@
             <a class="nav-link text-dark" [routerLink]='["/user/login"]'>登录</a>
           </li>
           <li *ngIf="userService.userStatus.isLoggedIn" class="nav-item">
-            <a class="nav-link text-dark" [routerLink]='["/user/login"]'>已登录为：<span class="text-danger">{{userService.userStatus.claims.name}}</span></a>
+            <a class="nav-link text-dark" [routerLink]='["/user/login"]'>已登录为：<span class="text-danger">{{userService.userStatus.name}}</span></a>
           </li>
         </ul>
       </div>

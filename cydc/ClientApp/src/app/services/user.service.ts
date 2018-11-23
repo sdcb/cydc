@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { type } from 'os';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  userStatus: UserStatus = {
-    isLoggedIn: false,
-    claims: {}
-  };
+  userStatus = new UserStatus();
 
   constructor(private http: HttpClient) {
     this.loadUserStatus();
@@ -20,9 +18,8 @@ export class UserService {
   }
 }
 
-export type UserStatus = {
-  isLoggedIn: boolean;
-  claims: {
-    [key: string]: string
-  }
+export class UserStatus {
+  isLoggedIn: boolean = false;
+  name: string = "";
+  isAdmin: boolean = false;
 }
