@@ -29,7 +29,7 @@ export class OrderComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private userService: UserService) { }
+    public userService: UserService) { }
 
   ngOnInit() {
     this.http.get("/foodOrder/siteNotification", { responseType: "text" }).subscribe(v => this.siteNotification = v);
