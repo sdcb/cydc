@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, ActivatedRouteSnapshot } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './shared/nav-menu/nav-menu.component';
@@ -27,6 +28,7 @@ import { OrderComponent } from './user/order/order.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    NgbModule, 
     RouterModule.forRoot(routes)
   ],
   providers: [
