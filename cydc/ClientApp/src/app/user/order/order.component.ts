@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from 'src/app/services/user.service';
-
-declare var $: any;
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-order',
@@ -29,7 +28,8 @@ export class OrderComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    public userService: UserService) { }
+    public userService: UserService,
+    private modalService: NgbModal) { }
 
   ngOnInit() {
     this.http.get("/foodOrder/siteNotification", { responseType: "text" }).subscribe(v => this.siteNotification = v);
@@ -49,7 +49,9 @@ export class OrderComponent implements OnInit {
 
   submit() {
     console.log("submit: ", this.selected);
-    $(this.confirmDialog.nativeElement).modal("show");
+    this.modalService.open(this.confirmDialog).result.then(v => {
+      console.log(v);
+    });
   }
 
   confirm() {

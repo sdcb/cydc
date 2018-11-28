@@ -36,101 +36,99 @@
         </table>
       </div>
     </div>
-    </div>
+  </div>
 </form>
 
 
-<div class="modal fade" tabindex="-1" role="dialog" #confirmDialog>
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header" *ngIf="selected.menu">
-        <h5 class="modal-title">请确认：{{selected.menu.title}} (<b class="text-danger">{{selected.menu.price}}</b>元)</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="container">
-          <div class="row">
-            <div class="col" *ngIf="selected.menu">
-              <b>{{selected.menu.details}}</b>
-              <hr/>
-            </div>            
+<ng-template #confirmDialog let-modal>
+  <div class="modal-content">
+    <div class="modal-header" *ngIf="selected.menu">
+      <h5 class="modal-title">请确认：{{selected.menu.title}} (<b class="text-danger">{{selected.menu.price}}</b>元)</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Close Button')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+          <div class="col" *ngIf="selected.menu">
+            <b>{{selected.menu.details}}</b>
+            <hr />
           </div>
-
-          <div class="row">
-            <div class="col">
-              <div class="form-group">
-                <label class="label-title">口味：</label>
-                <div class="container">
-                  <div class="row">
-                    <div class="form-check form-check-inline" *ngFor="let taste of tastes">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="taste" [value]="taste" [(ngModel)]="selected.taste">
-                        {{taste.name}}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col">
-              <div class="form-group">
-                <label class="label-title">点餐人：</label>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="person" [value]="true" [(ngModel)]="selected.isMe">
-                    自己 <small class="text-danger">（{{userService.userStatus.name}}）</small>
-                  </label>
-                </div>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="person" [value]="false" [(ngModel)]="selected.isMe">
-                    给别人点 <small class="text-danger">（扣自己钱）</small>
-                  </label>
-                  <input *ngIf="!selected.isMe" type="text" class="form-control form-control-sm inline" name="otherPersonName" placeholder="输入点餐人..."
-                         [(ngModel)]="selected.otherPersonName" [required]="!selected.isMe" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col">
-              <div class="form-group">
-                <label class="label-title">地点：</label>
-                <div class="container">
-                  <div class="row">
-                    <div class="form-check form-check-inline" *ngFor="let address of addresses">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="address" [value]="address" [(ngModel)]="selected.address">
-                        {{address.location}}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col">
-              <div class="form-group">
-                <label class="label-title" for="comments">备注：</label>
-                <input type="text" maxlength="50" class="form-control" id="comments" name="comment" rows="2" [(ngModel)]="selected.comment" />
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-        <button type="button" (click)="confirm()" class="btn btn-primary">确认</button>
+
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label class="label-title">口味：</label>
+              <div class="container">
+                <div class="row">
+                  <div class="form-check form-check-inline" *ngFor="let taste of tastes">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="radio" name="taste" [value]="taste" [(ngModel)]="selected.taste">
+                      {{taste.name}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label class="label-title">点餐人：</label>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" name="person" [value]="true" [(ngModel)]="selected.isMe">
+                  自己 <small class="text-danger">（{{userService.userStatus.name}}）</small>
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" name="person" [value]="false" [(ngModel)]="selected.isMe">
+                  给别人点 <small class="text-danger">（扣自己钱）</small>
+                </label>
+                <input *ngIf="!selected.isMe" type="text" class="form-control form-control-sm inline" name="otherPersonName" placeholder="输入点餐人..."
+                       [(ngModel)]="selected.otherPersonName" [required]="!selected.isMe" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label class="label-title">地点：</label>
+              <div class="container">
+                <div class="row">
+                  <div class="form-check form-check-inline" *ngFor="let address of addresses">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="radio" name="address" [value]="address" [(ngModel)]="selected.address">
+                      {{address.location}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label class="label-title" for="comments">备注：</label>
+              <input type="text" maxlength="50" class="form-control" id="comments" name="comment" rows="2" [(ngModel)]="selected.comment" />
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
+    <div class="modal-footer">
+      <button type="button" (click)="modal.dismiss('Cancel Button')" class="btn btn-secondary" data-dismiss="modal">取消</button>
+      <button type="button" (click)="confirm()" class="btn btn-primary">确认</button>
+    </div>
   </div>
-</div>
+</ng-template>
