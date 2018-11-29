@@ -34,20 +34,18 @@ export class OrderComponent implements OnInit {
     private router: Router) { }
 
   async ngOnInit() {
-    if (!(await this.userService.loadUserStatus()).isLoggedIn) {
-      this.router.navigateByUrl("/user/login", { queryParams: { redirectUrl: "/user/order" } });
-      return;
-    };
-    this.http.get("/foodOrder/siteNotification", { responseType: "text" }).subscribe(v => this.siteNotification = v);
-    this.http.get<Menu[]>("/info/menu").subscribe(v => {
+    await this.userService.ensureLogin();
+
+    this.http.get("/api/foodOrder/siteNotification", { responseType: "text" }).subscribe(v => this.siteNotification = v);
+    this.http.get<Menu[]>("/api/info/menu").subscribe(v => {
       this.menus = v;
       this.selected.menu = v[0];
     });
-    this.http.get<Address[]>("/info/address").subscribe(v => {
+    this.http.get<Address[]>("/api/info/address").subscribe(v => {
       this.addresses = v;
       this.selected.address = v[0];
     });
-    this.http.get<Taste[]>("/info/taste").subscribe(v => {
+    this.http.get<Taste[]>("/api/info/taste").subscribe(v => {
       this.tastes = v;
       this.selected.taste = v[0];
     });

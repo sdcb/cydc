@@ -11,13 +11,23 @@
             <a class="nav-link text-dark" [routerLink]='["/user/order"]'>点餐</a>
           </li>
           <li class="nav-item" [routerLinkActive]='["link-active"]' *ngIf="!userService.userStatus.isLoggedIn">
-            <a class="nav-link text-dark" [routerLink]='["/user/login"]'>登录</a>
+            <a class="nav-link text-dark" [routerLink]='["api/user/login"]'>登录</a>
           </li>
-          <li class="nav-item" [routerLinkActive]='["link-active"]' *ngIf="userService.userStatus.isLoggedIn">
-            <a class="nav-link text-dark" href="javascript:void(0)"><span [ngbTooltip]="userService.userStatus.name" placement="right" class="text-danger">已登录</span></a>
+          <li class="nav-item" *ngIf="userService.userStatus.isLoggedIn">
+            <a class="nav-link text-dark" (click)="logout()" href="javascript:void(0)">
+              <b>
+                <span [ngbTooltip]="loginTooltip" placement="right" class="text-danger">
+                  登出
+                </span>
+              </b>
+            </a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 </header>
+
+<ng-template #loginTooltip>
+  已登录为：<span class="text-info">{{userService.userStatus.name}}</span>
+</ng-template>

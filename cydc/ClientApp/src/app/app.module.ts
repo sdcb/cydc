@@ -15,6 +15,7 @@ import { NotFoundComponent } from './shared/not-found/not-found.component';
 import { OrderComponent } from './user/order/order.component';
 import { LoginComponent } from './shared/login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoggedOutComponent } from './shared/logged-out/logged-out.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HomeComponent,
     NotFoundComponent,
     OrderComponent,
-    LoginComponent, 
+    LoginComponent,
+    LoggedOutComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

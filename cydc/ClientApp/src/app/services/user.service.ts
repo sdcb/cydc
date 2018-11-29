@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,9 @@ export class UserService {
   userStatus = new UserStatus();
   loaded: boolean = false;
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private router: Router) {
     this.loadUserStatus();
   }
 
@@ -22,13 +25,24 @@ export class UserService {
     }
   }
 
+  async ensureLogin() {
+    if (!(await this.loadUserStatus()).isLoggedIn) {
+      await this.router.navigateByUrl("/api/user/login", { queryParams: { redirectUrl: "/user/order" } });
+    };
+  }
+
   private getUserStatusAsync() {
-    return this.http.get<UserStatus>("/user/status").toPromise()
+    return this.http.get<UserStatus>("api/user/status").toPromise()
+  }
+
+  async logout() {
+    await this.http.post("/user/logout", {});
+    await this.router.navigateByUrl("/user/loggedOut");
+    this.userStatus = new UserStatus();
   }
 }
 
 export class UserStatus {
-  
   isLoggedIn: boolean = false;
   name: string = "";
   isAdmin: boolean = false;

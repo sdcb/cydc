@@ -8,6 +8,11 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./nav-menu.component.css']
 })
 export class NavMenuComponent {
-  constructor(public userService: UserService, private http: HttpClient) {
+  constructor(
+    public userService: UserService) {
+  }
+
+  async logout() {
+    await this.userService.logout();
   }
 }
