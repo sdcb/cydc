@@ -1,3 +1,30 @@
+
 <h1>
-  my-food-order works! 💕
+  我的点餐列表
 </h1>
+
+<!-- material ref: https://material.angular.io/components/table/overview -->
+
+<div class="row">
+  <div class="col">
+    <table class="table table-striped table-bordered table-hover table-sm">
+      <tr>
+        <th>#</th>
+        <th>用户名</th>
+        <th>时间</th>
+        <th>菜单</th>
+        <th>价格</th>
+        <th>付款</th>
+      </tr>
+      <tr *ngFor="let item of dataSource">
+        <td>{{item.id}}</td>
+        <td>{{item.userName}}</td>
+        <td>{{item.orderTime}}</td>
+        <td [ngbTooltip]="item.comment">{{item.menu}}</td>
+        <td>{{item.price}}</td>
+        <td>{{item.isPayed ? 'Y' : ''}}</td>
+      </tr>
+    </table>
+
+  </div>
+</div>

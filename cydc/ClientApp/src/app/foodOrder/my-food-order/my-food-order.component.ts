@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FoodOrderApiService, FoodOrderItem } from '../food-order-api.service';
+
+
+
 
 @Component({
   selector: 'app-my-food-order',
@@ -6,10 +10,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./my-food-order.component.css']
 })
 export class MyFoodOrderComponent implements OnInit {
+  displayedColumns: string[];
+  dataSource: FoodOrderItem[] = [];
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private api: FoodOrderApiService) {
+    this.displayedColumns = api.foodOrderDisplayColumns();
   }
 
+  ngOnInit() {
+    this.api.getMyFoodOrder().subscribe(v => this.dataSource = v);
+  }
 }

@@ -7,6 +7,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './shared/nav-menu/nav-menu.component';
@@ -44,7 +45,8 @@ import { MyFoodOrderComponent } from './foodOrder/my-food-order/my-food-order.co
     ReactiveFormsModule,
     NgbModule,
     MatDialogModule,
-    MatButtonModule, 
+    MatButtonModule,
+    MatTableModule, 
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
   providers: [

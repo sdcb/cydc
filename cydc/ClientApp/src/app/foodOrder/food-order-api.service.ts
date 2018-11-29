@@ -26,6 +26,14 @@ export class FoodOrderApiService {
   create(dto: OrderCreateDto) {
     return this.http.post("/api/foodOrder/create", dto);
   }
+
+  getMyFoodOrder() {
+    return this.http.get<FoodOrderItem[]>("/api/foodOrder/my");
+  }
+
+  foodOrderDisplayColumns() {
+    return ["id", "userName", "orderTime", "menu", "price", "comment", "isPayed"];
+  }
 }
 
 export type OrderAddress = {
@@ -52,4 +60,14 @@ export type OrderCreateDto = {
   isMe: boolean;
   otherPersonName: string | undefined;
   comment: string | undefined;
+}
+
+export interface FoodOrderItem {
+  id: number;
+  userName: string;
+  orderTime: string;
+  menu: string;
+  price: number;
+  comment: string;
+  isPayed: boolean;
 }

@@ -66,6 +66,24 @@ namespace cydc.Controllers
             return Ok();
         }
 
+        public IActionResult My()
+        {
+            return Ok(_db.FoodOrder
+                .Where(x => x.OrderUserId == User.Identity.Name)
+                .OrderByDescending(x => x.OrderTime)
+                .Select(x => new
+                {
+                    Id = x.Id, 
+                    UserName = x.OrderUser.UserName, 
+                    OrderTime = x.OrderTime, 
+                    Menu = x.FoodMenu.Details, 
+                    Price = x.FoodMenu.Price, 
+                    Comment = x.Comment, 
+                    IsPayed = x.FoodOrderPayment != null
+                })
+                .Take(100));
+        }
+
         private async Task<string> GetUserIdFromUserName(bool isMe, string userName)
         {
             if (isMe) return User.Identity.Name;
