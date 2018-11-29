@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core';
 import { FoodOrderMenu } from './create.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { HttpClient } from '@angular/common/http';
 import { UserService } from 'src/app/services/user.service';
+import { FoodOrderApiService, FoodTaste, OrderAddress } from '../food-order-api.service';
 
 @Component({
   selector: 'app-order-create-dialog',
@@ -10,24 +10,24 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: []
 })
 export class OrderCreateDialog implements OnInit {
-  addresses: Address[] = [];
-  tastes: Taste[] = [];
+  addresses: OrderAddress[] = [];
+  tastes: FoodTaste[] = [];
   selected: FoodOrderSelectedDto;
 
   constructor(
     public dialogRef: MatDialogRef<OrderCreateDialog, OrderCreateDto>,
     public userService: UserService, 
-    private http: HttpClient, 
+    private api: FoodOrderApiService, 
     @Inject(MAT_DIALOG_DATA) menu: FoodOrderMenu) {
     this.selected = new FoodOrderSelectedDto(menu);
   }
 
   ngOnInit() {
-    this.http.get<Address[]>("/api/info/address").subscribe(v => {
+    this.api.getAllAddress().subscribe(v => {
       this.addresses = v;
       this.selected.address = v[0];
     });
-    this.http.get<Taste[]>("/api/info/taste").subscribe(v => {
+    this.api.getAllTaste().subscribe(v => {
       this.tastes = v;
       this.selected.taste = v[0];
     });
@@ -43,19 +43,9 @@ export class OrderCreateDialog implements OnInit {
   }
 }
 
-type Address = {
-  id: number;
-  name: string;
-}
-
-type Taste = {
-  id: number;
-  name: string;
-}
-
 export class FoodOrderSelectedDto {
-  address: Address | undefined;
-  taste: Taste | undefined;
+  address: OrderAddress | undefined;
+  taste: FoodTaste | undefined;
   comment: string | undefined;
   isMe: boolean = true;
   otherPersonName: string | undefined;

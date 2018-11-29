@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { UserService } from 'src/app/services/user.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialog } from '@angular/material/dialog';
 import { OrderCreateDialog, OrderCreateDto } from './create-dialog';
+import { FoodOrderApiService, FoodOrderMenu } from '../food-order-api.service';
 
 @Component({
   selector: 'app-order',
@@ -19,15 +18,15 @@ export class OrderComponent implements OnInit {
   confirmDialog!: ElementRef;
 
   constructor(
-    private http: HttpClient,
     public userService: UserService,
-    private dialogService: MatDialog) { }
+    private dialogService: MatDialog,
+    private api: FoodOrderApiService) { }
 
   async ngOnInit() {
     await this.userService.ensureLogin();
 
-    this.http.get("/api/foodOrder/siteNotification", { responseType: "text" }).subscribe(v => this.siteNotification = v);
-    this.http.get<FoodOrderMenu[]>("/api/info/menu").subscribe(v => {
+    this.api.getSiteNotification().subscribe(v => this.siteNotification = v);
+    this.api.getTodayMenus().subscribe(v => {
       this.menus = v;
       this.selectedMenu = v[0];
     });
@@ -41,11 +40,4 @@ export class OrderComponent implements OnInit {
     let createDto = await createDialog.afterClosed().toPromise<OrderCreateDto | undefined>();
     console.log(createDto);
   }
-}
-
-export type FoodOrderMenu = {
-  id: number;
-  title: string;
-  price: string;
-  details: string;
 }
