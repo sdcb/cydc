@@ -12,10 +12,10 @@ import { HomeComponent } from './home/home.component';
 import { routes } from './app.routes';
 import { loginProvider, loginResolver } from './services/external-redirect';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
-import { OrderComponent } from './user/order/order.component';
 import { LoginComponent } from './shared/login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoggedOutComponent } from './shared/logged-out/logged-out.component';
+import { OrderComponent } from './foodOrder/create/create.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,7 @@ import { LoggedOutComponent } from './shared/logged-out/logged-out.component';
     NavMenuComponent,
     HomeComponent,
     NotFoundComponent,
-    OrderComponent,
+    OrderComponent, 
     LoginComponent,
     LoggedOutComponent,
   ],

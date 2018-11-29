@@ -37,7 +37,7 @@ export class UserService {
 
   async logout() {
     await this.http.post("/user/logout", {});
-    await this.router.navigateByUrl("/user/loggedOut");
+    await this.router.navigateByUrl("/user/logged-out");
     this.userStatus = new UserStatus();
   }
 }

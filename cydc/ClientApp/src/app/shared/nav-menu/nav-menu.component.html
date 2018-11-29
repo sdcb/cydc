@@ -8,10 +8,10 @@
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
         <ul class="navbar-nav flex-grow">
           <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-            <a class="nav-link text-dark" [routerLink]='["/user/order"]'>点餐</a>
+            <a class="nav-link text-dark" [routerLink]='["/food-order/create"]'>点餐</a>
           </li>
           <li class="nav-item" [routerLinkActive]='["link-active"]' *ngIf="!userService.userStatus.isLoggedIn">
-            <a class="nav-link text-dark" [routerLink]='["api/user/login"]'>登录</a>
+            <a class="nav-link text-dark" [routerLink]='["/api/user/login"]'>登录</a>
           </li>
           <li class="nav-item" *ngIf="userService.userStatus.isLoggedIn">
             <a class="nav-link text-dark" (click)="logout()" href="javascript:void(0)">

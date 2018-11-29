@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order',
-  templateUrl: './order.component.html',
-  styleUrls: ['./order.component.css']
+  templateUrl: './create.component.html',
+  styleUrls: ['./create.component.css']
 })
 export class OrderComponent implements OnInit {
   siteNotification: string | null = null;
