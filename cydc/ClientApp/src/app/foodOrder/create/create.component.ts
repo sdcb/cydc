@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from 'src/app/services/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { OrderCreateDialog, OrderCreateDto } from './create-dialog';
 
 @Component({
   selector: 'app-order',
@@ -11,18 +12,8 @@ import { Router } from '@angular/router';
 })
 export class OrderComponent implements OnInit {
   siteNotification: string | null = null;
-  menus: Menu[] = [];
-  addresses: Address[] = [];
-  tastes: Taste[] = [];
-
-  selected = {
-    menu: <Menu | null>null,
-    address: <Address | null>null,
-    taste: <Taste | null>null,
-    comment: <string | null>null,
-    isMe: true,
-    otherPersonName: <string | null>null, 
-  };
+  selectedMenu: FoodOrderMenu | undefined;
+  menus: FoodOrderMenu[] = [];
 
   @ViewChild("confirmDialog")
   confirmDialog!: ElementRef;
@@ -30,52 +21,31 @@ export class OrderComponent implements OnInit {
   constructor(
     private http: HttpClient,
     public userService: UserService,
-    private modalService: NgbModal,
-    private router: Router) { }
+    private dialogService: MatDialog) { }
 
   async ngOnInit() {
     await this.userService.ensureLogin();
 
     this.http.get("/api/foodOrder/siteNotification", { responseType: "text" }).subscribe(v => this.siteNotification = v);
-    this.http.get<Menu[]>("/api/info/menu").subscribe(v => {
+    this.http.get<FoodOrderMenu[]>("/api/info/menu").subscribe(v => {
       this.menus = v;
-      this.selected.menu = v[0];
+      this.selectedMenu = v[0];
     });
-    this.http.get<Address[]>("/api/info/address").subscribe(v => {
-      this.addresses = v;
-      this.selected.address = v[0];
-    });
-    this.http.get<Taste[]>("/api/info/taste").subscribe(v => {
-      this.tastes = v;
-      this.selected.taste = v[0];
-    });
+    
   }
 
-  submit() {
-    console.log("submit: ", this.selected);
-    this.modalService.open(this.confirmDialog).result.then(v => {
-      console.log(v);
+  async submit() {
+    const createDialog = this.dialogService.open(OrderCreateDialog, {
+      data: this.selectedMenu,
     });
-  }
-
-  confirm() {
-    console.log("confirm: ", this.selected);
+    let createDto = await createDialog.afterClosed().toPromise<OrderCreateDto | undefined>();
+    console.log(createDto);
   }
 }
 
-type Menu = {
+export type FoodOrderMenu = {
   id: number;
   title: string;
   price: string;
   details: string;
-}
-
-type Address = {
-  id: number;
-  name: string;
-}
-
-type Taste = {
-  id: number;
-  name: string;
 }
