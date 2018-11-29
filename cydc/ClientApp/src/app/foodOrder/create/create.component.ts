@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrderCreateDialog } from './create-dialog';
-import { FoodOrderApiService, FoodOrderMenu } from '../food-order-api.service';
+import { FoodOrderApiService, FoodOrderMenu, OrderCreateDto } from '../food-order-api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order',
@@ -20,7 +21,8 @@ export class OrderComponent implements OnInit {
   constructor(
     public userService: UserService,
     private dialogService: MatDialog,
-    private api: FoodOrderApiService) { }
+    private api: FoodOrderApiService,
+    private router: Router) { }
 
   async ngOnInit() {
     await this.userService.ensureLogin();
@@ -38,6 +40,10 @@ export class OrderComponent implements OnInit {
       data: this.selectedMenu,
     });
     let createDto = await createDialog.afterClosed().toPromise<OrderCreateDto | undefined>();
-    console.log(createDto);
+    if (createDto === undefined) return;
+
+    this.api.create(createDto).subscribe(() => {
+      this.router.navigateByUrl("/food-order/my");
+    });
   }
 }

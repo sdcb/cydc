@@ -19,6 +19,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoggedOutComponent } from './shared/logged-out/logged-out.component';
 import { OrderComponent } from './foodOrder/create/create.component';
 import { OrderCreateDialog } from './foodOrder/create/create-dialog';
+import { MyFoodOrderComponent } from './foodOrder/my-food-order/my-food-order.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { OrderCreateDialog } from './foodOrder/create/create-dialog';
     OrderComponent, 
     LoginComponent,
     LoggedOutComponent,
-    OrderCreateDialog, 
+    OrderCreateDialog,
+    MyFoodOrderComponent, 
   ],
   entryComponents: [
     OrderCreateDialog

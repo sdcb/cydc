@@ -22,6 +22,10 @@ export class FoodOrderApiService {
   getAllTaste() {
     return this.http.get<FoodTaste[]>("/api/info/taste");
   }
+
+  create(dto: OrderCreateDto) {
+    return this.http.post("/api/foodOrder/create", dto);
+  }
 }
 
 export type OrderAddress = {

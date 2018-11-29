@@ -29,47 +29,25 @@ namespace cydc.Controllers
             return _db.SiteNotice.FirstOrDefault().Content;
         }
 
-        public IActionResult UserInfo()
-        {
-            return Ok(new
-            {
-                UserAgent = Request.Headers["User-Agent"].ToString(),
-                IP = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()
-            });
-        }
-
-        public async Task<int> Create(FoodOrderCreateDto order)
+        public async Task<IActionResult> Create([FromBody]FoodOrderCreateDto order)
         {
             FoodOrder foodOrder = new FoodOrder();
             var menu = await _db.FoodMenu.SingleAsync(x => x.Id == order.MenuId);
             var dateNow = DateTime.Now;
 
-            foodOrder.FoodOrderClientInfo = new FoodOrderClientInfo
-            {
-                Ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-                UserAgent = Request.Headers["User-Agent"]
-            };
-
-            var userName = order.OtherPersonName;
-            var userId = "";
-            if (!string.IsNullOrEmpty(userName))
-            {
-                userId = _db.AspNetUsers.First(x => x.UserName == userName).Id;
-            }
-            else
-            {
-                userId = User.Identity.Name;
-            }
-
-            IQueryable<AccountDetails> data = _db.AccountDetails;
-            var amount = data.Where(x => x.UserId == userId).Sum(x => x.Amount);
-
+            string userId = await GetUserIdFromUserName(order.IsMe, order.OtherPersonName);
             foodOrder.AccountDetails.Add(new AccountDetails
             {
                 UserId = userId,
                 CreateTime = dateNow,
                 Amount = -menu.Price
             });
+
+            foodOrder.FoodOrderClientInfo = new FoodOrderClientInfo
+            {
+                Ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                UserAgent = Request.Headers["User-Agent"]
+            };
 
             foodOrder.OrderUserId = userId;
             foodOrder.OrderTime = dateNow;
@@ -80,15 +58,30 @@ namespace cydc.Controllers
             _db.Add(foodOrder);
             await _db.SaveChangesAsync();
 
-            if (amount >= menu.Price)
+            decimal amount = await _db.AccountDetails.Where(x => x.UserId == userId).SumAsync(x => x.Amount);
+            if (amount >= 0)
             {
-                return 3;
-                //return await AutoPay(foodOrder);
+                await AutoPay(foodOrder);
             }
-            else
+            return Ok();
+        }
+
+        private async Task<string> GetUserIdFromUserName(bool isMe, string userName)
+        {
+            if (isMe) return User.Identity.Name;
+            return (await _db.AspNetUsers.FirstAsync(x => x.UserName == userName)).Id;
+        }
+
+        private async Task<int> AutoPay([FromBody] FoodOrder order)
+        {
+            order = await _db.FoodOrder
+                .Include(x => x.FoodOrderPayment)
+                .SingleAsync(x => x.Id == order.Id);
+            order.FoodOrderPayment = new FoodOrderPayment
             {
-                return 0;
-            }
+                PayedTime = DateTime.Now
+            };
+            return await _db.SaveChangesAsync();
         }
     }
 
