@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from 'src/app/services/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order',
@@ -29,9 +30,14 @@ export class OrderComponent implements OnInit {
   constructor(
     private http: HttpClient,
     public userService: UserService,
-    private modalService: NgbModal) { }
+    private modalService: NgbModal,
+    private router: Router) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    if (!(await this.userService.loadUserStatus()).isLoggedIn) {
+      this.router.navigateByUrl("/user/login", { queryParams: { redirectUrl: "/user/order" } });
+      return;
+    };
     this.http.get("/foodOrder/siteNotification", { responseType: "text" }).subscribe(v => this.siteNotification = v);
     this.http.get<Menu[]>("/info/menu").subscribe(v => {
       this.menus = v;

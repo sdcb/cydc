@@ -6,18 +6,29 @@ import { HttpClient } from '@angular/common/http';
 })
 export class UserService {
   userStatus = new UserStatus();
+  loaded: boolean = false;
 
   constructor(private http: HttpClient) {
     this.loadUserStatus();
   }
 
-  private async loadUserStatus() {
-    this.userStatus = await this.http.get<UserStatus>("/user/status").toPromise();
-    return this.userStatus;
+  async loadUserStatus() {
+    if (this.loaded) {
+      return this.userStatus;
+    } else {
+      this.userStatus = await this.getUserStatusAsync();
+      this.loaded = true;
+      return this.userStatus;
+    }
+  }
+
+  private getUserStatusAsync() {
+    return this.http.get<UserStatus>("/user/status").toPromise()
   }
 }
 
 export class UserStatus {
+  
   isLoggedIn: boolean = false;
   name: string = "";
   isAdmin: boolean = false;

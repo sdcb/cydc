@@ -13,6 +13,7 @@ import { routes } from './app.routes';
 import { loginProvider, loginResolver } from './services/external-redirect';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
 import { OrderComponent } from './user/order/order.component';
+import { LoginComponent } from './shared/login/login.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { OrderComponent } from './user/order/order.component';
     HomeComponent,
     NotFoundComponent,
     OrderComponent,
+    LoginComponent, 
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
