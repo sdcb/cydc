@@ -2,14 +2,14 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from 'src/app/services/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order',
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.css']
 })
-export class OrderComponent implements OnInit, CanActivate {
+export class OrderComponent implements OnInit {
   siteNotification: string | null = null;
   menus: Menu[] = [];
   addresses: Address[] = [];
