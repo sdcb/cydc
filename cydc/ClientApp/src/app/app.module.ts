@@ -14,6 +14,7 @@ import { loginProvider, loginResolver } from './services/external-redirect';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
 import { OrderComponent } from './user/order/order.component';
 import { LoginComponent } from './shared/login/login.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import { LoginComponent } from './shared/login/login.component';
     FormsModule,
     ReactiveFormsModule,
     NgbModule, 
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
   providers: [
     { provide: loginProvider, useValue: loginResolver }
