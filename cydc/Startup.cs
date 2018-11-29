@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sdcb.AspNetCore.Authentication.YeluCasSso;
 
 namespace cydc
@@ -38,6 +40,7 @@ namespace cydc
             });
 
             services.AddDbContext<CydcContext>(options => options.UseSqlServer(Configuration["CydcConnection"]));
+            services.AddHttpContextAccessor();
 
             services.AddAuthentication(o =>
             {

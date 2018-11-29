@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { MatDialog } from '@angular/material/dialog';
-import { OrderCreateDialog, OrderCreateDto } from './create-dialog';
+import { OrderCreateDialog } from './create-dialog';
 import { FoodOrderApiService, FoodOrderMenu } from '../food-order-api.service';
 
 @Component({

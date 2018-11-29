@@ -41,3 +41,11 @@ export type FoodOrderMenu = {
   details: string;
 }
 
+export type OrderCreateDto = {
+  addressId: number;
+  tasteId: number;
+  menuId: number;
+  isMe: boolean;
+  otherPersonName: string | undefined;
+  comment: string | undefined;
+}

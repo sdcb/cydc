@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core';
-import { FoodOrderMenu } from './create.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user.service';
-import { FoodOrderApiService, FoodTaste, OrderAddress } from '../food-order-api.service';
+import { FoodOrderApiService, FoodTaste, OrderAddress, OrderCreateDto, FoodOrderMenu } from '../food-order-api.service';
 
 @Component({
   selector: 'app-order-create-dialog',
@@ -70,13 +69,4 @@ export class FoodOrderSelectedDto {
       otherPersonName: this.otherPersonName
     };
   }
-}
-
-export type OrderCreateDto = {
-  addressId: number;
-  tasteId: number;
-  menuId: number;
-  isMe: boolean;
-  otherPersonName: string | undefined;
-  comment: string | undefined;
 }
