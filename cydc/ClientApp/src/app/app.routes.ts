@@ -6,6 +6,7 @@ import { OrderComponent } from "./user/order/order.component";
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: 'user/order', component: OrderComponent }, 
-  { path: 'user/login', component: NotFoundComponent, resolve: {url: loginProvider}}
+  { path: 'user/order', component: OrderComponent },
+  { path: 'user/login', component: NotFoundComponent, resolve: { url: loginProvider } }, 
+  { path: '**', component: NotFoundComponent }, 
 ];
