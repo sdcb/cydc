@@ -6,7 +6,7 @@ import { FoodOrderApiService, FoodTaste, OrderAddress, OrderCreateDto, FoodOrder
 @Component({
   selector: 'app-order-create-dialog',
   templateUrl: './create-dialog.html',
-  styleUrls: []
+  styleUrls: ['./create-dialog.css']
 })
 export class OrderCreateDialog implements OnInit {
   addresses: OrderAddress[] = [];

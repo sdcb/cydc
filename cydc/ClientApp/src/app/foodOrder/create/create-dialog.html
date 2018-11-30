@@ -1,83 +1,64 @@
-<h1 mat-dialog-title>请确认：{{selected.menu.title}} (<b class="text-danger">{{selected.menu.price}}</b>元)</h1>
-<div mat-dialog-content>
+<div mat-dialog-title>
   <div class="container">
     <div class="row">
-      <div class="col" *ngIf="selected.menu">
-        <b>{{selected.menu.details}}</b>
-        <hr />
-      </div>
+      <span>{{selected.menu.title}}</span>
+      <span class="flex-fill"></span>
+      <span>{{selected.menu.price}}元</span>
     </div>
-
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <label class="label-title">口味：</label>
-          <div class="container">
-            <div class="row">
-              <div class="form-check form-check-inline" *ngFor="let taste of tastes">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="radio" name="taste" [value]="taste" [(ngModel)]="selected.taste">
-                  {{taste.name}}
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <label class="label-title">点餐人：</label>
-          <div class="form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" type="radio" name="person" [value]="true" [(ngModel)]="selected.isMe">
-              自己 <small class="text-danger">（{{userService.userStatus.name}}）</small>
-            </label>
-          </div>
-          <div class="form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" type="radio" name="person" [value]="false" [(ngModel)]="selected.isMe">
-              给别人点 <small class="text-danger">（扣自己钱）</small>
-            </label>
-            <input *ngIf="!selected.isMe" type="text" class="form-control form-control-sm inline" name="otherPersonName" placeholder="输入点餐人..."
-                   [(ngModel)]="selected.otherPersonName" [required]="!selected.isMe" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <label class="label-title">地点：</label>
-          <div class="container">
-            <div class="row">
-              <div class="form-check form-check-inline" *ngFor="let address of addresses">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="radio" name="address" [value]="address" [(ngModel)]="selected.address">
-                  {{address.location}}
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <label class="label-title" for="comments">备注：</label>
-          <input type="text" maxlength="50" class="form-control" id="comments" name="comment" rows="2" [(ngModel)]="selected.comment" />
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
+<div mat-dialog-content>
+  <form class="create-dialog-form">
+    <mat-form-field>
+      <mat-label>套餐内容</mat-label>
+      <input matInput placeholder="套餐" disabled name="menu" [value]="selected.menu.details" />
+    </mat-form-field>
+
+    <div class="create-dialog-container">
+      <label class="dialog-label">口味: </label>
+      <mat-radio-group [(ngModel)]="selected.taste" name="taste">
+        <div class="container">
+          <div class="row">
+            <mat-radio-button class="col-2" *ngFor="let taste of tastes" [value]="taste">{{taste.name}}</mat-radio-button>
+          </div>
+        </div>
+      </mat-radio-group>
+    </div>
+
+    <div class="create-dialog-container">
+      <label class="dialog-label">点餐人: </label>
+      <mat-radio-group [(ngModel)]="selected.isMe" name="isMe">
+        <div class="container">
+          <div class="row">
+            <mat-radio-button class="col-2" [value]="true">自己</mat-radio-button>
+            <mat-radio-button class="col-2" [value]="false" matTooltip="扣自己钱">别人</mat-radio-button>
+            <mat-form-field *ngIf="!selected.isMe">
+              <input matInput placeholder="姓名" name="otherPersonName" [(ngModel)]="selected.otherPersonName" />
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-radio-group>
+    </div>
+
+    <div class="create-dialog-container">
+      <label class="dialog-label">送餐地点: </label>
+      <mat-radio-group [(ngModel)]="selected.address" name="address">
+        <div class="container">
+          <div class="row">
+            <mat-radio-button class="col-3" *ngFor="let address of addresses" [value]="address">{{address.location}}</mat-radio-button>
+          </div>
+        </div>
+      </mat-radio-group>
+    </div>
+
+    <mat-form-field>
+      <input class="order-dialog-input" matInput placeholder="备注" name="comment" [(ngModel)]="selected.comment" />
+    </mat-form-field>
+  </form>
+</div>
+
 <div mat-dialog-actions>
   <button mat-button (click)="cancel()">取消</button>
+  <span class="flex-fill"></span>
   <button mat-button cdkFocusInitial (click)="confirm()">确认点餐</button>
 </div>

@@ -1,0 +1,11 @@
+.create-dialog-form > * {
+  width: 100%;
+}
+
+label.dialog-label {
+  display: block;
+}
+
+.create-dialog-container {
+  margin-bottom: 1em;
+}
