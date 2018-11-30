@@ -4,7 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { MaterialModule } from './shared/material/material.module';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './shared/nav-menu/nav-menu.component';
@@ -18,7 +19,6 @@ import { LoggedOutComponent } from './shared/logged-out/logged-out.component';
 import { OrderComponent } from './foodOrder/create/create.component';
 import { OrderCreateDialog } from './foodOrder/create/create-dialog';
 import { MyFoodOrderComponent } from './foodOrder/my-food-order/my-food-order.component';
-import { materialModules } from './shared/material/material-modules';
 
 @NgModule({
   declarations: [
@@ -41,8 +41,7 @@ import { materialModules } from './shared/material/material-modules';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule,
-    ...materialModules, 
+    MaterialModule, 
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
   providers: [
