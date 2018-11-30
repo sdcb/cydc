@@ -7,6 +7,10 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.card-bg {
+  background-color: #e4e4e4 !important;
+}
+
 .spinning {
   animation: spin 1s infinite linear;
 }

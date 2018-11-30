@@ -1,13 +1,13 @@
 <div class="row">
   <div class="col">
-    <h1>欢迎 😊{{' ' + user.userStatus.name}}</h1>
+    <h1>欢迎 😊 {{user.userStatus.name}}</h1>
     <p *ngIf="!user.userStatus.isLoggedIn">请点击右上角登录</p>
   </div>
 </div>
 
 <div class="row">
-  <div class="col">
-    <mat-card class="mat-elevation-z2">
+  <div class="col-12 col-lg-4">
+    <mat-card class="mat-elevation-z2 card-bg">
       <mat-card-title>点餐</mat-card-title>
       <mat-card-content>
         <ul>
@@ -20,8 +20,8 @@
     </mat-card>
   </div>
 
-  <div class="col">
-    <mat-card>
+  <div class="col-12 col-lg-4">
+    <mat-card class="card-bg">
       <mat-card-title>BUG/问题/创意</mat-card-title>
       <mat-card-content>
         如果你遇到了BUG，或者有任意使用上的疑问，或者有什么创意，可以使用以下方式向我们反馈:
@@ -33,8 +33,8 @@
     </mat-card>
   </div>
 
-  <div class="col">
-    <mat-card>
+  <div class="col-12 col-lg-4">
+    <mat-card class="card-bg">
       <mat-card-title>开发者</mat-card-title>
       <mat-card-content>
         如果你是开发者，可以访问 <a [href]="source" target="_blank">{{source}}</a> 提交PR。
