@@ -35,7 +35,12 @@ export class OrderComponent implements OnInit {
     
   }
 
-  async submit() {
+  async select(menu: FoodOrderMenu) {
+    this.selectedMenu = menu;
+    await this.showConfirmDialog();
+  }
+
+  async showConfirmDialog() {
     const createDialog = this.dialogService.open(OrderCreateDialog, {
       data: this.selectedMenu,
     });

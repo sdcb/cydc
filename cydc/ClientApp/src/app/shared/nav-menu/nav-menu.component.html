@@ -1,6 +1,6 @@
 <header>
   <nav>
-    <mat-toolbar class="mat-elevation-z6 mb-3">
+    <mat-toolbar class="mat-elevation-z3 mb-3">
       <mat-toolbar-row class="menu-container">
         <button mat-button [routerLink]="['/']">首页</button>
         <button mat-button [routerLink]="['/food-order/create']">点餐</button>
@@ -15,38 +15,3 @@
     </mat-toolbar>
   </nav>
 </header>
-<!--<header>
-  <nav class='navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3'>
-    <div class="container">
-      <a class="navbar-brand" [routerLink]='["/"]'>cydc</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-        <ul class="navbar-nav flex-grow">
-          <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-            <a class="nav-link text-dark" [routerLink]='["/food-order/create"]'>点餐</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]='["link-active"]' *ngIf="!userService.userStatus.isLoggedIn">
-            <a class="nav-link text-dark" [routerLink]='["/api/user/login"]'>登录</a>
-          </li>
-          <li class="nav-item" *ngIf="userService.userStatus.isLoggedIn">
-            <a class="nav-link text-dark" (click)="logout()" href="javascript:void(0)">
-              <b>
-                <span [ngbTooltip]="loginTooltip" placement="right" class="text-danger">
-                  登出
-                </span>
-              </b>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</header>
-
-<ng-template #loginTooltip>
-  已登录为：<span class="text-info">{{userService.userStatus.name}}</span>
-</ng-template>
-
-    -->

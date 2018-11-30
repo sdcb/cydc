@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTooltipModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
@@ -8,13 +8,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 
 const materialModules = [
+  NgbTooltipModule,
+  NgbAlertModule, 
   MatDialogModule,
   MatButtonModule,
   MatTableModule,
   MatToolbarModule,
   MatTooltipModule,
   MatCardModule,
-  NgbModule, 
 ];
 
 @NgModule({

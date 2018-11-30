@@ -1,37 +1,42 @@
-<div class="row" #alertArea>
-  <div class="col-sm">
-    <ngb-alert [dismissible]="false" type="info">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-md-6 col-lg-8" [innerHtml]="siteNotification"></div>
-          <div class="col-12 col-md-6 col-lg-4">
-            <img style="width: 100%;" src="https://cydc.starworks.cc/images/pay.png" />
-          </div>
-        </div>
-      </div>
-    </ngb-alert>
+<div class="row mb-3">
+  <div class="col-12 col-md-6 col-lg-8">
+    <mat-card>
+      <mat-card-title>通知</mat-card-title>
+      <mat-card-content [innerHtml]="siteNotification"></mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <mat-card matTooltip="付款请扫二维码">
+      <mat-card-content>
+        <img mat-card-image src="https://cydc.starworks.cc/images/pay.png" />
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>
-<form (ngSubmit)="submit()">
-  <div class="row">
 
-    <div class="col">
-      <div class="form-group">
-        <table class="table table-striped table-bordered table-hover table-sm">
-          <tr>
-            <th>套餐</th>
-            <th>价格</th>
-            <th>内容</th>
-            <th></th>
-          </tr>
-          <tr *ngFor="let menu of menus">
-            <td>{{menu.title}}</td>
-            <td>{{menu.price}}</td>
-            <td>{{menu.details}}</td>
-            <td class="text-center"><button type="submit" class="btn btn-link btn-sm" (click)="selectedMenu = menu;">点餐</button></td>
-          </tr>
-        </table>
-      </div>
-    </div>
+<div class="row">
+  <div class="col-6" *ngFor="let menu of menus">
+    <mat-card>
+      <mat-card-title>
+        <div class="container">
+          <div class="row">
+            <span>{{menu.title}}</span>
+            <span class="flex-fill"></span>
+            <span>{{menu.price}}元</span>
+          </div>
+        </div>
+      </mat-card-title>
+      <mat-card-content>
+        {{menu.details}}
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="container">
+          <div class="row">
+            <span class="flex-fill"></span>
+            <button mat-raised-button color="primary" (click)="select(menu)">选择</button>
+          </div>
+        </div>
+      </mat-card-actions>
+    </mat-card>
   </div>
-</form>
+</div>
