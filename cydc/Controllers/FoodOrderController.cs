@@ -84,6 +84,14 @@ namespace cydc.Controllers
                 .Take(100));
         }
 
+        public async Task<IActionResult> MyBalance()
+        {
+            decimal balance = await _db.AccountDetails
+                .Where(x => x.UserId == User.Identity.Name)
+                .SumAsync(x => x.Amount);
+            return Ok(balance);
+        }
+
         private async Task<string> GetUserIdFromUserName(bool isMe, string userName)
         {
             if (isMe) return User.Identity.Name;

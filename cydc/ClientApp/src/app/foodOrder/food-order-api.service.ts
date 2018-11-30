@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FoodOrderApiService {
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient) { }
 
   getSiteNotification() {
     return this.http.get("/api/foodOrder/siteNotification", { responseType: "text" });
@@ -31,8 +32,8 @@ export class FoodOrderApiService {
     return this.http.get<FoodOrderItem[]>("/api/foodOrder/my");
   }
 
-  foodOrderDisplayColumns() {
-    return ["id", "userName", "orderTime", "menu", "price", "comment", "isPayed"];
+  getMyBalance() {
+    return this.http.get<number>("/api/foodOrder/MyBalance");
   }
 }
 

@@ -8,6 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 const materialModules = [
   NgbTooltipModule,
@@ -19,7 +20,8 @@ const materialModules = [
   MatTooltipModule,
   MatCardModule,
   MatInputModule,
-  MatRadioModule, 
+  MatRadioModule,
+  MatPaginatorModule, 
 ];
 
 @NgModule({
