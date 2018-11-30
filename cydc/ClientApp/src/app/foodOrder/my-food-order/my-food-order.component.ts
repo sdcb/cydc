@@ -3,6 +3,7 @@ import { FoodOrderApiService, FoodOrderItem } from '../food-order-api.service';
 import { UserService } from 'src/app/services/user.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-my-food-order',
@@ -17,6 +18,10 @@ export class MyFoodOrderComponent implements OnInit {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
+  @ViewChild(MatSort)
+  sort!: MatSort;
+
+
   constructor(
     private api: FoodOrderApiService,
     private userService: UserService) {
@@ -24,8 +29,9 @@ export class MyFoodOrderComponent implements OnInit {
 
   async ngOnInit() {
     await this.userService.ensureLogin();
-
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
     this.api.getMyFoodOrder().subscribe(v => {
       this.dataSource.data = v;
     });

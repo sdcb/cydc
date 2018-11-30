@@ -1,14 +1,16 @@
 <div class="row mb-3">
-  <div class="col-12 col-md-6 col-lg-8">
+  <div class="col-12">
     <mat-card>
       <mat-card-title>通知</mat-card-title>
-      <mat-card-content [innerHtml]="siteNotification"></mat-card-content>
-    </mat-card>
-  </div>
-  <div class="col-12 col-md-6 col-lg-4">
-    <mat-card matTooltip="付款请扫二维码">
       <mat-card-content>
-        <img mat-card-image src="https://cydc.starworks.cc/images/pay.png" />
+        <div class="container">
+          <div class="row">
+            <div class="col-12 col-md-6 col-lg-8" [innerHtml]="siteNotification"></div>
+            <div class="col-12 col-md-6 col-lg-4">
+              <img matTooltip="付款请用支付宝扫二维码" class="w100" src="https://cydc.starworks.cc/images/pay.png" />
+            </div>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>

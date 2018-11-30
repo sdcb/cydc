@@ -19,6 +19,8 @@ import { LoggedOutComponent } from './shared/logged-out/logged-out.component';
 import { OrderComponent } from './foodOrder/create/create.component';
 import { OrderCreateDialog } from './foodOrder/create/create-dialog';
 import { MyFoodOrderComponent } from './foodOrder/my-food-order/my-food-order.component';
+import { AppPaginatorIntl } from './shared/utils/app-paginator-intl';
+import { MatPaginatorIntl } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,8 @@ import { MyFoodOrderComponent } from './foodOrder/my-food-order/my-food-order.co
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
   providers: [
-    { provide: loginProvider, useValue: loginResolver }
+    { provide: loginProvider, useValue: loginResolver },
+    { provide: MatPaginatorIntl, useClass: AppPaginatorIntl, }
   ],
   bootstrap: [AppComponent]
 })
