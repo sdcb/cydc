@@ -7,7 +7,7 @@
         <button mat-button [routerLink]="['/food-order/my']">我的</button>
         <span class="flex-fill"></span>
         <button *ngIf="!userService.userStatus.isLoggedIn" mat-button [routerLink]="['/api/user/login']">登录</button>
-        <button *ngIf="userService.userStatus.isLoggedIn" mat-button (click)="logout()"
+        <button *ngIf="userService.userStatus.isLoggedIn" mat-button color="warn" (click)="logout()"
                 matTooltip="已登录为: {{userService.userStatus.name}}">退出</button>
       </mat-toolbar-row>
     </mat-toolbar>
