@@ -6,7 +6,8 @@ import { UserService } from '../services/user.service';
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
-  constructor(private user: UserService) {
-    
+  source = "https://github.com/sdcb/cydc";
+
+  constructor(public user: UserService) {
   }
 }

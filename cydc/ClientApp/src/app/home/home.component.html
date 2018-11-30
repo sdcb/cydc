@@ -1,14 +1,49 @@
-<h1>Hello, world!</h1>
-<p>Welcome to your new single-page application, built with:</p>
-<ul>
-  <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-  <li><a href='https://angular.io/'>Angular</a> and <a href='http://www.typescriptlang.org/'>TypeScript</a> for client-side code</li>
-  <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-</ul>
-<p>To help you get started, we've also set up:</p>
-<ul>
-  <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-  <li><strong>Angular CLI integration</strong>. In development mode, there's no need to run <code>ng serve</code>. It runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-  <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration automatically invokes <code>ng build</code> to produce minified, ahead-of-time compiled JavaScript files.</li>
-</ul>
-<p>The <code>ClientApp</code> subdirectory is a standard Angular CLI application. If you open a command prompt in that directory, you can run any <code>ng</code> command (e.g., <code>ng test</code>), or use <code>npm</code> to install extra packages into it.</p>
+<div class="row">
+  <div class="col">
+    <h1>欢迎 😊{{'@' + user.userStatus.name}}</h1>
+    <p *ngIf="!user.userStatus.isLoggedIn">请点击右上角登录</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <mat-card class="mat-elevation-z2">
+      <mat-card-title>点餐</mat-card-title>
+      <mat-card-content>
+        <ul>
+          <li>要点餐，请点击 <a [routerLink]="['/food-order/create']">此处</a> 进入点餐页面。</li>
+          <li>查看订单，点击 <a [routerLink]="['/food-order/my']">此处</a> 进入订单页面。</li>
+          <li>查看帐单余额，点击 <a [routerLink]="['/food-order/my']">此处</a> 进入订单页面。</li>
+        </ul>        
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="col">
+    <mat-card>
+      <mat-card-title>BUG/问题/创意</mat-card-title>
+      <mat-card-content>
+        如果你遇到了BUG，或者有任意使用上的疑问，或者有什么创意，可以使用以下方式向我们反馈:
+        <ul>
+          <li>Github: <a [href]="source + '/issues'" target="_blank">{{source + '/issues'}}</a></li>
+          <li>邮件: sdflysha#qq.com</li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="col">
+    <mat-card>
+      <mat-card-title>开发者</mat-card-title>
+      <mat-card-content>
+        如果你是开发者，可以访问 <a [href]="source" target="_blank">{{source}}</a> 提交PR。
+        本网站使用的技术包括：
+        <ul>
+          <li>TypeScript/C#</li>
+          <li>ASP.NET Core 2.2/Entity Framework 2.1</li>
+          <li>Angular 7.x/Angular Material 7.x</li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
