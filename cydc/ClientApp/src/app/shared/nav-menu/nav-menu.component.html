@@ -1,4 +1,19 @@
 <header>
+  <nav>
+    <mat-toolbar class="mat-elevation-z6 mb-3">
+      <mat-toolbar-row class="menu-container">
+        <button mat-button [routerLink]="['/']">首页</button>
+        <button mat-button [routerLink]="['/food-order/create']">点餐</button>
+        <button mat-button [routerLink]="['/food-order/my']">我的</button>
+        <span class="flex-fill"></span>
+        <button *ngIf="!userService.userStatus.isLoggedIn" mat-button [routerLink]="['/api/user/login']">登录</button>
+        <button *ngIf="userService.userStatus.isLoggedIn" mat-button (click)="logout()"
+                matTooltip="已登录为: {{userService.userStatus.name}}">退出</button>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </nav>
+</header>
+<!--<header>
   <nav class='navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3'>
     <div class="container">
       <a class="navbar-brand" [routerLink]='["/"]'>cydc</a>
@@ -26,7 +41,7 @@
       </div>
     </div>
   </nav>
-</header>
+</header>-->
 
 <ng-template #loginTooltip>
   已登录为：<span class="text-info">{{userService.userStatus.name}}</span>

@@ -8,6 +8,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './shared/nav-menu/nav-menu.component';
@@ -46,7 +48,9 @@ import { MyFoodOrderComponent } from './foodOrder/my-food-order/my-food-order.co
     NgbModule,
     MatDialogModule,
     MatButtonModule,
-    MatTableModule, 
+    MatTableModule,
+    MatToolbarModule,
+    MatTooltipModule, 
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
   providers: [
