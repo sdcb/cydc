@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const materialModules = [
   NgbTooltipModule,
@@ -23,7 +24,8 @@ const materialModules = [
   MatInputModule,
   MatRadioModule,
   MatPaginatorModule,
-  MatSortModule, 
+  MatSortModule,
+  MatProgressSpinnerModule, 
 ];
 
 @NgModule({

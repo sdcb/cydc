@@ -3,4 +3,7 @@
   <div class="container">
     <router-outlet></router-outlet>
   </div>
+  <div *ngIf="globalLoading.visible" class="loading-indicator">
+    <mat-spinner></mat-spinner>
+  </div>
 </body>

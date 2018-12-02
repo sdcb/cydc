@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { OrderCreateDialog } from './create-dialog';
 import { FoodOrderApiService, FoodOrderMenu, OrderCreateDto } from '../food-order-api.service';
 import { Router } from '@angular/router';
+import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 
 @Component({
   selector: 'app-order',
@@ -22,17 +23,18 @@ export class OrderComponent implements OnInit {
     public userService: UserService,
     private dialogService: MatDialog,
     private api: FoodOrderApiService,
-    private router: Router) { }
+    private router: Router,
+    private loading: GlobalLoadingService) { }
 
   async ngOnInit() {
     await this.userService.ensureLogin();
 
-    this.api.getSiteNotification().subscribe(v => this.siteNotification = v);
-    this.api.getTodayMenus().subscribe(v => {
-      this.menus = v;
-      this.selectedMenu = v[0];
-    });
-    
+    this.loading.addPromises(
+      this.api.getSiteNotification().toPromise().then(v => this.siteNotification = v), 
+      this.api.getTodayMenus().toPromise().then(v => {
+        this.menus = v;
+        this.selectedMenu = v[0];
+    }));
   }
 
   async select(menu: FoodOrderMenu) {
