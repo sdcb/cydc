@@ -1,7 +1,6 @@
 <div class="row">
   <div class="col">
     <h1>欢迎 😊 {{user.userStatus.name}}</h1>
-    <p *ngIf="!user.userStatus.isLoggedIn">请点击右上角登录</p>
   </div>
 </div>
 
@@ -11,7 +10,7 @@
       <mat-card-title>点餐</mat-card-title>
       <mat-card-content>
         <ul>
-          <li *ngIf="!user.userStatus.isLoggedIn">先 <a [routerLink]="['/api/user/login']">登录</a> 。</li>
+          <li *ngIf="!user.userStatus.isLoggedIn">先点击左上角或者 <a [routerLink]="['/api/user/login']">这里</a> 登录。</li>
           <li>要点餐，请点击 <a [routerLink]="['/food-order/create']">此处</a> 进入点餐页面。</li>
           <li>查看订单，点击 <a [routerLink]="['/food-order/my']">此处</a> 进入订单页面。</li>
           <li>查看帐单余额，点击 <a [routerLink]="['/food-order/my']">此处</a> 进入订单页面。</li>
