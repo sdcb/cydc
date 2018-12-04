@@ -25,7 +25,7 @@ export class FoodOrderApiService {
   }
 
   create(dto: OrderCreateDto) {
-    return this.http.post("/api/foodOrder/create", dto);
+    return this.http.post<void>("/api/foodOrder/create", dto);
   }
 
   getMyFoodOrder() {
