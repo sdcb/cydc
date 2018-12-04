@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { GlobalLoadingService } from './global-loading.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
-    private router: Router) {
+    private router: Router,
+    private loading: GlobalLoadingService) {
     this.loadUserStatus();
   }
 
@@ -19,7 +21,7 @@ export class UserService {
     if (this.loaded) {
       return this.userStatus;
     } else {
-      this.userStatus = await this.getUserStatusAsync();
+      this.userStatus = await this.loading.wrap(this.getUserStatusAsync());
       this.loaded = true;
       return this.userStatus;
     }
