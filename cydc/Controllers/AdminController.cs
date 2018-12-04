@@ -26,29 +26,38 @@ namespace cydc.Controllers
             IQueryable<AdminUserDto> query = _db.AspNetUsers
                 .Select(x => new AdminUserDto
                 {
-                    Id = x.Id, 
-                    Name = x.UserName, 
-                    Email = x.Email, 
-                    Balance = x.AccountDetails.Sum(a => a.Amount)
-                })
-                .Skip(skip)
-                .Take(Math.Min(100, take))
-                .OrderByDescending(x => x.Balance);
+                    Id = x.Id,
+                    Name = x.UserName,
+                    Email = x.Email,
+                    Balance = x.AccountDetails.Sum(v => v.Amount) + 0
+                });
 
+            query = FilterOperator(searchDto.Operator, query);
             if (!string.IsNullOrWhiteSpace(searchDto.Name))
-                query = query.Where(x => x.Name.Contains(searchDto.Name));
-            switch (searchDto.Operator)
+                query = query.Where(x => x.Name.Contains(searchDto.Name));            
+
+            if (searchDto.Operator < SearchUserBalanceOperator.GreaterThanZero)
+                query = query.OrderBy(x => x.Balance);
+            else
+                query = query.OrderByDescending(x => x.Balance);
+
+            return Ok(query.Skip(skip).Take(take));
+        }
+
+        private static IQueryable<AdminUserDto> FilterOperator(SearchUserBalanceOperator op, IQueryable<AdminUserDto> query)
+        {
+            switch (op)
             {
                 case SearchUserBalanceOperator.All:
-                    return Ok(query);
+                    return query;
                 case SearchUserBalanceOperator.LessThanZero:
-                    return Ok(query.Where(x => x.Balance < 0));
+                    return query.Where(x => x.Balance < 0);
                 case SearchUserBalanceOperator.EqualToZero:
-                    return Ok(query.Where(x => x.Balance == 0));
+                    return query.Where(x => x.Balance == 0);
                 case SearchUserBalanceOperator.GreaterThanZero:
-                    return Ok(query.Where(x => x.Balance > 0));
+                    return query.Where(x => x.Balance > 0);
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(searchDto.Operator));
+                    throw new ArgumentOutOfRangeException(nameof(op));
             }
         }
     }

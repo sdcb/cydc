@@ -22,15 +22,17 @@ export class UsersComponent implements OnInit {
   constructor(
     private userService: UserService,
     private api: AdminApiService) {
-    this.dataSource = new ApiDataSource<AdminUserDto, AdminUserQuery>((p, s, t) => this.api.getUsers(p, s, t));
+    this.dataSource = new ApiDataSource<AdminUserDto, AdminUserQuery>(s => this.api.getUsers(s));
   }
 
   async ngOnInit() {
     await this.userService.ensureAdmin();
 
-    this.dataSource.loadData(this.query, this.paginator.pageIndex, this.paginator.pageSize);
+    this.dataSource.loadData(this.query);
     this.paginator.page.subscribe(() => {
-      this.dataSource.loadData(this.query, this.paginator.pageIndex, this.paginator.pageSize);
+      this.query.pageIndex = this.paginator.pageIndex;
+      this.query.pageSize = this.paginator.pageSize;
+      this.dataSource.loadData(this.query);
     });
     //this.dataSource.
   }
