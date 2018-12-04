@@ -29,7 +29,7 @@ export class OrderComponent implements OnInit {
   async ngOnInit() {
     await this.userService.ensureLogin();
 
-    this.loading.addPromises(
+    this.loading.wrapAll(
       this.api.getSiteNotification().toPromise().then(v => this.siteNotification = v), 
       this.api.getTodayMenus().toPromise().then(v => {
         this.menus = v;
@@ -49,8 +49,7 @@ export class OrderComponent implements OnInit {
     let createDto = await createDialog.afterClosed().toPromise<OrderCreateDto | undefined>();
     if (createDto === undefined) return;
 
-    this.api.create(createDto).subscribe(() => {
-      this.router.navigateByUrl("/food-order/my");
-    });
+    await this.loading.wrap(this.api.create(createDto).toPromise());
+    await this.router.navigateByUrl("/food-order/my");
   }
 }

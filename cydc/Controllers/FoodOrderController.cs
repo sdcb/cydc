@@ -46,7 +46,7 @@ namespace cydc.Controllers
             foodOrder.FoodOrderClientInfo = new FoodOrderClientInfo
             {
                 Ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-                UserAgent = Request.Headers["User-Agent"]
+                UserAgent = $"{Request.Host}@{Request.Headers["User-Agent"]}"
             };
 
             foodOrder.OrderUserId = userId;

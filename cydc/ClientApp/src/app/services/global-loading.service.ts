@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +12,15 @@ export class GlobalLoadingService {
     return this.promiseCount > 0;
   }
 
-  addPromise<T>(promise: Promise<T>) {
+  wrap<T>(promise: Promise<T>) {
     this.promiseCount++;
-    return promise.then(() => this.promiseCount--, () => this.promiseCount--);
+    promise.then(() => this.promiseCount--, () => this.promiseCount--);
+    return promise;
   }
 
-  addPromises(...promises: Promise<any>[]) {
+  wrapAll(...promises: Promise<any>[]) {
     for(let promise of promises) {
-      this.addPromise(promise);
+      this.wrap(promise);
     }
   }
 }

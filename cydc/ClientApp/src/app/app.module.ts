@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatPaginatorIntl } from '@angular/material';
+import { LayoutModule } from '@angular/cdk/layout';
 
 import { MaterialModule } from './shared/material/material.module';
 
@@ -20,7 +22,8 @@ import { OrderComponent } from './foodOrder/create/create.component';
 import { OrderCreateDialog } from './foodOrder/create/create-dialog';
 import { MyFoodOrderComponent } from './foodOrder/my-food-order/my-food-order.component';
 import { AppPaginatorIntl } from './shared/utils/app-paginator-intl';
-import { MatPaginatorIntl } from '@angular/material';
+import { UsersComponent } from './admin/users/users.component';
+import { NotAdminComponent } from './admin/not-admin/not-admin.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +35,9 @@ import { MatPaginatorIntl } from '@angular/material';
     LoginComponent,
     LoggedOutComponent,
     OrderCreateDialog,
-    MyFoodOrderComponent, 
+    MyFoodOrderComponent,
+    UsersComponent,
+    NotAdminComponent, 
   ],
   entryComponents: [
     OrderCreateDialog
@@ -43,6 +48,7 @@ import { MatPaginatorIntl } from '@angular/material';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    LayoutModule, 
     MaterialModule, 
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
