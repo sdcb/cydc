@@ -21,6 +21,7 @@ import { OrderCreateDialog } from './foodOrder/create/create-dialog';
 import { MyFoodOrderComponent } from './foodOrder/my-food-order/my-food-order.component';
 import { AppPaginatorIntl } from './shared/utils/app-paginator-intl';
 import { MatPaginatorIntl } from '@angular/material';
+import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { MatPaginatorIntl } from '@angular/material';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    LayoutModule, 
     MaterialModule, 
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],

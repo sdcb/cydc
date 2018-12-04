@@ -21,8 +21,8 @@
       </ng-container>
 
       <ng-container matColumnDef="orderTime">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>订餐时间</th>
-        <td mat-cell *matCellDef="let item">{{item.orderTime | date:'yyyy年M月d日 H:mm'}}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>时间</th>
+        <td mat-cell *matCellDef="let item">{{item.orderTime | date: screenSize.sm ? 'yyyy-M-d' : 'yyyy-M-d H:mm'}}</td>
       </ng-container>
 
       <ng-container matColumnDef="menu">
@@ -43,8 +43,8 @@
       </ng-container>
 
       <ng-container matColumnDef="isPayed">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>是否付款</th>
-        <td mat-cell *matCellDef="let item">{{item.isPayed ? '✔' : ''}}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>付款</th>
+        <td mat-cell *matCellDef="let item">{{item.isPayed ? '✅' : '❌'}}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
