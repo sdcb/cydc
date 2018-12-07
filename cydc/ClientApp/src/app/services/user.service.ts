@@ -8,7 +8,7 @@ import { GlobalLoadingService } from './global-loading.service';
 })
 export class UserService {
   userStatus = new UserStatus();
-  loaded: boolean = false;
+  private loadingPromise: Promise<any> | undefined = undefined;
 
   constructor(
     private http: HttpClient,
@@ -18,11 +18,11 @@ export class UserService {
   }
 
   async loadUserStatus() {
-    if (this.loaded) {
-      return this.userStatus;
+    if (this.loadingPromise !== undefined) {
+      return await this.loadingPromise;
     } else {
-      this.userStatus = await this.loading.wrap(this.getUserStatusAsync());
-      this.loaded = true;
+      this.loadingPromise = this.loading.wrap(this.getUserStatusAsync());
+      this.userStatus = await this.loadingPromise;
       return this.userStatus;
     }
   }

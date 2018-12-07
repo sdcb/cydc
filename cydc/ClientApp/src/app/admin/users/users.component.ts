@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { AdminUserDto, AdminApiService, ApiDataSource, AdminUserQuery } from '../admin-api.service';
+import { AdminUserDto, AdminApiService, ApiDataSource, AdminUserQuery, BalanceOperator } from '../admin-api.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -11,27 +11,33 @@ import { AdminUserDto, AdminApiService, ApiDataSource, AdminUserQuery } from '..
 export class UsersComponent implements OnInit {
   displayedColumns = ["name", "email", "balance"];
   query = new AdminUserQuery();
-  dataSource: ApiDataSource<AdminUserDto, AdminUserQuery>;
-
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
-
-  @ViewChild(MatSort)
-  sort!: MatSort;
+  dataSource: ApiDataSource<AdminUserDto>;
 
   constructor(
     private userService: UserService,
-    private api: AdminApiService) {
-    this.dataSource = new ApiDataSource<AdminUserDto, AdminUserQuery>((p, s, t) => this.api.getUsers(p, s, t));
+    private api: AdminApiService,
+    private router: Router, private route: ActivatedRoute) {
+    this.dataSource = new ApiDataSource<AdminUserDto>(() => this.api.getUsers(this.query));
   }
 
   async ngOnInit() {
     await this.userService.ensureAdmin();
-
-    this.dataSource.loadData(this.query, this.paginator.pageIndex, this.paginator.pageSize);
-    this.paginator.page.subscribe(() => {
-      this.dataSource.loadData(this.query, this.paginator.pageIndex, this.paginator.pageSize);
+    this.route.queryParams.subscribe(p => {
+      console.log("subscribe...", p);
+      this.query.replaceWith(p);
+      this.dataSource.loadData();
     });
-    //this.dataSource.
+  }
+
+  async page(pageIndex: number, pageSize: number) {
+    this.query.pageIndex = pageIndex;
+    this.query.pageSize = pageSize;
+    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+  }
+
+  async applyOperator(operator: BalanceOperator) {
+    this.query.operator = operator;
+    this.query.resetPager();
+    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
   }
 }
