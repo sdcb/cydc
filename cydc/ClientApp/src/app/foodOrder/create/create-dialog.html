@@ -25,7 +25,7 @@
       </mat-radio-group>
     </div>
 
-    <div class="create-dialog-container">
+    <div class="create-dialog-container" *ngIf="userService.userStatus.isAdmin">
       <label class="dialog-label">点餐人: </label>
       <mat-radio-group [(ngModel)]="selected.isMe" name="isMe">
         <div class="container">

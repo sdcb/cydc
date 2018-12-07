@@ -76,7 +76,8 @@ namespace cydc.Controllers
                     Id = x.Id, 
                     UserName = x.OrderUser.UserName, 
                     OrderTime = x.OrderTime, 
-                    Menu = x.FoodMenu.Details, 
+                    Menu = x.FoodMenu.Title, 
+                    Details = x.FoodMenu.Details, 
                     Price = x.FoodMenu.Price, 
                     Comment = x.Comment, 
                     IsPayed = x.FoodOrderPayment != null

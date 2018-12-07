@@ -68,6 +68,7 @@ export interface FoodOrderItem {
   userName: string;
   orderTime: string;
   menu: string;
+  details: string;
   price: number;
   comment: string;
   isPayed: boolean;
