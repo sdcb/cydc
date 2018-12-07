@@ -28,7 +28,6 @@ export class UsersComponent implements OnInit {
   async ngOnInit() {
     await this.userService.ensureAdmin();
     this.route.queryParams.subscribe(p => {
-      console.log("subscribe...", p);
       this.query.replaceWith(p);
       this.dataSource.loadData();
     });

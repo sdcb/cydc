@@ -2,21 +2,45 @@
   <nav>
     <mat-toolbar class="mat-elevation-z2 mb-3">
       <mat-toolbar-row class="menu-container">
-        <button mat-button routerLinkActive="mat-primary" [routerLink]="['/welcome']">cydc</button>
-        <button mat-button routerLinkActive="mat-primary" [routerLink]="['/food-order/create']"
-                *ngIf="isLoggedIn">点餐</button>
-        <button mat-button routerLinkActive="mat-primary" [routerLink]="['/food-order/my']"
-                *ngIf="isLoggedIn">我的</button>
+        <a mat-button routerLinkActive="mat-primary" [routerLink]="['/welcome']">cydc</a>
+
+        <ng-container *ngIf="isLoggedIn">
+          <a mat-button routerLinkActive="mat-primary" [routerLink]="['/food-order/create']">点餐</a>
+          <a mat-button routerLinkActive="mat-primary" [routerLink]="['/food-order/my']">我的</a>
+        </ng-container>
+
         <span class="flex-fill"></span>
-        <button mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/users']"
-                *ngIf="isAdmin">用户</button>
-        <button mat-button [routerLink]="['/api/user/login']"
-                *ngIf="!isLoggedIn">登录</button>
-        <button mat-button color="warn" (click)="logout()" matTooltip="已登录为: {{userService.userStatus.name}}"
+
+        <!-- admin stuff here -->
+        <ng-container *ngIf="isAdmin && size.md">
+          <!-- small screen -->
+          <button mat-button [matMenuTriggerFor]="adminManageMenu">
+            管理
+          </button>
+          <mat-menu #adminManageMenu>
+            <ng-container *ngTemplateOutlet="adminButtons"></ng-container>
+          </mat-menu>
+        </ng-container>
+        <ng-container *ngIf="isAdmin && !size.md">
+          <!-- big screen -->
+          <ng-container *ngTemplateOutlet="adminButtons"></ng-container>
+        </ng-container>
+        <!-- admin stuff end -->
+
+        <a mat-button [routerLink]="['/api/user/login']"
+                *ngIf="!isLoggedIn">
+          登录
+        </a>
+        <a mat-button color="warn" (click)="logout()" matTooltip="已登录为: {{userService.userStatus.name}}"
                 *ngIf="isLoggedIn">
           退出
-        </button>
+        </a>
       </mat-toolbar-row>
     </mat-toolbar>
   </nav>
 </header>
+
+<ng-template #adminButtons>
+  <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/users']">用户管理</a>
+  <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/orders']">订单管理</a>
+</ng-template>
