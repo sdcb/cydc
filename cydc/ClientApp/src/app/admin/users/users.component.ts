@@ -12,7 +12,7 @@ import { debounce } from 'rxjs/operators';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  displayedColumns = ["name", "email", "balance"];
+  displayedColumns = ["name", "email", "balance", "action"];
   query = new AdminUserQuery();
   dataSource: ApiDataSource<AdminUserDto>;
   nameInput = new FormControl();
@@ -50,5 +50,9 @@ export class UsersComponent implements OnInit {
     this.query.name = name;
     this.query.resetPager();
     await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+  }
+
+  addAmount(user: AdminUserDto) {
+    console.log(user);
   }
 }

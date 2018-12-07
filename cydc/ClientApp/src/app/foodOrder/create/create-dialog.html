@@ -26,12 +26,12 @@
     </div>
 
     <div class="create-dialog-container" *ngIf="userService.userStatus.isAdmin">
-      <label class="dialog-label">点餐人: </label>
+      <label class="dialog-label" matTooltip="仅管理员，普通用户不会显示点餐人">点餐人: </label>
       <mat-radio-group [(ngModel)]="selected.isMe" name="isMe">
         <div class="container">
           <div class="row">
             <mat-radio-button class="col-6 col-md-4" [value]="true">自己</mat-radio-button>
-            <mat-radio-button class="col-6 col-md-4" [value]="false" matTooltip="扣自己钱">别人</mat-radio-button>
+            <mat-radio-button class="col-6 col-md-4" [value]="false" matTooltip="记在别人帐上">别人</mat-radio-button>
             <div class="col-12">
               <mat-form-field *ngIf="!selected.isMe">
                 <input matInput [matAutocomplete]="auto" placeholder="别人姓名" name="otherPersonName"
