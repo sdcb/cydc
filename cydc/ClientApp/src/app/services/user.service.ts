@@ -44,7 +44,7 @@ export class UserService {
   }
 
   async logout() {
-    await this.http.post("/user/logout", {});
+    await this.http.get("/api/user/logout").toPromise();
     await this.router.navigateByUrl("/user/logged-out");
     this.userStatus = new UserStatus();
   }
