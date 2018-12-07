@@ -8,6 +8,7 @@ import { OrderComponent } from './foodOrder/create/create.component';
 import { MyFoodOrderComponent } from './foodOrder/my-food-order/my-food-order.component';
 import { UsersComponent } from './admin/users/users.component';
 import { NotAdminComponent } from './admin/not-admin/not-admin.component';
+import { OrdersComponent } from './admin/orders/orders.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: "full",  },
@@ -16,7 +17,9 @@ export const routes: Routes = [
   { path: 'food-order/my', component: MyFoodOrderComponent }, 
   { path: 'api/user/login', component: LoginComponent, resolve: { url: loginProvider } },
   { path: 'user/logged-out', component: LoggedOutComponent, },
+
   { path: 'admin/users', component: UsersComponent, },
-  { path: 'admin/not-admin', component: NotAdminComponent, }, 
+  { path: 'admin/orders', component: OrdersComponent, }, 
+  { path: 'admin/not-admin', component: NotAdminComponent, },
   { path: '**', component: NotFoundComponent }, 
 ];
