@@ -115,6 +115,17 @@ namespace cydc.Controllers
             };
             return await _db.SaveChangesAsync();
         }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<List<string>> SearchName(string name)
+        {
+            return await _db.AspNetUsers
+                .Where(x => x.NormalizedUserName.Contains(name.ToUpperInvariant()))
+                .OrderByDescending(x => x.FoodOrder.Count)
+                .Select(x => x.UserName)
+                .Take(5)
+                .ToListAsync();
+        }
     }
 
     public class FoodOrderCreateDto

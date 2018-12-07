@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user.service';
 import { FoodOrderApiService, FoodTaste, OrderAddress, OrderCreateDto, FoodOrderMenu } from '../food-order-api.service';
+import { FormControl } from '@angular/forms';
+import { debounce } from 'rxjs/operators';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-order-create-dialog',
@@ -11,6 +14,7 @@ import { FoodOrderApiService, FoodTaste, OrderAddress, OrderCreateDto, FoodOrder
 export class OrderCreateDialog implements OnInit {
   addresses: OrderAddress[] = [];
   tastes: FoodTaste[] = [];
+  personNames: string[] = [];
   selected: FoodOrderSelectedDto;
 
   constructor(
@@ -30,6 +34,11 @@ export class OrderCreateDialog implements OnInit {
       this.tastes = v;
       this.selected.taste = v[0];
     });
+    this.selected.otherPersonName.valueChanges.pipe(debounce(() => timer(500))).subscribe(val => {
+      this.api.searchPersonNames(val).subscribe(personNames => {
+        this.personNames = personNames;
+      });
+    });
   }
 
   cancel() {
@@ -47,7 +56,7 @@ export class FoodOrderSelectedDto {
   taste: FoodTaste | undefined;
   comment: string | undefined;
   isMe: boolean = true;
-  otherPersonName: string | undefined;
+  otherPersonName = new FormControl();
 
   constructor(public menu: FoodOrderMenu) {
   }
@@ -55,7 +64,7 @@ export class FoodOrderSelectedDto {
   validate() {
     if (this.address === undefined) return false;
     if (this.taste === undefined) return false;
-    if (!this.isMe && this.otherPersonName === undefined) return false;
+    if (!this.isMe && !this.otherPersonName.value) return false;
     return true;
   }
 
@@ -66,7 +75,7 @@ export class FoodOrderSelectedDto {
       menuId: this.menu.id,
       comment: this.comment,
       isMe: this.isMe,
-      otherPersonName: this.otherPersonName
+      otherPersonName: this.otherPersonName.value
     };
   }
 }

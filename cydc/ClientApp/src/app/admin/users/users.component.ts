@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 import { UserService } from 'src/app/services/user.service';
 import { AdminUserDto, AdminApiService, ApiDataSource, AdminUserQuery, BalanceOperator } from '../admin-api.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { fromEvent, timer } from 'rxjs';
+import { timer } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
 

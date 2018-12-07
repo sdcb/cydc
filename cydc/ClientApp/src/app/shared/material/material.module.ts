@@ -12,7 +12,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
-import { MatOptionModule, MatSelectModule } from '@angular/material';
+import { MatOptionModule, MatSelectModule, MatAutocompleteModule } from '@angular/material';
 
 const materialModules = [
   NgbTooltipModule,
@@ -30,7 +30,8 @@ const materialModules = [
   MatProgressSpinnerModule,
   MatIconModule,
   MatOptionModule,
-  MatSelectModule, 
+  MatSelectModule,
+  MatAutocompleteModule, 
 ];
 
 @NgModule({

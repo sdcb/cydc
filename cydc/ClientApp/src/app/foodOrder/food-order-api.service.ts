@@ -1,5 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,11 @@ export class FoodOrderApiService {
 
   getMyBalance() {
     return this.http.get<number>("/api/foodOrder/MyBalance");
+  }
+
+  searchPersonNames(name: string) {
+    if (!name || name === "") return of([]);
+    return this.http.get<string[]>(`/api/foodOrder/searchName?name=${encodeURIComponent(name)}`)
   }
 }
 
