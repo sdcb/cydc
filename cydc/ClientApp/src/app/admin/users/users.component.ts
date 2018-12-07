@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { AdminUserDto, AdminApiService, ApiDataSource, AdminUserQuery, BalanceOperator } from '../admin-api.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { fromEvent, timer } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { debounce } from 'rxjs/operators';
 
 @Component({
   selector: 'app-users',
@@ -12,12 +15,14 @@ export class UsersComponent implements OnInit {
   displayedColumns = ["name", "email", "balance"];
   query = new AdminUserQuery();
   dataSource: ApiDataSource<AdminUserDto>;
+  nameInput = new FormControl();
 
   constructor(
     private userService: UserService,
     private api: AdminApiService,
     private router: Router, private route: ActivatedRoute) {
     this.dataSource = new ApiDataSource<AdminUserDto>(() => this.api.getUsers(this.query));
+    this.nameInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyName(n));
   }
 
   async ngOnInit() {
@@ -37,6 +42,12 @@ export class UsersComponent implements OnInit {
 
   async applyOperator(operator: BalanceOperator) {
     this.query.operator = operator;
+    this.query.resetPager();
+    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+  }
+
+  async applyName(name: string) {
+    this.query.name = name;
     this.query.resetPager();
     await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
   }
