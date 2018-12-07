@@ -31,6 +31,11 @@ namespace cydc.Controllers
 
         public async Task<IActionResult> Create([FromBody]FoodOrderCreateDto order)
         {
+            if (!User.IsInRole("Admin") && order.OtherPersonName != null)
+            {
+                return BadRequest("Only admin can specify OtherPersonName.");
+            }
+
             FoodOrder foodOrder = new FoodOrder();
             var menu = await _db.FoodMenu.SingleAsync(x => x.Id == order.MenuId);
             var dateNow = DateTime.Now;

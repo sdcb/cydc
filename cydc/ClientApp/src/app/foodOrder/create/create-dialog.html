@@ -19,7 +19,7 @@
       <mat-radio-group [(ngModel)]="selected.taste" name="taste">
         <div class="container">
           <div class="row">
-            <mat-radio-button class="col-6 col-md-3" *ngFor="let taste of tastes" [value]="taste">{{taste.name}}</mat-radio-button>
+            <mat-radio-button class="col-6 col-md-4" *ngFor="let taste of tastes" [value]="taste">{{taste.name}}</mat-radio-button>
           </div>
         </div>
       </mat-radio-group>
@@ -30,8 +30,8 @@
       <mat-radio-group [(ngModel)]="selected.isMe" name="isMe">
         <div class="container">
           <div class="row">
-            <mat-radio-button class="col-6 col-md-3" [value]="true">自己</mat-radio-button>
-            <mat-radio-button class="col-6 col-md-3" [value]="false" matTooltip="扣自己钱">别人</mat-radio-button>
+            <mat-radio-button class="col-6 col-md-4" [value]="true">自己</mat-radio-button>
+            <mat-radio-button class="col-6 col-md-4" [value]="false" matTooltip="扣自己钱">别人</mat-radio-button>
             <mat-form-field *ngIf="!selected.isMe">
               <input matInput placeholder="姓名" name="otherPersonName" [(ngModel)]="selected.otherPersonName" />
             </mat-form-field>
@@ -45,7 +45,7 @@
       <mat-radio-group [(ngModel)]="selected.address" name="address">
         <div class="container">
           <div class="row">
-            <mat-radio-button class="col-6 col-md-3" *ngFor="let address of addresses" [value]="address">{{address.location}}</mat-radio-button>
+            <mat-radio-button class="col-6 col-md-4" *ngFor="let address of addresses" [value]="address">{{address.location}}</mat-radio-button>
           </div>
         </div>
       </mat-radio-group>
