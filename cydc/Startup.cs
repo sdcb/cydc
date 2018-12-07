@@ -46,7 +46,14 @@ namespace cydc
             {
                 o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 o.DefaultChallengeScheme = YeluCasSsoDefaults.AuthenticationScheme;
-            }).AddCookie().AddYeluCasSso(o =>
+            }).AddCookie(o =>
+            {
+                o.Events.OnRedirectToLogin = ctx =>
+                {
+                    ctx.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
+            }).AddYeluCasSso(o =>
             {
                 o.YeluCasSsoEndpoint = Configuration["YeluCasSsoEndpoint"];
                 o.Events.OnCreatingClaims = OnCreatingClaims;

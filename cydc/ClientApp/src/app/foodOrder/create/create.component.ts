@@ -45,6 +45,7 @@ export class OrderComponent implements OnInit {
   async showConfirmDialog() {
     const createDialog = this.dialogService.open(OrderCreateDialog, {
       data: this.selectedMenu,
+      width: "450px"
     });
     let createDto = await createDialog.afterClosed().toPromise<OrderCreateDto | undefined>();
     if (createDto === undefined) return;
