@@ -4,6 +4,7 @@ import { FoodOrderItem, FoodOrderApiService } from 'src/app/foodOrder/food-order
 import { UserService } from 'src/app/services/user.service';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
+import { AdminApiService } from '../admin-api.service';
 
 @Component({
   selector: 'app-orders',
@@ -12,7 +13,6 @@ import { ScreenSizeService } from 'src/app/services/screen-size.service';
 })
 export class OrdersComponent implements OnInit {
   dataSource = new MatTableDataSource<FoodOrderItem>();
-  balance!: number;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -21,7 +21,8 @@ export class OrdersComponent implements OnInit {
   sort!: MatSort;
 
   constructor(
-    private api: FoodOrderApiService,
+    private foodOrderApi: FoodOrderApiService,
+    private api: AdminApiService, 
     private userService: UserService,
     private loading: GlobalLoadingService,
     public screenSize: ScreenSizeService) {
@@ -32,16 +33,10 @@ export class OrdersComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    this.dataSource.data = await this.loading.wrap(this.api.getMyFoodOrder().toPromise());
-    this.api.getMyBalance().subscribe(v => this.balance = v);
+    this.dataSource.data = await this.loading.wrap(this.foodOrderApi.getMyFoodOrder().toPromise());
   }
 
   get displayedColumns() {
-    if (this.screenSize.md)
-      return ["orderTime", "menu", "comment", "price", "isPayed"];
-    else if (this.screenSize.lg)
-      return ["id", "orderTime", "menu", "comment", "price", "isPayed"]
-    else
-      return ["id", "userName", "orderTime", "menu", "comment", "price", "isPayed"];
+    return this.foodOrderApi.foodOrderColumns();
   };
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace cydc.Controllers.AdmimDtos
 {
-    public class UserBalanceSearchDto : PagedQuery
+    public class AdminUserQuery : PagedQuery
     {
         public string Name { get; set; }
 

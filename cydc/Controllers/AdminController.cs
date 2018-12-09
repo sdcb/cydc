@@ -16,9 +16,14 @@ namespace cydc.Controllers
             _db = db;
         }
 
-        public async Task<PagedResult<AdminUserDto>> Users(UserBalanceSearchDto searchDto)
+        public async Task<PagedResult<AdminUserDto>> Users(AdminUserQuery searchDto)
         {
             return await searchDto.DoQuery(_db);
+        }
+
+        public async Task<PagedResult<FoodOrderDto>> Orders(FoodOrderQuery query)
+        {
+            return await query.DoQuery(_db);
         }
     }
 }

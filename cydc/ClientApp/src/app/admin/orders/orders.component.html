@@ -8,6 +8,17 @@
     </div>
   </div>
   <div class="col-12">
+    <div class="container table-search-container">
+      <div class="row">
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <input matInput placeholder="用户名" [formControl]="nameInput"
+                   [value]="query.name"/>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
     <table mat-table matSort [dataSource]="dataSource" class="w100">
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>

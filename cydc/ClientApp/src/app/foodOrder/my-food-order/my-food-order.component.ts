@@ -39,11 +39,6 @@ export class MyFoodOrderComponent implements OnInit {
   }
 
   get displayedColumns() {
-    if (this.screenSize.md)
-      return ["orderTime", "menu", "comment", "price", "isPayed"];
-    else if (this.screenSize.lg)
-      return ["id", "orderTime", "menu", "comment", "price", "isPayed"]
-    else
-      return ["id", "userName", "orderTime", "menu", "comment", "price", "isPayed"];
+    return this.api.foodOrderColumns;
   };
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using cydc.Controllers.AdmimDtos;
 using cydc.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -81,7 +82,7 @@ namespace cydc.Controllers
             return Ok(_db.FoodOrder
                 .Where(x => x.OrderUserId == User.Identity.Name)
                 .OrderByDescending(x => x.OrderTime)
-                .Select(x => new
+                .Select(x => new FoodOrderDto
                 {
                     Id = x.Id, 
                     UserName = x.OrderUser.UserName, 

@@ -1,13 +1,15 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
+import { ScreenSizeService } from '../services/screen-size.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FoodOrderApiService {
   constructor(
-    private http: HttpClient) { }
+    private http: HttpClient,
+    private size: ScreenSizeService) { }
 
   getSiteNotification() {
     return this.http.get("/api/foodOrder/siteNotification", { responseType: "text" });
@@ -41,6 +43,15 @@ export class FoodOrderApiService {
     if (!name || name === "") return of([]);
     return this.http.get<string[]>(`/api/foodOrder/searchName?name=${encodeURIComponent(name)}`)
   }
+
+  foodOrderColumns() {
+    if (this.size.md)
+      return ["orderTime", "menu", "comment", "price", "isPayed"];
+    else if (this.size.lg)
+      return ["id", "orderTime", "menu", "comment", "price", "isPayed"]
+    else
+      return ["id", "userName", "orderTime", "menu", "comment", "price", "isPayed"];
+  };
 }
 
 export type OrderAddress = {
