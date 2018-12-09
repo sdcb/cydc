@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { timer } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
+import { ScreenSizeService } from 'src/app/services/screen-size.service';
 
 @Component({
   selector: 'app-users',
@@ -12,7 +13,7 @@ import { debounce } from 'rxjs/operators';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  displayedColumns = ["name", "email", "balance", "action"];
+  displayedColumns = ["name", "email", "balance"];
   query = new AdminUserQuery();
   dataSource: ApiDataSource<AdminUserDto>;
   nameInput = new FormControl();
@@ -20,7 +21,8 @@ export class UsersComponent implements OnInit {
   constructor(
     private userService: UserService,
     private api: AdminApiService,
-    private router: Router, private route: ActivatedRoute) {
+    private router: Router, private route: ActivatedRoute,
+    private size: ScreenSizeService) {
     this.dataSource = new ApiDataSource<AdminUserDto>(() => this.api.getUsers(this.query));
     this.nameInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyName(n));
   }
@@ -49,9 +51,5 @@ export class UsersComponent implements OnInit {
     this.query.name = name;
     this.query.resetPager();
     await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
-  }
-
-  addAmount(user: AdminUserDto) {
-    console.log(user);
   }
 }
