@@ -1,7 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { AdminUserDto, AdminApiService, ApiDataSource, AdminUserQuery } from '../admin-api.service';
+import { AdminUserDto, AdminApiService, ApiDataSource, AdminUserQuery, BalanceOperator } from '../admin-api.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { timer } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { debounce } from 'rxjs/operators';
 
 @Component({
   selector: 'app-users',
@@ -9,31 +12,46 @@ import { AdminUserDto, AdminApiService, ApiDataSource, AdminUserQuery } from '..
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  displayedColumns = ["name", "email", "balance"];
+  displayedColumns = ["name", "email", "balance", "action"];
   query = new AdminUserQuery();
-  dataSource: ApiDataSource<AdminUserDto, AdminUserQuery>;
-
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
-
-  @ViewChild(MatSort)
-  sort!: MatSort;
+  dataSource: ApiDataSource<AdminUserDto>;
+  nameInput = new FormControl();
 
   constructor(
     private userService: UserService,
-    private api: AdminApiService) {
-    this.dataSource = new ApiDataSource<AdminUserDto, AdminUserQuery>(s => this.api.getUsers(s));
+    private api: AdminApiService,
+    private router: Router, private route: ActivatedRoute) {
+    this.dataSource = new ApiDataSource<AdminUserDto>(() => this.api.getUsers(this.query));
+    this.nameInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyName(n));
   }
 
   async ngOnInit() {
     await this.userService.ensureAdmin();
-
-    this.dataSource.loadData(this.query);
-    this.paginator.page.subscribe(() => {
-      this.query.pageIndex = this.paginator.pageIndex;
-      this.query.pageSize = this.paginator.pageSize;
-      this.dataSource.loadData(this.query);
+    this.route.queryParams.subscribe(p => {
+      this.query.replaceWith(p);
+      this.dataSource.loadData();
     });
-    //this.dataSource.
+  }
+
+  async page(pageIndex: number, pageSize: number) {
+    this.query.pageIndex = pageIndex;
+    this.query.pageSize = pageSize;
+    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+  }
+
+  async applyOperator(operator: BalanceOperator) {
+    this.query.operator = operator;
+    this.query.resetPager();
+    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+  }
+
+  async applyName(name: string) {
+    this.query.name = name;
+    this.query.resetPager();
+    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+  }
+
+  addAmount(user: AdminUserDto) {
+    console.log(user);
   }
 }

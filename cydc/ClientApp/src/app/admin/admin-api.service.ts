@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { DataSource } from '@angular/cdk/table';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { finalize } from 'rxjs/operators';
-import { RequestOptions } from '@angular/http';
+import { finalize, map } from 'rxjs/operators';
+import { Params } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,31 +13,70 @@ export class AdminApiService {
   constructor(private http: HttpClient) { }
 
   getUsers(query: AdminUserQuery) {
-    let params = new HttpParams({
-      fromObject: {
-        skip: query.skip.toString(),
-        take: query.take.toString(),
-        operator: query.operator.toString(), 
-      }
+    return this.http.get<PagedResult<AdminUserDto>>(`/api/admin/users`, {
+      params: <Params>query.toDto()
     });
-    if (query.name) params.append("name", query.name);
-    return this.http.get<AdminUserDto[]>("/api/admin/users", { params: params});
   }
 }
 
-export class PagedQuery {
-  get skip() { return this.pageIndex * this.pageSize; }
-  get take() { return this.pageSize; }
+export interface PagedDto {
+  page: string;
+  pageSize: string;
+}
 
-  constructor(
-    public pageIndex: number = 0,
-    public pageSize: number = 12) {
+export interface UserQueryDto extends PagedDto {
+  operator: string;
+  name: string;
+}
+
+export class PagedQuery {
+  pageIndex!: number;
+  pageSize!: number;
+
+  constructor() {
+    this.reset();
+  }
+
+  page() { return this.pageIndex + 1; }
+
+  replaceWith(p: Partial<PagedDto>) {
+    this.pageIndex = p.page ? parseInt(p.page) - 1 : 0;
+    this.pageSize = parseInt(p.pageSize!) || 12;
+  }
+
+  toDto(): PagedDto {
+    let o = <PagedDto>{};
+    if (this.pageIndex !== 0) o.page = this.page().toString();
+    if (this.pageSize !== 12) o.pageSize = this.pageSize.toString();
+    return o;
+  }
+
+  protected reset() {
+    this.pageIndex = 0;
+    this.pageSize = 12;
   }
 }
 
 export class AdminUserQuery extends PagedQuery {
-  name: string | undefined;
-  operator: BalanceOperator = BalanceOperator.LessThanZero;
+  name: string = "";
+  operator: BalanceOperator = BalanceOperator.All;
+
+  replaceWith(p: Partial<UserQueryDto>) {
+    super.replaceWith(p);
+    this.name = p.name || "";
+    this.operator = parseInt(p.operator!) || BalanceOperator.All;    
+  }
+
+  toDto(): UserQueryDto {
+    let o = <UserQueryDto>super.toDto();
+    if (this.name !== "") o.name = this.name;
+    if (this.operator !== BalanceOperator.All) o.operator = this.operator.toString();
+    return o;
+  }
+
+  resetPager() {
+    super.reset();
+  }
 }
 
 export type AdminUserDto = {
@@ -47,6 +86,11 @@ export type AdminUserDto = {
   balance: number;
 }
 
+export class PagedResult<T> {
+  pagedData: T[] = [];
+  totalCount: number = 0;
+}
+
 export enum BalanceOperator {
   All = 0,
   LessThanZero = 1,
@@ -54,26 +98,30 @@ export enum BalanceOperator {
   GreaterThanZero = 3, 
 }
 
-export class ApiDataSource<T, S> extends DataSource<T> {
-  dataSubject = new BehaviorSubject<T[]>([]);
+export class ApiDataSource<TData> extends DataSource<TData> {
+  dataSubject = new BehaviorSubject(new PagedResult<TData>());
+  dataCount: number = 0;
   loading = false;
 
-  constructor(private searchApi: (searchDto: S) => Observable<T[]>) {
+  constructor(private searchApi: () => Observable<PagedResult<TData>>) {
     super();
   }
 
-  connect(collectionViewer: CollectionViewer): Observable<T[]> {
-    return this.dataSubject.asObservable();
+  connect(collectionViewer: CollectionViewer): Observable<TData[]> {
+    return this.dataSubject.pipe(map(x => x.pagedData));
   }
 
   disconnect(collectionViewer: CollectionViewer) {
     this.dataSubject.complete();
   }
 
-  loadData(searchDto: S) {
+  loadData() {
     this.loading = true;
-    this.searchApi(searchDto)
+    this.searchApi()
       .pipe(finalize(() => this.loading = false))
-      .subscribe(data => this.dataSubject.next(data));
+      .subscribe(data => {
+        this.dataSubject.next(data);
+        this.dataCount = data.totalCount;
+      });
   }
 }
