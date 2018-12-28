@@ -4,7 +4,7 @@
       <div class="row">
         <h2 class="d-inline">点餐列表</h2>
         <span class="flex-fill"></span>
-        <h2 class="d-inline">余额：{{balance}}元</h2>
+        <h2 class="d-inline">余额：{{balance === undefined ? '--' : balance}}元</h2>
       </div>
     </div>
   </div>
@@ -21,13 +21,15 @@
       </ng-container>
 
       <ng-container matColumnDef="orderTime">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>订餐时间</th>
-        <td mat-cell *matCellDef="let item">{{item.orderTime | date:'yyyy年M月d日 H:mm'}}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>时间</th>
+        <td mat-cell *matCellDef="let item" [matTooltip]="item.orderTime | date: 'yyyy-M-d H:mm'"
+            >{{item.orderTime | date: screenSize.sm ? 'yyyy-M-d' : 'yyyy-M-d H:mm'}}</td>
       </ng-container>
 
       <ng-container matColumnDef="menu">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>菜单</th>
-        <td mat-cell *matCellDef="let item">{{item.menu}}</td>
+        <td mat-cell *matCellDef="let item" [matTooltip]="item.details"
+            >{{screenSize.sm ? item.menu : item.details}}</td>
       </ng-container>
 
       <ng-container matColumnDef="comment">
@@ -43,14 +45,15 @@
       </ng-container>
 
       <ng-container matColumnDef="isPayed">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>是否付款</th>
-        <td mat-cell *matCellDef="let item">{{item.isPayed ? '✔' : ''}}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>付款</th>
+        <td mat-cell *matCellDef="let item" [matTooltip]="item.isPayed ? '已付' : '未付'"
+            >{{item.isPayed ? '✅' : '❌'}}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[12,20,50,100]" showFirstLastButtons itemsPerPageLabel="每页条数:"></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[12,20,50,100]" showFirstLastButtons></mat-paginator>
   </div>
 </div>

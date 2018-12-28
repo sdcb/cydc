@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using cydc.Controllers.AdmimDtos;
 using cydc.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -31,11 +32,21 @@ namespace cydc.Controllers
 
         public async Task<IActionResult> Create([FromBody]FoodOrderCreateDto order)
         {
+            if (!User.IsInRole("Admin") && !order.IsMe)
+            {
+                return BadRequest("Only admin can specify OtherPersonName.");
+            }
+
+            string userId = await GetUserIdFromUserName(order.IsMe, order.OtherPersonName);
+            if (userId == null)
+            {
+                return BadRequest($"User {order.OtherPersonName} cannot found.");
+            }
+
             FoodOrder foodOrder = new FoodOrder();
             var menu = await _db.FoodMenu.SingleAsync(x => x.Id == order.MenuId);
             var dateNow = DateTime.Now;
 
-            string userId = await GetUserIdFromUserName(order.IsMe, order.OtherPersonName);
             foodOrder.AccountDetails.Add(new AccountDetails
             {
                 UserId = userId,
@@ -46,7 +57,7 @@ namespace cydc.Controllers
             foodOrder.FoodOrderClientInfo = new FoodOrderClientInfo
             {
                 Ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-                UserAgent = Request.Headers["User-Agent"]
+                UserAgent = $"{Request.Host}@{Request.Headers["User-Agent"]}"
             };
 
             foodOrder.OrderUserId = userId;
@@ -71,12 +82,13 @@ namespace cydc.Controllers
             return Ok(_db.FoodOrder
                 .Where(x => x.OrderUserId == User.Identity.Name)
                 .OrderByDescending(x => x.OrderTime)
-                .Select(x => new
+                .Select(x => new FoodOrderDto
                 {
                     Id = x.Id, 
                     UserName = x.OrderUser.UserName, 
                     OrderTime = x.OrderTime, 
-                    Menu = x.FoodMenu.Details, 
+                    Menu = x.FoodMenu.Title, 
+                    Details = x.FoodMenu.Details, 
                     Price = x.FoodMenu.Price, 
                     Comment = x.Comment, 
                     IsPayed = x.FoodOrderPayment != null
@@ -95,7 +107,7 @@ namespace cydc.Controllers
         private async Task<string> GetUserIdFromUserName(bool isMe, string userName)
         {
             if (isMe) return User.Identity.Name;
-            return (await _db.AspNetUsers.FirstAsync(x => x.UserName == userName)).Id;
+            return (await _db.AspNetUsers.FirstOrDefaultAsync(x => x.UserName == userName))?.Id;
         }
 
         private async Task<int> AutoPay([FromBody] FoodOrder order)
@@ -108,6 +120,17 @@ namespace cydc.Controllers
                 PayedTime = DateTime.Now
             };
             return await _db.SaveChangesAsync();
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<List<string>> SearchName(string name)
+        {
+            return await _db.AspNetUsers
+                .Where(x => x.NormalizedUserName.Contains(name.ToUpperInvariant()))
+                .OrderByDescending(x => x.FoodOrder.Count)
+                .Select(x => x.UserName)
+                .Take(5)
+                .ToListAsync();
         }
     }
 

@@ -4,6 +4,8 @@ import { UserService } from 'src/app/services/user.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { GlobalLoadingService } from 'src/app/services/global-loading.service';
+import { ScreenSizeService } from 'src/app/services/screen-size.service';
 
 @Component({
   selector: 'app-my-food-order',
@@ -11,9 +13,8 @@ import { MatSort } from '@angular/material/sort';
   styleUrls: ['./my-food-order.component.css']
 })
 export class MyFoodOrderComponent implements OnInit {
-  displayedColumns = ["id", "orderTime", "menu", "comment", "price", "isPayed"];
   dataSource = new MatTableDataSource<FoodOrderItem>();
-  balance = NaN;
+  balance!: number;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -21,10 +22,11 @@ export class MyFoodOrderComponent implements OnInit {
   @ViewChild(MatSort)
   sort!: MatSort;
 
-
   constructor(
     private api: FoodOrderApiService,
-    private userService: UserService) {
+    private userService: UserService,
+    private loading: GlobalLoadingService,
+    public screenSize: ScreenSizeService) {
   }
 
   async ngOnInit() {
@@ -32,10 +34,11 @@ export class MyFoodOrderComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    this.api.getMyFoodOrder().subscribe(v => {
-      this.dataSource.data = v;
-    });
-
+    this.dataSource.data = await this.loading.wrap(this.api.getMyFoodOrder().toPromise());
     this.api.getMyBalance().subscribe(v => this.balance = v);
   }
+
+  get displayedColumns() {
+    return this.api.foodOrderColumns();
+  };
 }

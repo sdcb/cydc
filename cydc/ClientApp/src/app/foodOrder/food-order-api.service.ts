@@ -1,12 +1,15 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
+import { ScreenSizeService } from '../services/screen-size.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FoodOrderApiService {
   constructor(
-    private http: HttpClient) { }
+    private http: HttpClient,
+    private size: ScreenSizeService) { }
 
   getSiteNotification() {
     return this.http.get("/api/foodOrder/siteNotification", { responseType: "text" });
@@ -25,7 +28,7 @@ export class FoodOrderApiService {
   }
 
   create(dto: OrderCreateDto) {
-    return this.http.post("/api/foodOrder/create", dto);
+    return this.http.post<void>("/api/foodOrder/create", dto);
   }
 
   getMyFoodOrder() {
@@ -35,6 +38,20 @@ export class FoodOrderApiService {
   getMyBalance() {
     return this.http.get<number>("/api/foodOrder/MyBalance");
   }
+
+  searchPersonNames(name: string) {
+    if (!name || name === "") return of([]);
+    return this.http.get<string[]>(`/api/foodOrder/searchName?name=${encodeURIComponent(name)}`)
+  }
+
+  foodOrderColumns() {
+    if (this.size.md)
+      return ["orderTime", "menu", "comment", "price", "isPayed"];
+    else if (this.size.lg)
+      return ["id", "orderTime", "menu", "comment", "price", "isPayed"]
+    else
+      return ["id", "userName", "orderTime", "menu", "comment", "price", "isPayed"];
+  };
 }
 
 export type OrderAddress = {
@@ -68,6 +85,7 @@ export interface FoodOrderItem {
   userName: string;
   orderTime: string;
   menu: string;
+  details: string;
   price: number;
   comment: string;
   isPayed: boolean;

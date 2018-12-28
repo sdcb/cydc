@@ -1,0 +1,70 @@
+<div class="row mat-elevation-z2">
+  <div class="col-12">
+    <div class="container">
+      <div class="row">
+        <h2 class="d-inline">用户列表</h2>
+        <span class="flex-fill"></span>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="container table-search-container">
+      <div class="row">
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <input matInput placeholder="用户名" [formControl]="nameInput"
+                   [value]="query.name" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <mat-select #operator placeholder="余额" required
+                        [value]="query.operator"
+                        (selectionChange)="applyOperator(operator.value)">
+              <mat-option [value]="0">全部</mat-option>
+              <mat-option [value]="1">&lt;0</mat-option>
+              <mat-option [value]="2">=0</mat-option>
+              <mat-option [value]="3">&gt;0</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <table mat-table matSort [dataSource]="dataSource" class="w100">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let item">{{item.id}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>名字</th>
+        <td mat-cell *matCellDef="let item">
+          <a [routerLink]="['/admin/orders', {userName: item.name}]" [matTooltip]="item.id">{{item.name}}</a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>邮箱</th>
+        <td mat-cell *matCellDef="let item">{{item.email}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="balance">
+        <th mat-header-cell *matHeaderCellDef>余额</th>
+        <td mat-cell *matCellDef="let item">{{item.balance}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>操作</th>
+        <td mat-cell *matCellDef="let item"></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator #pager [pageSizeOptions]="[12,20,50,100]" [length]="dataSource.dataCount" (page)="page(pager.pageIndex, pager.pageSize)"
+                   showFirstLastButtons></mat-paginator>
+  </div>
+</div>
