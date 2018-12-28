@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
-import { AdminUserDto, AdminApiService, AdminUserQuery, BalanceOperator } from '../admin-api.service';
+import { AdminApiService } from '../admin-api.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { timer } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
 import { ApiDataSource } from 'src/app/shared/utils/paged-query';
+import { AdminUserQuery, AdminUserDto, BalanceOperator } from './admin-user-dtos';
 
 @Component({
   selector: 'app-users',

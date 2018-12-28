@@ -13,12 +13,12 @@ export class PagedResult<T> {
   totalCount: number = 0;
 }
 
-export class PagedQuery {
+export class PagedQuery<T extends PagedDto> {
   pageIndex!: number;
   pageSize!: number;
 
   constructor() {
-    this.reset();
+    this.resetPager();
   }
 
   page() { return this.pageIndex + 1; }
@@ -35,7 +35,7 @@ export class PagedQuery {
     return o;
   }
 
-  protected reset() {
+  resetPager() {
     this.pageIndex = 0;
     this.pageSize = 12;
   }
