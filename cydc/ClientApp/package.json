@@ -8,7 +8,8 @@
     "build:ssr": "ng run cydc:server:dev",
     "test": "ng test --browsers ChromeHeadless",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "updateBuild": "node ./replace-build.js"
   },
   "private": true,
   "dependencies": {
@@ -53,7 +54,8 @@
     "karma-coverage-istanbul-reporter": "~2.0.4",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
-    "typescript": "~3.1.6"
+    "typescript": "~3.1.6",
+    "replace-in-file": "3.4.2"
   },
   "optionalDependencies": {
     "node-sass": "^4.9.3",
