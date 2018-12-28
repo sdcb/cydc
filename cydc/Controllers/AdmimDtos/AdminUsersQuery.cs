@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
+using Newtonsoft.Json;
 
 namespace cydc.Controllers.AdmimDtos
 {
@@ -28,7 +30,7 @@ namespace cydc.Controllers.AdmimDtos
                 query = query.Where(x => x.Name.Contains(Name));
             query = ByOperator(query, Operator);
 
-            return ToPagedResultAsync(query);
+            return query.ToPagedResultAsync(this);
         }
 
         private static IQueryable<AdminUserDto> ByOperator(IQueryable<AdminUserDto> query, SearchUserBalanceOperator op)
@@ -58,12 +60,15 @@ namespace cydc.Controllers.AdmimDtos
         public int Skip => (Page - 1) * PageSize;
 
         public int Take => PageSize;
+    }
 
-        public async Task<PagedResult<T>> ToPagedResultAsync<T>(IQueryable<T> query)
+    public static class PagedQueryExtensions
+    {
+        public static async Task<PagedResult<T>> ToPagedResultAsync<T>(this IQueryable<T> query, PagedQuery pagedQuery)
         {
             return new PagedResult<T>
             {
-                PagedData = await query.Skip(Math.Max(0, Skip)).Take(Math.Min(Take, 100)).ToListAsync(),
+                PagedData = await query.Skip(Math.Max(0, pagedQuery.Skip)).Take(Math.Min(pagedQuery.Take, 100)).ToListAsync(),
                 TotalCount = await query.CountAsync(),
             };
         }
@@ -73,5 +78,29 @@ namespace cydc.Controllers.AdmimDtos
     {
         public List<T> PagedData { get; set; }
         public int TotalCount { get; set; }
+    }
+
+    public abstract class SortedPagedQuery : PagedQuery
+    {
+        public string Sort { get; set; }
+
+        public string Direction { get; set; }
+
+        public string GetSortString() => Sort + " " + Direction;
+    }
+
+    public static class SortedPagedQueryExtensions
+    {
+        public static IQueryable<T> ToSorted<T>(this IQueryable<T> query, SortedPagedQuery sortedPagedQuery)
+        {
+            if (!String.IsNullOrEmpty(sortedPagedQuery.Direction))
+            {
+                return query.OrderBy(sortedPagedQuery.GetSortString());
+            }
+            else
+            {
+                return query;
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@ import { DataSource } from '@angular/cdk/table';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { map, finalize } from 'rxjs/operators';
+import { Sort } from '@angular/material';
 
 export interface PagedDto {
   page: string;
@@ -41,6 +42,44 @@ export class PagedQuery<T extends PagedDto> {
   }
 }
 
+export interface SortedPagedDto extends PagedDto {
+  sort: string;
+  direction: string;
+}
+
+export class SortedPagedQuery<T extends SortedPagedDto> extends PagedQuery<T> {
+  sort: string | undefined;
+  direction: string | undefined;
+
+  applySort(s: Sort) {
+    if (s.direction === "") {
+      this.sort = undefined;
+      this.direction = undefined;
+    } else {
+      this.sort = s.active;
+      this.direction = s.direction;
+    }
+  }
+
+  replaceWith(p: Partial<SortedPagedDto>) {
+    super.replaceWith(p);
+    if (p.sort !== undefined) this.sort = p.sort;
+    if (p.direction) this.direction = p.direction;
+  }
+
+  toDto(): SortedPagedDto {
+    let o = <SortedPagedDto>super.toDto();
+    if (this.sort !== undefined) o.sort = this.sort;
+    if (this.direction !== undefined) o.direction = this.direction;
+    return o;
+  }
+
+  resetPager() {
+    this.pageIndex = 0;
+    this.pageSize = 12;
+  }
+}
+
 export class ApiDataSource<TData> extends DataSource<TData> {
   dataSubject = new BehaviorSubject(new PagedResult<TData>());
   dataCount: number = 0;
@@ -67,4 +106,14 @@ export class ApiDataSource<TData> extends DataSource<TData> {
         this.dataCount = data.totalCount;
       });
   }
+}
+
+export function unwrapDate(strDate: string | undefined) {
+  if (strDate === undefined) return undefined;
+  return new Date(strDate);
+}
+
+export function unwrapBoolean(boolStr: string | undefined) {
+  if (boolStr === undefined) return undefined;
+  return boolStr === "1";
 }

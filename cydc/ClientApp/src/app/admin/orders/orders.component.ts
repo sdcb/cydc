@@ -9,6 +9,7 @@ import { FormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Sort } from '@angular/material';
 
 @Component({
   selector: 'app-orders',
@@ -45,17 +46,22 @@ export class OrdersComponent implements OnInit {
     await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
   }
 
+  async applySort(sort: Sort) {
+    this.query.applySort(sort);
+    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+  }
+
   applyUserName(userName: string) {
     this.query.userName = userName;
     this.afterApplied();
   }
 
-  applyStartTime(startTime: Date) {
+  applyStartTime(startTime: string) {
     this.query.startTime = startTime;
     this.afterApplied();
   }
 
-  applyEndTime(endTime: Date) {
+  applyEndTime(endTime: string) {
     this.query.endTime = endTime;
     this.afterApplied();
   }

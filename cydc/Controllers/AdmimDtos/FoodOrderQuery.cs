@@ -25,7 +25,7 @@ namespace cydc.Controllers.AdmimDtos
         public bool IsPayed { get; set; }
     }
 
-    public class FoodOrderQuery : PagedQuery
+    public class FoodOrderQuery : SortedPagedQuery
     {
         public string UserName { get; set; }
 
@@ -48,8 +48,18 @@ namespace cydc.Controllers.AdmimDtos
                     Price = x.FoodMenu.Price,
                     Comment = x.Comment,
                     IsPayed = x.FoodOrderPayment != null
-                });
-            return await ToPagedResultAsync(query);
+                }).ToSorted(this);
+
+            if (!String.IsNullOrEmpty(UserName))
+                query = query.Where(x => x.UserName.Contains(UserName));
+            if (StartTime != null)
+                query = query.Where(x => x.OrderTime >= StartTime.Value);
+            if (EndTime != null)
+                query = query.Where(x => x.OrderTime < EndTime.Value);
+            if (IsPayed != null)
+                query = query.Where(x => x.IsPayed == IsPayed.Value);
+
+            return await query.ToPagedResultAsync(this);
         }
     }
 }
