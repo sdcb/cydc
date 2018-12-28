@@ -5,6 +5,7 @@ import { version } from "../../environments/version";
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
   source = "https://github.com/sdcb/cydc";
@@ -13,6 +14,10 @@ export class HomeComponent {
   }
 
   version() {
-    return version.job + version.buildId;
+    return version.job + "-" + version.buildId;
+  }
+
+  rv() {
+    return version.rv;
   }
 }
