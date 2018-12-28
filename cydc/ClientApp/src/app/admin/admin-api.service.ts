@@ -72,6 +72,6 @@ export enum BalanceOperator {
 
 export class AdminOrderQuery extends PagedQuery {
   toDto() {
-    return {};
+    return <any>{};
   }
 }

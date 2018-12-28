@@ -39,6 +39,6 @@ export class MyFoodOrderComponent implements OnInit {
   }
 
   get displayedColumns() {
-    return this.api.foodOrderColumns;
+    return this.api.foodOrderColumns();
   };
 }

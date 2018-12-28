@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
-import { AdminUserDto, AdminApiService, ApiDataSource, AdminUserQuery, BalanceOperator } from '../admin-api.service';
+import { AdminUserDto, AdminApiService, AdminUserQuery, BalanceOperator } from '../admin-api.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { timer } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
-import { ScreenSizeService } from 'src/app/services/screen-size.service';
+import { ApiDataSource } from 'src/app/shared/utils/paged-query';
 
 @Component({
   selector: 'app-users',
@@ -21,8 +21,7 @@ export class UsersComponent implements OnInit {
   constructor(
     private userService: UserService,
     private api: AdminApiService,
-    private router: Router, private route: ActivatedRoute,
-    private size: ScreenSizeService) {
+    private router: Router, private route: ActivatedRoute) {
     this.dataSource = new ApiDataSource<AdminUserDto>(() => this.api.getUsers(this.query));
     this.nameInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyName(n));
   }
