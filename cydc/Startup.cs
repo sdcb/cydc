@@ -27,7 +27,7 @@ namespace cydc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_0);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -35,7 +35,13 @@ namespace cydc
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddDbContext<CydcContext>(options => options.UseSqlServer(Configuration["CydcConnection"]));
+            services.AddDbContext<CydcContext>(options => options.UseSqlServer(Configuration["CydcConnection"]));            
+            services.AddDefaultIdentity<AspNetUsers>()
+                .AddDefaultUI(UIFramework.Bootstrap4)
+                .AddEntityFrameworkStores<CydcContext>()
+                .AddUserManager<UserManager>()
+                .AddDefaultTokenProviders();
+
             services.AddAuthentication(o =>
             {
                 o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -45,11 +51,7 @@ namespace cydc
                 o.YeluCasSsoEndpoint = Configuration["YeluCasSsoEndpoint"];
                 o.Events.OnCreatingClaims = UserManager.OnCreatingClaims;
             });
-            services.AddDefaultIdentity<AspNetUsers>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<CydcContext>()
-                .AddUserManager<UserManager>()
-                .AddDefaultTokenProviders();
+
             services.AddHttpContextAccessor();
         }
 
