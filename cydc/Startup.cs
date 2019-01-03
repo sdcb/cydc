@@ -48,8 +48,8 @@ namespace cydc
             services.AddDefaultIdentity<AspNetUsers>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<CydcContext>()
+                .AddUserManager<UserManager>()
                 .AddDefaultTokenProviders();
-            services.AddTransient<UserManager>();
             services.AddHttpContextAccessor();
         }
 
