@@ -107,7 +107,7 @@ namespace cydc.Controllers
         private async Task<string> GetUserIdFromUserName(bool isMe, string userName)
         {
             if (isMe) return User.Identity.Name;
-            return (await _db.AspNetUsers.FirstOrDefaultAsync(x => x.UserName == userName))?.Id;
+            return (await _db.Users.FirstOrDefaultAsync(x => x.UserName == userName))?.Id;
         }
 
         private async Task<int> AutoPay([FromBody] FoodOrder order)
@@ -125,7 +125,7 @@ namespace cydc.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<List<string>> SearchName(string name)
         {
-            return await _db.AspNetUsers
+            return await _db.Users
                 .Where(x => x.NormalizedUserName.Contains(name.ToUpperInvariant()))
                 .OrderByDescending(x => x.FoodOrder.Count)
                 .Select(x => x.UserName)

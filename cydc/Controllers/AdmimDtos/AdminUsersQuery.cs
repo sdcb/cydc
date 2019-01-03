@@ -17,7 +17,7 @@ namespace cydc.Controllers.AdmimDtos
 
         public Task<PagedResult<AdminUserDto>> DoQuery(CydcContext db)
         {
-            IQueryable<AdminUserDto> query = db.AspNetUsers
+            IQueryable<AdminUserDto> query = db.Users
                .Select(x => new AdminUserDto
                {
                    Id = x.Id,
