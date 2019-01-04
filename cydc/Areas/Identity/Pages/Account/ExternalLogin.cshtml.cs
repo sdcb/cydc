@@ -1,15 +1,15 @@
-﻿using System;
+﻿using cydc.Database;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+using Sdcb.AspNetCore.Authentication.YeluCasSso;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using cydc.Database;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace cydc.Areas.Identity.Pages.Account
 {
@@ -66,8 +66,9 @@ namespace cydc.Areas.Identity.Pages.Account
             if (remoteError != null)
             {
                 ErrorMessage = $"Error from external provider: {remoteError}";
-                return RedirectToPage("./Login", new {ReturnUrl = returnUrl });
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
+
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
@@ -76,7 +77,7 @@ namespace cydc.Areas.Identity.Pages.Account
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
@@ -88,6 +89,13 @@ namespace cydc.Areas.Identity.Pages.Account
             }
             else
             {
+                if (info.LoginProvider == YeluCasSsoDefaults.AuthenticationScheme)
+                {
+                    if (await LoginByYeluCasSsoAsync(info))
+                    {
+                        return LocalRedirect(returnUrl);
+                    }
+                }
                 // If the user does not have an account, then ask the user to create an account.
                 ReturnUrl = returnUrl;
                 LoginProvider = info.LoginProvider;
@@ -100,6 +108,39 @@ namespace cydc.Areas.Identity.Pages.Account
                 }
                 return Page();
             }
+        }
+
+        private async Task<bool> LoginByYeluCasSsoAsync(ExternalLoginInfo info)
+        {
+            string email = info.Principal.FindFirstValue(CasConstants.Email);
+            string userName = info.Principal.FindFirstValue(CasConstants.Name);
+
+            AspNetUsers user = 
+                await _userManager.FindByEmailAsync(email) ??
+                await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+            {
+                user = new AspNetUsers
+                {
+                    UserName = info.Principal.FindFirstValue(CasConstants.Name),
+                    Email = info.Principal.FindFirstValue(CasConstants.Email),
+                };
+
+                var result = await _userManager.CreateAsync(user);
+                if (!result.Succeeded) return false;
+            }
+
+            IList<UserLoginInfo> logins = await _userManager.GetLoginsAsync(user);
+            if (logins.All(x => x.LoginProvider != YeluCasSsoDefaults.AuthenticationScheme))
+            {
+                _logger.LogInformation($"User created an account using {info.LoginProvider} provider.");
+                var result = await _userManager.AddLoginAsync(user, info);
+                if (!result.Succeeded) return false;
+            }
+
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            return true;
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)

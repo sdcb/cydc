@@ -35,24 +35,25 @@ namespace cydc
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddDbContext<CydcContext>(options => options.UseSqlServer(Configuration["CydcConnection"]));            
-            services.AddDefaultIdentity<AspNetUsers>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<CydcContext>()
+            services.AddDbContext<CydcContext>(options => options.UseSqlServer(Configuration["CydcConnection"]));
+            services.AddHttpContextAccessor();
+
+            services.AddDefaultIdentity<AspNetUsers>(o =>
+                {
+                    o.User.RequireUniqueEmail = true;
+                    o.User.AllowedUserNameCharacters = null;
+                })
+                .AddDefaultUI()
                 .AddUserManager<UserManager>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<CydcContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication(o =>
-            {
-                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = YeluCasSsoDefaults.AuthenticationScheme;
-            }).AddYeluCasSso(o =>
+            services.AddAuthentication().AddYeluCasSso(o =>
             {
                 o.YeluCasSsoEndpoint = Configuration["YeluCasSsoEndpoint"];
                 o.Events.OnCreatingClaims = UserManager.OnCreatingClaims;
             });
-
-            services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +72,7 @@ namespace cydc
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

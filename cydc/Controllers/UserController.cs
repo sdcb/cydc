@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Sdcb.AspNetCore.Authentication.YeluCasSso;
 
 namespace cydc.Controllers
 {
@@ -25,7 +24,7 @@ namespace cydc.Controllers
             return new UserStatus
             {
                 IsLoggedIn = User.Identity.IsAuthenticated,
-                Name = User.FindFirst(x => x.Type == CasConstants.Name)?.Value,
+                Name = User.FindFirst(x => x.Type == ClaimTypes.Name)?.Value,
                 IsAdmin = User.IsInRole("Admin"), 
             };
         }

@@ -44,6 +44,7 @@ namespace cydc.Managers.Identities
 
             // commit
             claimsIdentity.AddClaim(new Claim(claimsIdentity.NameClaimType, systemUser.Id));
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, systemUser.Id));
             foreach (var role in roles)
             {
                 claimsIdentity.AddClaim(new Claim(claimsIdentity.RoleClaimType, role));
