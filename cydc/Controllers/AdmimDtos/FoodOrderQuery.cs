@@ -1,6 +1,5 @@
 ﻿using cydc.Database;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,6 +33,8 @@ namespace cydc.Controllers.AdmimDtos
         public DateTime? EndTime { get; set; }
 
         public bool? IsPayed { get; set; }
+
+        public override string GetDefaultSortString() => "Id DESC";
 
         public async Task<PagedResult<FoodOrderDto>> DoQuery(CydcContext db)
         {

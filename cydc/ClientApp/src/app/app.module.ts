@@ -25,6 +25,7 @@ import { AppPaginatorIntl } from './shared/utils/app-paginator-intl';
 import { UsersComponent } from './admin/users/users.component';
 import { NotAdminComponent } from './admin/not-admin/not-admin.component';
 import { OrdersComponent } from './admin/orders/orders.component';
+import { MenusComponent } from './admin/menus/menus.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { OrdersComponent } from './admin/orders/orders.component';
     MyFoodOrderComponent,
     UsersComponent,
     NotAdminComponent,
-    OrdersComponent, 
+    OrdersComponent,
+    MenusComponent, 
   ],
   entryComponents: [
     OrderCreateDialog

@@ -1,4 +1,4 @@
-import { PagedDto, PagedQuery, unwrapDate, unwrapBoolean, SortedPagedQuery, SortedPagedDto } from 'src/app/shared/utils/paged-query';
+import { unwrapBoolean, SortedPagedQuery, SortedPagedDto } from 'src/app/shared/utils/paged-query';
 
 export interface FoodOrderQueryDto extends SortedPagedDto {
   userName: string;

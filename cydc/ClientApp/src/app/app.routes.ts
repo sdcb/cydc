@@ -9,6 +9,7 @@ import { MyFoodOrderComponent } from './foodOrder/my-food-order/my-food-order.co
 import { UsersComponent } from './admin/users/users.component';
 import { NotAdminComponent } from './admin/not-admin/not-admin.component';
 import { OrdersComponent } from './admin/orders/orders.component';
+import { MenusComponent } from './admin/menus/menus.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: "full",  },
@@ -19,7 +20,8 @@ export const routes: Routes = [
   { path: 'user/logged-out', component: LoggedOutComponent, },
 
   { path: 'admin/users', component: UsersComponent, },
-  { path: 'admin/orders', component: OrdersComponent, }, 
-  { path: 'admin/not-admin', component: NotAdminComponent, },
+  { path: 'admin/orders', component: OrdersComponent, },
+  { path: 'admin/menus', component: MenusComponent, },
+  { path: 'admin/not-admin', component: NotAdminComponent, },  
   { path: '**', component: NotFoundComponent }, 
 ];

@@ -5,15 +5,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
-using Newtonsoft.Json;
 
 namespace cydc.Controllers.AdmimDtos
 {
-    public class AdminUserQuery : PagedQuery
+    public class AdminUserDto
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public decimal Balance { get; set; }
+    }
+
+    public class AdminUserQuery : SortedPagedQuery
     {
         public string Name { get; set; }
 
         public SearchUserBalanceOperator Operator { get; set; } = SearchUserBalanceOperator.All;
+
+        public override string GetDefaultSortString() => "Id DESC";
 
         public Task<PagedResult<AdminUserDto>> DoQuery(CydcContext db)
         {
@@ -24,7 +33,7 @@ namespace cydc.Controllers.AdmimDtos
                    Name = x.UserName,
                    Email = x.Email,
                    Balance = x.AccountDetails.Sum(a => a.Amount)
-               });
+               }).ToSorted(this);
 
             if (!string.IsNullOrWhiteSpace(Name))
                 query = query.Where(x => x.Name.Contains(Name));
@@ -87,6 +96,8 @@ namespace cydc.Controllers.AdmimDtos
         public string Direction { get; set; }
 
         public string GetSortString() => Sort + " " + Direction;
+
+        public virtual string GetDefaultSortString() => null;
     }
 
     public static class SortedPagedQueryExtensions
@@ -96,6 +107,10 @@ namespace cydc.Controllers.AdmimDtos
             if (!String.IsNullOrEmpty(sortedPagedQuery.Direction))
             {
                 return query.OrderBy(sortedPagedQuery.GetSortString());
+            }
+            else if (sortedPagedQuery.GetDefaultSortString() != null)
+            {
+                return query.OrderBy(sortedPagedQuery.GetDefaultSortString());
             }
             else
             {
