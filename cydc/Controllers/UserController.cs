@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using cydc.Database;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cydc.Controllers
@@ -13,10 +15,14 @@ namespace cydc.Controllers
     public class UserController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly SignInManager<AspNetUsers> _signInManager;
 
-        public UserController(IHostingEnvironment hostingEnvironment)
+        public UserController(
+            IHostingEnvironment hostingEnvironment, 
+            SignInManager<AspNetUsers> signInManager)
         {
             _hostingEnvironment = hostingEnvironment;
+            _signInManager = signInManager;
         }
 
         public UserStatus Status()
@@ -31,8 +37,7 @@ namespace cydc.Controllers
 
         public async Task Logout()
         {
-            await HttpContext.SignOutAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme);
+            await _signInManager.SignOutAsync();
         }
 
         [Authorize]
