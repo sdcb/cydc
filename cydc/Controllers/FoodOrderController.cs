@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using cydc.Controllers.AdmimDtos;
 using cydc.Database;
+using cydc.Managers.Identities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -80,7 +81,7 @@ namespace cydc.Controllers
         public IActionResult My()
         {
             return Ok(_db.FoodOrder
-                .Where(x => x.OrderUserId == User.Identity.Name)
+                .Where(x => x.OrderUserId == User.GetUserId())
                 .OrderByDescending(x => x.OrderTime)
                 .Select(x => new FoodOrderDto
                 {
@@ -99,14 +100,14 @@ namespace cydc.Controllers
         public async Task<IActionResult> MyBalance()
         {
             decimal balance = await _db.AccountDetails
-                .Where(x => x.UserId == User.Identity.Name)
+                .Where(x => x.UserId == User.GetUserId())
                 .SumAsync(x => x.Amount);
             return Ok(balance);
         }
 
         private async Task<string> GetUserIdFromUserName(bool isMe, string userName)
         {
-            if (isMe) return User.Identity.Name;
+            if (isMe) return User.GetUserId();
             return (await _db.Users.FirstOrDefaultAsync(x => x.UserName == userName))?.Id;
         }
 
