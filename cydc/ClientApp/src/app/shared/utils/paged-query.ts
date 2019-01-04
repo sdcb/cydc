@@ -108,9 +108,9 @@ export class ApiDataSource<TData> extends DataSource<TData> {
   }
 }
 
-export function unwrapDate(strDate: string | undefined) {
-  if (strDate === undefined) return undefined;
-  return new Date(strDate);
+export function unwrapNumber(strNumber: string | undefined) {
+  if (strNumber === undefined) return undefined;
+  return parseFloat(strNumber);
 }
 
 export function unwrapBoolean(boolStr: string | undefined) {
