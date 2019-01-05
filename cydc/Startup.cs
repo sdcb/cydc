@@ -1,17 +1,14 @@
-using System.Threading.Tasks;
 using cydc.Database;
+using cydc.Managers.Csrf;
 using cydc.Managers.Identities;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Sdcb.AspNetCore.Authentication.YeluCasSso;
 
 namespace cydc
 {
@@ -37,6 +34,7 @@ namespace cydc
 
             services.AddDbContext<CydcContext>(options => options.UseSqlServer(Configuration["CydcConnection"]));
             services.AddHttpContextAccessor();
+            services.AddAntiforgery(o => o.HeaderName = "X-XSRF-TOKEN");
 
             services.AddDefaultIdentity<AspNetUsers>(o =>
                 {
@@ -73,6 +71,7 @@ namespace cydc
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseAuthentication();
+            app.UseAntiforgeryToken();
 
             app.UseMvc(routes =>
             {

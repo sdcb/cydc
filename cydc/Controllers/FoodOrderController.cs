@@ -25,12 +25,13 @@ namespace cydc.Controllers
             _db = db;
             _httpContextAccessor = httpContextAccessor;
         }
-
+        
         public string SiteNotification()
         {
             return _db.SiteNotice.FirstOrDefault().Content;
         }
 
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromBody]FoodOrderCreateDto order)
         {
             if (!User.IsInRole("Admin") && !order.IsMe)
