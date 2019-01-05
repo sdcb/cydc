@@ -12,23 +12,21 @@
       <div class="row">
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <input matInput placeholder="菜单内容" [formControl]="detailsInput"
-                   [value]="query.details" />
+            <input matInput placeholder="菜单内容" [formControl]="detailsInput" [value]="query.details" />
           </mat-form-field>
         </div>
 
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <input matInput placeholder="价格" type="number" [formControl]="priceInput"
-                   [value]="query.price"/>
+            <input matInput placeholder="价格" type="number" [formControl]="priceInput" [value]="query.price" />
           </mat-form-field>
         </div>
 
         <div class="col-6 col-md-3">
           <mat-form-field>
             <!-- start date datepicker -->
-            <input matInput [matDatepicker]="startPicker" placeholder="开始时间" name="startDate"
-                   [ngModel]="query.startTime" (ngModelChange)="applyStartTime(startDateInput.value)" #startDateInput>
+            <input matInput [matDatepicker]="startPicker" placeholder="开始时间" name="startDate" [ngModel]="query.startTime"
+              (ngModelChange)="applyStartTime(startDateInput.value)" #startDateInput>
             <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
             <mat-datepicker #startPicker startView="month"></mat-datepicker>
           </mat-form-field>
@@ -38,7 +36,7 @@
           <mat-form-field>
             <!-- start date datepicker -->
             <input matInput [matDatepicker]="endPicker" placeholder="结束时间" name="endDate" [min]="query.startTime"
-                   [ngModel]="query.endTime" (ngModelChange)="applyEndTime(endDateInput.value)" #endDateInput>
+              [ngModel]="query.endTime" (ngModelChange)="applyEndTime(endDateInput.value)" #endDateInput>
             <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
             <mat-datepicker #endPicker startView="month" [startAt]="query.startTime"></mat-datepicker>
           </mat-form-field>
@@ -65,7 +63,7 @@
       </ng-container>
 
       <ng-container matColumnDef="details">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>详情</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>内容</th>
         <td mat-cell *matCellDef="let item" [matTooltip]="item.details">
           {{screenSize.sm ? item.name : item.details}}
         </td>
@@ -78,7 +76,11 @@
 
       <ng-container matColumnDef="enabled">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>状态</th>
-        <td mat-cell *matCellDef="let item">{{item.enabled ? '✔' : '❌'}}</td>
+        <td mat-cell *matCellDef="let item">
+          <mat-checkbox [ngModel]="item.enabled" (ngModelChange)="toggleStatus(item)">
+            {{item.enabled ? '已显示' : '已禁用'}}
+          </mat-checkbox>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="orderCount">
@@ -90,7 +92,7 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[12,20,50,100]" showFirstLastButtons #pager
-                   [length]="dataSource.dataCount" (page)="page(pager.pageIndex, pager.pageSize)"></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[12,20,50,100]" showFirstLastButtons #pager [length]="dataSource.dataCount"
+      (page)="page(pager.pageIndex, pager.pageSize)"></mat-paginator>
   </div>
 </div>

@@ -1,5 +1,8 @@
-import { SortedPagedQuery, SortedPagedDto, unwrapNumber } from 'src/app/shared/utils/paged-query';
+import { SortedPagedQuery, SortedPagedDto, unwrapNumber, PagedResult } from 'src/app/shared/utils/paged-query';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
+import { Params } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 export interface MenuQueryDto extends SortedPagedDto {
   details: string;
@@ -46,4 +49,22 @@ export type MenuDto = {
   price: number;
   enabled: boolean;
   orderCount: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AdminMenuApi {
+  constructor(private http: HttpClient) {
+  }
+
+  getMenus(query: AdminMenuQuery) {
+    return this.http.get<PagedResult<MenuDto>>(`/api/adminMenu/menus`, {
+      params: <Params>query.toDto(), 
+    });
+  }
+
+  toggleStatus(menuId: number) {
+    return this.http.post<boolean>(`api/adminMenu/toggleStatus?menuId=${menuId}`, {});
+  }
 }
