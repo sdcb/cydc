@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Builder;
+﻿using cydc.Infrastructure.Middlewares;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
-namespace cydc.Managers.Csrf
+namespace cydc.Infrastructure.Middlewares
 {
     public class AntiforgeryTokenMiddleware
     {
@@ -30,7 +30,10 @@ namespace cydc.Managers.Csrf
             return _next(context);
         }
     }
+}
 
+namespace Microsoft.AspNetCore.Builder
+{
     public static class AntiforgeryTokenMiddlewareExtensions
     {
         public static IApplicationBuilder UseAntiforgeryToken(this IApplicationBuilder builder)

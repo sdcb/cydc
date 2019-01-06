@@ -2,6 +2,9 @@
 using cydc.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace cydc.Controllers
@@ -27,6 +30,22 @@ namespace cydc.Controllers
             menu.Enabled = !menu.Enabled;
             await _db.SaveChangesAsync();
             return menu.Enabled;
+        }
+
+        public async Task<string> SaveContent(int menuId, [FromBody][Required] string content)
+        {
+            FoodMenu menu = _db.FoodMenu.Find(menuId);
+            menu.Details = content;
+            await _db.SaveChangesAsync();
+            return content;
+        }
+
+        public async Task<decimal> SavePrice(int menuId, [FromBody][Required] decimal price)
+        {
+            FoodMenu menu = _db.FoodMenu.Find(menuId);
+            menu.Price = price;
+            await _db.SaveChangesAsync();
+            return price;
         }
     }
 }
