@@ -27,6 +27,7 @@ import { NotAdminComponent } from './admin/not-admin/not-admin.component';
 import { OrdersComponent } from './admin/orders/orders.component';
 import { MenusComponent } from './admin/menus/menus.component';
 import { ClickEditComponent } from './shared/click-edit/click-edit.component';
+import { MenuCreateComponent } from './admin/menus/menu-create.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { ClickEditComponent } from './shared/click-edit/click-edit.component';
     NotAdminComponent,
     OrdersComponent,
     MenusComponent,
-    ClickEditComponent,  
+    ClickEditComponent,
+    MenuCreateComponent,  
   ],
   entryComponents: [
     OrderCreateDialog
