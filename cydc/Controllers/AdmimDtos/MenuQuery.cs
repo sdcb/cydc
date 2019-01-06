@@ -11,7 +11,7 @@ namespace cydc.Controllers.AdmimDtos
 
         public DateTime CreateTime { get; set; }
 
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         public string Details { get; set; }
 
@@ -42,7 +42,7 @@ namespace cydc.Controllers.AdmimDtos
                     Id = x.Id, 
                     CreateTime = x.CreateTime, 
                     Details = x.Details, 
-                    Name = x.Title, 
+                    Title = x.Title, 
                     Enabled = x.Enabled, 
                     Price = x.Price, 
                     OrderCount = x.FoodOrder.Count, 

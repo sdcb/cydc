@@ -25,10 +25,5 @@ namespace cydc.Controllers
         {
             return await query.DoQuery(_db);
         }
-
-        public async Task<PagedResult<MenuDto>> Menus(MenuQuery query)
-        {
-            return await query.DoQuery(_db);
-        }
     }
 }

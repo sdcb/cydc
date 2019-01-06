@@ -38,6 +38,14 @@ export class MyFoodOrderComponent implements OnInit {
     this.api.getMyBalance().subscribe(v => this.balance = v);
   }
 
+  async saveComment(value: string, item: FoodOrderItem) {
+    item.comment = await this.api.saveComment(item.id, value).toPromise();
+  }
+
+  isToday(item: FoodOrderItem) {
+    new Date(item.orderTime).getDate() === new Date().getDate();
+  }
+
   get displayedColumns() {
     return this.api.foodOrderColumns();
   };

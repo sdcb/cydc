@@ -22,20 +22,22 @@
 
       <ng-container matColumnDef="orderTime">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>时间</th>
-        <td mat-cell *matCellDef="let item" [matTooltip]="item.orderTime | date: 'yyyy-M-d H:mm'"
-            >{{item.orderTime | date: screenSize.sm ? 'yyyy-M-d' : 'yyyy-M-d H:mm'}}</td>
+        <td mat-cell *matCellDef="let item" [matTooltip]="item.orderTime | date: 'yyyy-M-d H:mm'">{{item.orderTime |
+          date: screenSize.sm ? 'yyyy-M-d' : 'yyyy-M-d H:mm'}}</td>
       </ng-container>
 
       <ng-container matColumnDef="menu">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>菜单</th>
-        <td mat-cell *matCellDef="let item" [matTooltip]="item.details"
-            >{{screenSize.sm ? item.menu : item.details}}</td>
+        <td mat-cell *matCellDef="let item" [matTooltip]="item.details">{{screenSize.sm ? item.menu : item.details}}</td>
       </ng-container>
 
       <ng-container matColumnDef="comment">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>备注</th>
         <td mat-cell *matCellDef="let item">
-          <span [matTooltip]="item.comment">{{item.comment ? '💬' : ''}}</span>
+          <app-click-edit *ngIf="isToday(item)" [value]="item.comment" (save)="saveComment($event, item)" [matTooltip]="item.comment || '点击编辑'">
+            {{item.comment ? '💬' : '<无>'}}
+          </app-click-edit>
+          <span *ngIf="!isToday(item)" [matTooltip]="item.comment">{{item.comment ? '💬' : ''}}</span>
         </td>
       </ng-container>
 
@@ -46,8 +48,7 @@
 
       <ng-container matColumnDef="isPayed">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>付款</th>
-        <td mat-cell *matCellDef="let item" [matTooltip]="item.isPayed ? '已付' : '未付'"
-            >{{item.isPayed ? '✅' : '❌'}}</td>
+        <td mat-cell *matCellDef="let item" [matTooltip]="item.isPayed ? '已付' : '未付'">{{item.isPayed ? '✅' : '❌'}}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
