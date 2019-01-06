@@ -40,7 +40,7 @@ namespace cydc.Controllers
             return content;
         }
 
-        public async Task<decimal> SavePrice(int menuId, [FromBody][Required] decimal price)
+        public async Task<decimal> SavePrice(int menuId, [Required] decimal price)
         {
             FoodMenu menu = _db.FoodMenu.Find(menuId);
             menu.Price = price;

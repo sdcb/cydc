@@ -71,7 +71,9 @@
 
       <ng-container matColumnDef="price">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>价格</th>
-        <td mat-cell *matCellDef="let item">{{item.price}}</td>
+        <td mat-cell *matCellDef="let item">
+          <app-hover-edit [value]="item.price" (save)="savePrice($event, item)"></app-hover-edit>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="enabled">

@@ -3,6 +3,7 @@ import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { Params } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
 
 export interface MenuQueryDto extends SortedPagedDto {
   details: string;
@@ -72,5 +73,11 @@ export class AdminMenuApi {
     return this.http.post(`/api/adminMenu/saveContent?menuId=${id}`, detailsToSave, {
       responseType: "text"
     });
+  }
+
+  savePrice(id: number, priceToSave: string) {
+    return this.http.post(`/api/adminMenu/savePrice?menuId=${id}&price=${priceToSave}`, {}, {
+      responseType: "text"
+    }).pipe(map(v => parseFloat(v)));
   }
 }

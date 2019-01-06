@@ -88,6 +88,10 @@ export class MenusComponent implements OnInit {
     item.details = await this.loading.wrap(this.api.saveContent(item.id, editValue).toPromise());
   }
 
+  async savePrice(editValue: string, item: MenuDto) {
+    item.price = await this.loading.wrap(this.api.savePrice(item.id, editValue).toPromise());
+  }
+
   commitContent(item: MenuEditDto) {
     console.log(item.detailsToSave);
     if (!item.detailsToSave) return;
