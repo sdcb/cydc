@@ -39,7 +39,7 @@ export class AdminMenuQuery extends SortedPagedQuery<MenuQueryDto> {
 
 export function menuColumns(size: ScreenSizeService) {
   if (size.md) return ["createTime", "details", "price", "orderCount", "enabled"];
-  return ["id", "createTime", "name", "details", "price", "orderCount", "enabled"];
+  return ["id", "createTime", "name", "details", "price", "orderCount", "enabled", "action"];
 }
 
 export type MenuDto = {
@@ -79,5 +79,9 @@ export class AdminMenuApi {
     return this.http.post(`/api/adminMenu/savePrice?menuId=${id}&price=${priceToSave}`, {}, {
       responseType: "text"
     }).pipe(map(v => parseFloat(v)));
+  }
+
+  delete(id: number) {
+    return this.http.post(`/api/adminMenu/delete?menuId=${id}`, {});
   }
 }

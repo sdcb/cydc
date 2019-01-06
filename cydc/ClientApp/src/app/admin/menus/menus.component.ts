@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { menuColumns, AdminMenuQuery, MenuDto, AdminMenuApi, MenuEditDto } from './admin-menu-api';
+import { menuColumns, AdminMenuQuery, MenuDto, AdminMenuApi } from './admin-menu-api';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { FormControl } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
@@ -91,13 +91,11 @@ export class MenusComponent implements OnInit {
   async savePrice(editValue: string, item: MenuDto) {
     item.price = await this.loading.wrap(this.api.savePrice(item.id, editValue).toPromise());
   }
-
-  commitContent(item: MenuEditDto) {
-    console.log(item.detailsToSave);
-    if (!item.detailsToSave) return;
-    this.loading.wrap(this.api.saveContent(item.id, item.detailsToSave).toPromise()).then(v => {
-      item.details = v;
-      item.editMode = false;
-    });
+  
+  async delete(item: MenuDto) {
+    if (confirm("确定删除？")) {
+      await this.loading.wrap(this.api.delete(item.id).toPromise());
+      this.dataSource.loadData();
+    }
   }
 }

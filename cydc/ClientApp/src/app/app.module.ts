@@ -26,7 +26,7 @@ import { UsersComponent } from './admin/users/users.component';
 import { NotAdminComponent } from './admin/not-admin/not-admin.component';
 import { OrdersComponent } from './admin/orders/orders.component';
 import { MenusComponent } from './admin/menus/menus.component';
-import { HoverEditComponent } from './shared/hover-edit/hover-edit.component';
+import { ClickEditComponent } from './shared/click-edit/click-edit.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +43,7 @@ import { HoverEditComponent } from './shared/hover-edit/hover-edit.component';
     NotAdminComponent,
     OrdersComponent,
     MenusComponent,
-    HoverEditComponent, 
+    ClickEditComponent,  
   ],
   entryComponents: [
     OrderCreateDialog

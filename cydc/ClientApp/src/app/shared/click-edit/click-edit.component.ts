@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
-  selector: 'app-hover-edit',
-  templateUrl: './hover-edit.component.html',
-  styleUrls: ['./hover-edit.component.css']
+  selector: 'app-click-edit',
+  templateUrl: './click-edit.component.html',
+  styleUrls: ['./click-edit.component.css']
 })
-export class HoverEditComponent implements OnInit {
+export class ClickEditComponent implements OnInit {
   editMode = false;
   editValue!: string;
 
