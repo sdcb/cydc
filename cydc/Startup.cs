@@ -1,17 +1,13 @@
-using System.Threading.Tasks;
 using cydc.Database;
 using cydc.Managers.Identities;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Sdcb.AspNetCore.Authentication.YeluCasSso;
 
 namespace cydc
 {
@@ -27,7 +23,9 @@ namespace cydc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .AddTextPlainInput()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -37,6 +35,7 @@ namespace cydc
 
             services.AddDbContext<CydcContext>(options => options.UseSqlServer(Configuration["CydcConnection"]));
             services.AddHttpContextAccessor();
+            services.AddAntiforgery(o => o.HeaderName = "X-XSRF-TOKEN");
 
             services.AddDefaultIdentity<AspNetUsers>(o =>
                 {
@@ -73,6 +72,7 @@ namespace cydc
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseAuthentication();
+            app.UseAntiforgeryToken();
 
             app.UseMvc(routes =>
             {

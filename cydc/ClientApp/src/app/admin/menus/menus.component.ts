@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { menuColumns, AdminMenuQuery, MenuDto } from './admin-menu-dtos';
+import { menuColumns, AdminMenuQuery, MenuDto, AdminMenuApi } from './admin-menu-api';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { FormControl } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiDataSource } from 'src/app/shared/utils/paged-query';
-import { AdminApiService } from '../admin-api.service';
-import { Sort } from '@angular/material';
+import { Sort, MatInput } from '@angular/material';
 import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
+import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 
 @Component({
   selector: 'app-menus',
@@ -25,7 +25,8 @@ export class MenusComponent implements OnInit {
     public screenSize: ScreenSizeService,
     private userService: UserService,
     private router: Router, private route: ActivatedRoute,
-    private api: AdminApiService) {
+    private api: AdminMenuApi, 
+    private loading: GlobalLoadingService) {
     this.dataSource = new ApiDataSource<MenuDto>(() => this.api.getMenus(this.query));
     this.detailsInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyDetails(n));
     this.priceInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyPrice(n));
@@ -77,5 +78,28 @@ export class MenusComponent implements OnInit {
   applyEndTime(endTime: string) {
     this.query.endTime = endTime;
     this.afterApplied();
+  }
+
+  async toggleStatus(item: MenuDto) {
+    item.enabled = await this.loading.wrap(this.api.toggleStatus(item.id).toPromise());
+  }
+
+  async saveDetails(editValue: string, item: MenuDto) {
+    item.details = await this.api.saveContent(item.id, editValue).toPromise();
+  }
+
+  async saveTitle(editValue: string, item: MenuDto) {
+    item.title = await this.api.saveTitle(item.id, editValue).toPromise();
+  }
+
+  async savePrice(editValue: string, item: MenuDto) {
+    item.price = await this.api.savePrice(item.id, editValue).toPromise();
+  }
+  
+  async delete(item: MenuDto) {
+    if (confirm("确定删除？")) {
+      await this.loading.wrap(this.api.delete(item.id).toPromise());
+      this.dataSource.loadData();
+    }
   }
 }

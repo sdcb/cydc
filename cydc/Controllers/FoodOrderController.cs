@@ -25,12 +25,13 @@ namespace cydc.Controllers
             _db = db;
             _httpContextAccessor = httpContextAccessor;
         }
-
+        
         public string SiteNotification()
         {
             return _db.SiteNotice.FirstOrDefault().Content;
         }
 
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromBody]FoodOrderCreateDto order)
         {
             if (!User.IsInRole("Admin") && !order.IsMe)
@@ -103,6 +104,17 @@ namespace cydc.Controllers
                 .Where(x => x.UserId == User.GetUserId())
                 .SumAsync(x => x.Amount);
             return Ok(balance);
+        }
+
+        public async Task<IActionResult> SaveComment(int orderId, [FromBody]string comment)
+        {
+            FoodOrder order = await _db.FoodOrder.FindAsync(orderId);
+            if (order.OrderUserId != User.GetUserId()) return Forbid();
+            if (order.OrderTime < DateTime.Now.Date) return BadRequest("Order must be today.");
+
+            order.Comment = comment;
+            await _db.SaveChangesAsync();
+            return Ok(order.Comment);
         }
 
         private async Task<string> GetUserIdFromUserName(bool isMe, string userName)
