@@ -49,6 +49,14 @@ namespace cydc.Controllers
             return price;
         }
 
+        public async Task<string> SaveTitle(int menuId, [FromBody][Required] string title)
+        {
+            FoodMenu menu = await _db.FoodMenu.FindAsync(menuId);
+            menu.Title = title;
+            await _db.SaveChangesAsync();
+            return title;
+        }
+
         public async Task Delete(int menuId)
         {
             FoodMenu menu = await _db.FoodMenu.FindAsync(menuId);
