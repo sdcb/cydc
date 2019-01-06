@@ -44,6 +44,12 @@ export class FoodOrderApiService {
     return this.http.get<string[]>(`/api/foodOrder/searchName?name=${encodeURIComponent(name)}`)
   }
 
+  saveComment(orderId: number, comment: string) {
+    return this.http.post(`/api/foodOrder/saveComment?orderId=${orderId}`, comment, {
+      responseType: "text"
+    });
+  }
+
   foodOrderColumns() {
     if (this.size.md)
       return ["orderTime", "menu", "comment", "price", "isPayed"];

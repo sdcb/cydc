@@ -106,6 +106,17 @@ namespace cydc.Controllers
             return Ok(balance);
         }
 
+        public async Task<IActionResult> SaveComment(int orderId, [FromBody]string comment)
+        {
+            FoodOrder order = await _db.FoodOrder.FindAsync(orderId);
+            if (order.OrderUserId != User.GetUserId()) return Forbid();
+            if (order.OrderTime < DateTime.Now.Date) return BadRequest("Order must be today.");
+
+            order.Comment = comment;
+            await _db.SaveChangesAsync();
+            return Ok(order.Comment);
+        }
+
         private async Task<string> GetUserIdFromUserName(bool isMe, string userName)
         {
             if (isMe) return User.GetUserId();
