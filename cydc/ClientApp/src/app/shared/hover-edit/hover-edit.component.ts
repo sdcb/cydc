@@ -13,12 +13,15 @@ export class HoverEditComponent implements OnInit {
 
   _value!: string;
 
+  @Input() type: string = "text";
+
   @Input()
   get value() {return this._value;}
   set value(val: string) { 
     this._value = val;
     if (this.editMode) {
       this.editMode = false;
+      this.input.nativeElement.disabled = false;
     }
   }
 
@@ -42,6 +45,7 @@ export class HoverEditComponent implements OnInit {
   commit() {
     if (!this.editMode) return this.cancel();
     if (this.editValue === this.value) return this.cancel();
+    this.input.nativeElement.disabled = true;
     this.save.emit(this.editValue);
   }
 }

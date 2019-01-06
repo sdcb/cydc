@@ -2,6 +2,6 @@
   {{value}}
 </span>
 <mat-form-field *ngIf="editMode" class="w100">
-  <input matInput type="text" autofocus placeholder="编辑" #input required name="content" [(ngModel)]="editValue"
+  <input matInput [type]="type" autofocus placeholder="编辑" #input required name="content" [(ngModel)]="editValue"
     (blur)="commit()" (keyup.enter)="commit()" (keyup.esc)="cancel()"/>
 </mat-form-field>
