@@ -24,7 +24,7 @@ export class OrdersComponent implements OnInit {
 
   constructor(
     private foodOrderApi: FoodOrderApiService,
-    private api: AdminApiService, 
+    private api: AdminApiService,
     private userService: UserService,
     public screenSize: ScreenSizeService,
     private router: Router, private route: ActivatedRoute) {

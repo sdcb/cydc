@@ -115,5 +115,5 @@ export function unwrapNumber(strNumber: string | undefined) {
 
 export function unwrapBoolean(boolStr: string | undefined) {
   if (boolStr === undefined) return undefined;
-  return boolStr === "1";
+  return boolStr === "true";
 }
