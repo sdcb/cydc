@@ -22,4 +22,8 @@ export class AdminApiService {
       params: <Params>query.toDto()
     });
   }
+
+  resetPassword(id: string, password: string) {
+    return this.http.post<boolean>(`/api/admin/resetPassword?userId=${id}`, password);
+  }
 }

@@ -1,3 +1,4 @@
+import { PasswordResetDialog as PasswordResetDialog } from './admin/users/password-reset.dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, InjectionToken } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -35,7 +36,7 @@ import { MenuCreateDialog } from './admin/menus/menu-create.dialog';
     NavMenuComponent,
     HomeComponent,
     NotFoundComponent,
-    OrderComponent, 
+    OrderComponent,
     LoginComponent,
     LoggedOutComponent,
     OrderCreateDialog,
@@ -45,20 +46,22 @@ import { MenuCreateDialog } from './admin/menus/menu-create.dialog';
     OrdersComponent,
     MenusComponent,
     ClickEditComponent,
-    MenuCreateDialog,  
+    MenuCreateDialog,
+    PasswordResetDialog,
   ],
   entryComponents: [
-    OrderCreateDialog, 
-    MenuCreateDialog, 
-  ], 
+    OrderCreateDialog,
+    MenuCreateDialog,
+    PasswordResetDialog
+  ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    FontAwesomeModule, 
+    FontAwesomeModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    LayoutModule, 
-    MaterialModule, 
+    LayoutModule,
+    MaterialModule,
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
   providers: [
