@@ -1,6 +1,7 @@
 import { FormControl } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
+import { AdminUserDto } from './admin-user-dtos';
 
 @Component({
   selector: 'app-password-reset-dialog',
@@ -8,9 +9,12 @@ import { MatDialogRef, MatDialog } from '@angular/material';
   styles: [``]
 })
 export class PasswordResetDialog implements OnInit {
-  constructor(public dialogRef: MatDialogRef<PasswordResetDialog, string>) { }
+  constructor(
+    public dialogRef: MatDialogRef<PasswordResetDialog, string>, 
+    @Inject(MAT_DIALOG_DATA)public user: AdminUserDto) {}
 
-  password = new FormControl("");
+  hide = false;
+  password = new FormControl(generatePassword());
   confirmPassword = new FormControl("", c => {
     if (c.value != this.password.value) {
       return {
@@ -22,10 +26,6 @@ export class PasswordResetDialog implements OnInit {
 
   ngOnInit(): void { }
 
-  cancel() {
-    this.dialogRef.close();
-  }
-
   confirm() {
     this.dialogRef.close(this.password.value);
   }
@@ -35,8 +35,10 @@ export class PasswordResetDialog implements OnInit {
     this.confirmPassword = this.password;
   }
 
-  static getPassword(dialogService: MatDialog) {
-    return dialogService.open<PasswordResetDialog, string, string>(PasswordResetDialog)
+  static getPassword(dialogService: MatDialog, user: AdminUserDto) {
+    return dialogService.open<PasswordResetDialog, AdminUserDto, string>(PasswordResetDialog, {
+        data: user, width: "400px", 
+      })
       .afterClosed()
       .toPromise();
   }

@@ -73,7 +73,7 @@ export class UsersComponent implements OnInit {
   }
 
   async resetPassword(user: AdminUserDto) {
-    const password = await PasswordResetDialog.getPassword(this.dialogService);
+    const password = await PasswordResetDialog.getPassword(this.dialogService, user);
     if (password === undefined) return;
     if (await this.loading.wrap(this.api.resetPassword(user.id, password).toPromise())) {
       alert("密码重置成功，请发送给用户");
