@@ -1,4 +1,5 @@
 ﻿using cydc.Controllers.AdmimDtos;
+using cydc.Controllers.AdminMenuDtos;
 using cydc.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +66,15 @@ namespace cydc.Controllers
             FoodMenu menu = await _db.FoodMenu.FindAsync(menuId);
             _db.Entry(menu).State = EntityState.Deleted;
             await _db.SaveChangesAsync();
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<int> Create([FromBody] MenuCreateDto menuCreateDto)
+        {
+            FoodMenu foodMenu = menuCreateDto.ToFoodMenu();
+            _db.Entry(foodMenu).State = EntityState.Added;
+            await _db.SaveChangesAsync();
+            return foodMenu.Id;
         }
     }
 }
