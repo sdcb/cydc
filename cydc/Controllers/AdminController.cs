@@ -46,5 +46,34 @@ namespace cydc.Controllers
         {
             return await _db.FoodOrder.Where(x => x.OrderTime.Date == DateTime.Now.Date).CountAsync();
         }
+
+        [ValidateAntiForgeryToken]
+        public async Task DeleteOrder(int orderId)
+        {
+            FoodOrder order = await _db.FoodOrder.FindAsync(orderId);
+            _db.Entry(order).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task Pay(int orderId)
+        {
+            FoodOrderPayment payment = await _db.FoodOrderPayment.FirstOrDefaultAsync(x => x.FoodOrderId == orderId);
+            if (payment == null)
+            {
+                payment = new FoodOrderPayment
+                {
+                    FoodOrderId = orderId, 
+                    PayedTime = DateTime.Now, 
+                };
+                _db.Entry(payment).State = EntityState.Added;
+            }
+            else
+            {
+                payment.PayedTime = DateTime.Now;
+                _db.Entry(payment).State = EntityState.Modified;
+            }
+            await _db.SaveChangesAsync();
+        }
     }
 }

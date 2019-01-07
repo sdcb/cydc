@@ -30,4 +30,12 @@ export class AdminApiService {
   todayOrders() {
     return this.http.get<number>(`/api/admin/todayOrders`);
   }
+
+  deleteOrder(orderId: number) {
+    return this.http.post(`/api/admin/deleteOrder?orderId=${orderId}`, {});
+  }
+
+  pay(orderId: number) {
+    return this.http.post(`/api/admin/pay?orderId=${orderId}`, {});
+  }
 }

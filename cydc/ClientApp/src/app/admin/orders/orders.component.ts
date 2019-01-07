@@ -10,6 +10,7 @@ import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Sort } from '@angular/material';
+import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 
 @Component({
   selector: 'app-orders',
@@ -19,6 +20,7 @@ import { Sort } from '@angular/material';
 export class OrdersComponent implements OnInit {
   dataSource: ApiDataSource<FoodOrderDto>;
   query = new AdminOrderQuery();
+  displayedColumns = this.foodOrderApi.foodOrderColumns();
 
   userNameInput = new FormControl();
 
@@ -27,7 +29,8 @@ export class OrdersComponent implements OnInit {
     private api: AdminApiService,
     private userService: UserService,
     public screenSize: ScreenSizeService,
-    private router: Router, private route: ActivatedRoute) {
+    private router: Router, private route: ActivatedRoute, 
+    private loading: GlobalLoadingService) {
     this.dataSource = new ApiDataSource<FoodOrderDto>(() => this.api.getOrders(this.query));
     this.userNameInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyUserName(n));
   }
@@ -76,7 +79,13 @@ export class OrdersComponent implements OnInit {
     await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
   }
 
-  get displayedColumns() {
-    return this.foodOrderApi.foodOrderColumns();
-  };
+  async pay(item: FoodOrderDto) {
+    await this.loading.wrap(this.api.pay(item.id).toPromise());
+    this.dataSource.loadData();
+  }
+
+  async delete(item: FoodOrderDto) {
+    await this.loading.wrap(this.api.deleteOrder(item.id).toPromise());
+    this.dataSource.loadData();
+  }
 }

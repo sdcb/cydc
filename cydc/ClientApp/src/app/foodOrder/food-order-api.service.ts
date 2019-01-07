@@ -54,9 +54,9 @@ export class FoodOrderApiService {
     if (this.size.md)
       return ["orderTime", "menu", "comment", "price", "isPayed"];
     else if (this.size.lg)
-      return ["id", "orderTime", "menu", "comment", "price", "isPayed"]
+      return ["orderTime", "menu", "comment", "price", "isPayed", "action"]
     else
-      return ["id", "userName", "orderTime", "menu", "comment", "price", "isPayed"];
+      return ["id", "userName", "orderTime", "menu", "comment", "price", "isPayed", "action"];
   };
 }
 
