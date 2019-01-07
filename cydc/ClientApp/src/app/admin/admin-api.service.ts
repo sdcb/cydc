@@ -26,4 +26,8 @@ export class AdminApiService {
   resetPassword(id: string, password: string) {
     return this.http.post<boolean>(`/api/admin/resetPassword?userId=${id}`, password);
   }
+  
+  todayOrders() {
+    return this.http.get<number>(`/api/admin/todayOrders`);
+  }
 }

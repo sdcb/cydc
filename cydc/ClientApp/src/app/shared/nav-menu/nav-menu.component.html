@@ -42,6 +42,6 @@
 
 <ng-template #adminButtons>
   <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/users']">用户</a>
-  <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/orders']">订单</a>
+  <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/orders']" [matBadge]="todayOrders > 0 ? todayOrders : ''">订单</a>
   <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/menus']">菜单</a>
 </ng-template>

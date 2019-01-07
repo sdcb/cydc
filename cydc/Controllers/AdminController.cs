@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using cydc.Controllers.AdmimDtos;
 using cydc.Database;
 using cydc.Managers.Identities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace cydc.Controllers
 {
@@ -37,6 +40,11 @@ namespace cydc.Controllers
             string token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var ok = await _userManager.ResetPasswordAsync(user, token, password);
             return ok.Succeeded;
+        }
+
+        public async Task<int> TodayOrders()
+        {
+            return await _db.FoodOrder.Where(x => x.OrderTime.Date == DateTime.Now.Date).CountAsync();
         }
     }
 }
