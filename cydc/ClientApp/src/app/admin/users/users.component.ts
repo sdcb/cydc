@@ -7,6 +7,7 @@ import { FormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
 import { ApiDataSource } from 'src/app/shared/utils/paged-query';
 import { AdminUserQuery, AdminUserDto, BalanceOperator } from './admin-user-dtos';
+import { Sort } from '@angular/material';
 
 @Component({
   selector: 'app-users',
@@ -14,10 +15,12 @@ import { AdminUserQuery, AdminUserDto, BalanceOperator } from './admin-user-dtos
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  displayedColumns = ["name", "email", "balance"];
+  displayedColumns = ["name", "email", "balance", "orderCount", "action"];
   query = new AdminUserQuery();
   dataSource: ApiDataSource<AdminUserDto>;
-  nameInput = new FormControl();
+
+  nameInput = new FormControl("");
+  emailInput = new FormControl("");
 
   constructor(
     private userService: UserService,
@@ -25,6 +28,7 @@ export class UsersComponent implements OnInit {
     private router: Router, private route: ActivatedRoute) {
     this.dataSource = new ApiDataSource<AdminUserDto>(() => this.api.getUsers(this.query));
     this.nameInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyName(n));
+    this.emailInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyEmail(n));
   }
 
   async ngOnInit() {
@@ -33,6 +37,11 @@ export class UsersComponent implements OnInit {
       this.query.replaceWith(p);
       this.dataSource.loadData();
     });
+  }
+
+  async applySort(sort: Sort) {
+    this.query.applySort(sort);
+    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
   }
 
   async page(pageIndex: number, pageSize: number) {
@@ -51,5 +60,15 @@ export class UsersComponent implements OnInit {
     this.query.name = name;
     this.query.resetPager();
     await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+  }
+
+  async applyEmail(email: string) {
+    this.query.email = email;
+    this.query.resetPager();
+    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+  }
+
+  resetPassword() {
+    alert("TBD");
   }
 }
