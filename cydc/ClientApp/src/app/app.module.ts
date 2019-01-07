@@ -1,3 +1,4 @@
+import { PasswordResetDialog as PasswordResetDialog } from './admin/users/password-reset.dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, InjectionToken } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -27,7 +28,7 @@ import { NotAdminComponent } from './admin/not-admin/not-admin.component';
 import { OrdersComponent } from './admin/orders/orders.component';
 import { MenusComponent } from './admin/menus/menus.component';
 import { ClickEditComponent } from './shared/click-edit/click-edit.component';
-import { MenuCreateComponent } from './admin/menus/menu-create.component';
+import { MenuCreateDialog } from './admin/menus/menu-create.dialog';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { MenuCreateComponent } from './admin/menus/menu-create.component';
     NavMenuComponent,
     HomeComponent,
     NotFoundComponent,
-    OrderComponent, 
+    OrderComponent,
     LoginComponent,
     LoggedOutComponent,
     OrderCreateDialog,
@@ -45,19 +46,22 @@ import { MenuCreateComponent } from './admin/menus/menu-create.component';
     OrdersComponent,
     MenusComponent,
     ClickEditComponent,
-    MenuCreateComponent,  
+    MenuCreateDialog,
+    PasswordResetDialog,
   ],
   entryComponents: [
-    OrderCreateDialog
-  ], 
+    OrderCreateDialog,
+    MenuCreateDialog,
+    PasswordResetDialog
+  ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    FontAwesomeModule, 
+    FontAwesomeModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    LayoutModule, 
-    MaterialModule, 
+    LayoutModule,
+    MaterialModule,
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
   providers: [

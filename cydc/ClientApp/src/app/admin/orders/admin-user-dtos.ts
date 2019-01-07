@@ -18,7 +18,7 @@ export class AdminOrderQuery extends SortedPagedQuery<FoodOrderQueryDto> {
     if (this.userName !== "") o.userName = this.userName;
     if (this.startTime !== "" && this.startTime !== undefined) o.startTime = new Date(this.startTime).toISOString();
     if (this.endTime !== "" && this.endTime !== undefined) o.endTime = new Date(this.endTime).toISOString();
-    if (this.isPayed !== undefined) o.isPayed = this.isPayed ? "1" : "0";
+    if (this.isPayed !== undefined) o.isPayed = this.isPayed ? "true" : "false";
     return o;
   }
 

@@ -12,16 +12,25 @@
       <div class="row">
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <input matInput placeholder="用户名" [formControl]="userNameInput"
-                   [value]="query.userName" />
+            <input matInput placeholder="用户名" [formControl]="userNameInput" [value]="query.userName" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <mat-select placeholder="全部付款" [ngModel]="query.isPayed" (ngModelChange)="applyIsPayed(payedInput.value)" name="isPayed" #payedInput>
+              <mat-option [value]="undefined">全部付款</mat-option>
+              <mat-option [value]="true">已付</mat-option>
+              <mat-option [value]="false">未付</mat-option>
+            </mat-select>
           </mat-form-field>
         </div>
 
         <div class="col-6 col-md-3">
           <mat-form-field>
             <!-- start date datepicker -->
-            <input matInput [matDatepicker]="startPicker" placeholder="开始时间" name="startDate"
-                   [ngModel]="query.startTime" (ngModelChange)="applyStartTime(startDateInput.value)" #startDateInput>
+            <input matInput [matDatepicker]="startPicker" placeholder="开始时间" name="startDate" [ngModel]="query.startTime"
+              (ngModelChange)="applyStartTime(startDateInput.value)" #startDateInput>
             <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
             <mat-datepicker #startPicker startView="month"></mat-datepicker>
           </mat-form-field>
@@ -31,7 +40,7 @@
           <mat-form-field>
             <!-- start date datepicker -->
             <input matInput [matDatepicker]="endPicker" placeholder="结束时间" name="endDate" [min]="query.startTime"
-                   [ngModel]="query.endTime" (ngModelChange)="applyEndTime(endDateInput.value)" #endDateInput>
+              [ngModel]="query.endTime" (ngModelChange)="applyEndTime(endDateInput.value)" #endDateInput>
             <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
             <mat-datepicker #endPicker startView="month" [startAt]="query.startTime"></mat-datepicker>
           </mat-form-field>
@@ -87,7 +96,7 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[12,20,50,100]" showFirstLastButtons #pager
-                   [length]="dataSource.dataCount" (page)="page(pager.pageIndex, pager.pageSize)"></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[12,20,50,100]" showFirstLastButtons #pager [length]="dataSource.dataCount"
+      (page)="page(pager.pageIndex, pager.pageSize)"></mat-paginator>
   </div>
 </div>

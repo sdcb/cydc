@@ -1,9 +1,10 @@
-﻿using cydc.Database;
+﻿using cydc.Controllers.AdmimDtos;
+using cydc.Database;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cydc.Controllers.AdmimDtos
+namespace cydc.Controllers.AdminMenuDtos
 {
     public class MenuDto
     {
