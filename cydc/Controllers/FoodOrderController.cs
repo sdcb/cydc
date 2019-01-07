@@ -106,6 +106,7 @@ namespace cydc.Controllers
             return Ok(balance);
         }
 
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveComment(int orderId, [FromBody]string comment)
         {
             FoodOrder order = await _db.FoodOrder.FindAsync(orderId);

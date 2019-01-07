@@ -3,9 +3,7 @@ using cydc.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace cydc.Controllers
@@ -20,11 +18,12 @@ namespace cydc.Controllers
             _db = db;
         }
 
-        public async Task<AdmimDtos.PagedResult<MenuDto>> Menus(MenuQuery query)
+        public async Task<PagedResult<MenuDto>> Menus(MenuQuery query)
         {
             return await query.DoQuery(_db);
         }
 
+        [ValidateAntiForgeryToken]
         public async Task<bool> ToggleStatus(int menuId)
         {
             FoodMenu menu = _db.FoodMenu.Find(menuId);
@@ -33,6 +32,7 @@ namespace cydc.Controllers
             return menu.Enabled;
         }
 
+        [ValidateAntiForgeryToken]
         public async Task<string> SaveContent(int menuId, [FromBody][Required] string content)
         {
             FoodMenu menu = await _db.FoodMenu.FindAsync(menuId);
@@ -41,6 +41,7 @@ namespace cydc.Controllers
             return content;
         }
 
+        [ValidateAntiForgeryToken]
         public async Task<decimal> SavePrice(int menuId, [Required] decimal price)
         {
             FoodMenu menu = await _db.FoodMenu.FindAsync(menuId);
@@ -49,6 +50,7 @@ namespace cydc.Controllers
             return price;
         }
 
+        [ValidateAntiForgeryToken]
         public async Task<string> SaveTitle(int menuId, [FromBody][Required] string title)
         {
             FoodMenu menu = await _db.FoodMenu.FindAsync(menuId);
@@ -57,6 +59,7 @@ namespace cydc.Controllers
             return title;
         }
 
+        [ValidateAntiForgeryToken]
         public async Task Delete(int menuId)
         {
             FoodMenu menu = await _db.FoodMenu.FindAsync(menuId);
