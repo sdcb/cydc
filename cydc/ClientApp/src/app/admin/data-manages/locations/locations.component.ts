@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LocationManageDto, DataManagesApiService } from '../data-manages-api.service';
+import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 
 @Component({
   selector: 'app-location',
@@ -9,7 +10,9 @@ import { LocationManageDto, DataManagesApiService } from '../data-manages-api.se
 export class LocationsComponent implements OnInit {
   allLocation!: LocationManageDto[];
   displayedColumns = ["id", "location", "foodOrderCount", "status", "action"]
-  constructor(private api: DataManagesApiService) { }
+  constructor(
+    private api: DataManagesApiService, 
+    private loading: GlobalLoadingService) { }
 
   ngOnInit() {
     this.loadData();
@@ -17,6 +20,11 @@ export class LocationsComponent implements OnInit {
 
   loadData() {
     this.api.getAllLocation().subscribe(x => this.allLocation = x);
+  }
+
+  async toggleEnabled(item: LocationManageDto) {
+    await this.loading.wrap(this.api.toggleLocationEnabled(item.id).toPromise());
+    this.loadData();
   }
 
   delete(item: LocationManageDto) {
