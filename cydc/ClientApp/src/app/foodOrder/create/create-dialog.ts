@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user.service';
-import { FoodOrderApiService, FoodTaste, OrderAddress, OrderCreateDto, FoodOrderMenu } from '../food-order-api.service';
+import { FoodOrderApiService, TasteDto, LocationDto, OrderCreateDto, FoodOrderMenu } from '../food-order-api.service';
 import { FormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
@@ -12,8 +12,8 @@ import { timer } from 'rxjs';
   styleUrls: ['./create-dialog.css']
 })
 export class OrderCreateDialog implements OnInit {
-  addresses: OrderAddress[] = [];
-  tastes: FoodTaste[] = [];
+  addresses: LocationDto[] = [];
+  tastes: TasteDto[] = [];
   personNames: string[] = [];
   selected: FoodOrderSelectedDto;
 
@@ -26,7 +26,7 @@ export class OrderCreateDialog implements OnInit {
   }
 
   ngOnInit() {
-    this.api.getAllAddress().subscribe(async v => {
+    this.api.getAllLocation().subscribe(async v => {
       this.addresses = v;
       const lastLocationId = await this.api.getMyLastLocationId().toPromise();
       this.selected.address = v.filter(x => x.id === lastLocationId)[0] || v[0];
@@ -54,8 +54,8 @@ export class OrderCreateDialog implements OnInit {
 }
 
 export class FoodOrderSelectedDto {
-  address: OrderAddress | undefined;
-  taste: FoodTaste | undefined;
+  address: LocationDto | undefined;
+  taste: TasteDto | undefined;
   comment: string | undefined;
   isMe: boolean = true;
   otherPersonName = new FormControl();

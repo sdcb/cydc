@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FoodOrderApiService } from 'src/app/foodOrder/food-order-api.service';
+import { FoodOrderApiService, LocationDto, TasteDto } from 'src/app/foodOrder/food-order-api.service';
 import { UserService } from 'src/app/services/user.service';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { AdminApiService } from '../admin-api.service';
@@ -20,6 +20,8 @@ import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 export class OrdersComponent implements OnInit {
   dataSource: ApiDataSource<FoodOrderDto>;
   query = new AdminOrderQuery();
+  allLocation!: LocationDto[];
+  allTaste!: TasteDto[];
   get displayedColumns() { return this.foodOrderApi.foodOrderColumnsForAdmin(); }
 
   userNameInput = new FormControl();
@@ -37,6 +39,9 @@ export class OrdersComponent implements OnInit {
 
   async ngOnInit() {
     await this.userService.ensureAdmin();
+    this.foodOrderApi.getAllLocation().subscribe(v => this.allLocation = v);
+    this.foodOrderApi.getAllTaste().subscribe(v => this.allTaste = v);
+
     this.route.queryParams.subscribe(p => {
       this.query.replaceWith(p);
       this.dataSource.loadData();
@@ -71,6 +76,16 @@ export class OrdersComponent implements OnInit {
 
   applyIsPayed(isPayed: boolean) {
     this.query.isPayed = isPayed;
+    this.afterApplied();
+  }
+
+  applyLocationId(locationId: number | undefined) {
+    this.query.locationId = locationId;
+    this.afterApplied();
+  }
+
+  applyTasteId(tasteId: number | undefined) {
+    this.query.tasteId = tasteId;
     this.afterApplied();
   }
 
