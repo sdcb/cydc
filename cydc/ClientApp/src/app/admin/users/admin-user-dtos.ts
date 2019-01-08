@@ -1,24 +1,28 @@
-import { PagedDto, PagedQuery } from 'src/app/shared/utils/paged-query';
+import { SortedPagedQuery, SortedPagedDto } from 'src/app/shared/utils/paged-query';
 
 
-export interface UserQueryDto extends PagedDto {
+export interface UserQueryDto extends SortedPagedDto {
   operator: string;
   name: string;
+  email: string;
 }
 
-export class AdminUserQuery extends PagedQuery<UserQueryDto> {
+export class AdminUserQuery extends SortedPagedQuery<UserQueryDto> {
   name: string = "";
+  email: string = "";
   operator: BalanceOperator = BalanceOperator.All;
 
   replaceWith(p: Partial<UserQueryDto>) {
     super.replaceWith(p);
     this.name = p.name || "";
+    this.email = p.email || "";
     this.operator = parseInt(p.operator!) || BalanceOperator.All;
   }
 
   toDto(): UserQueryDto {
     let o = <UserQueryDto>super.toDto();
     if (this.name !== "") o.name = this.name;
+    if (this.email !== "") o.email = this.email;
     if (this.operator !== BalanceOperator.All) o.operator = this.operator.toString();
     return o;
   }
@@ -29,6 +33,7 @@ export type AdminUserDto = {
   name: string;
   email: string;
   balance: number;
+  orderCount: number;
 }
 
 export enum BalanceOperator {

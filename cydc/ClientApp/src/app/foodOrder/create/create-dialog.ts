@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user.service';
-import { FoodOrderApiService, FoodTaste, OrderAddress, OrderCreateDto, FoodOrderMenu } from '../food-order-api.service';
+import { FoodOrderApiService, TasteDto, LocationDto, OrderCreateDto, FoodOrderMenu } from '../food-order-api.service';
 import { FormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
@@ -12,27 +12,29 @@ import { timer } from 'rxjs';
   styleUrls: ['./create-dialog.css']
 })
 export class OrderCreateDialog implements OnInit {
-  addresses: OrderAddress[] = [];
-  tastes: FoodTaste[] = [];
+  addresses: LocationDto[] = [];
+  tastes: TasteDto[] = [];
   personNames: string[] = [];
   selected: FoodOrderSelectedDto;
 
   constructor(
     public dialogRef: MatDialogRef<OrderCreateDialog, OrderCreateDto>,
-    public userService: UserService, 
-    private api: FoodOrderApiService, 
+    public userService: UserService,
+    private api: FoodOrderApiService,
     @Inject(MAT_DIALOG_DATA) menu: FoodOrderMenu) {
     this.selected = new FoodOrderSelectedDto(menu);
   }
 
   ngOnInit() {
-    this.api.getAllAddress().subscribe(v => {
+    this.api.getAllLocation().subscribe(async v => {
       this.addresses = v;
-      this.selected.address = v[0];
+      const lastLocationId = await this.api.getMyLastLocationId().toPromise();
+      this.selected.address = v.filter(x => x.id === lastLocationId)[0] || v[0];
     });
-    this.api.getAllTaste().subscribe(v => {
+    this.api.getAllTaste().subscribe(async v => {
       this.tastes = v;
-      this.selected.taste = v[0];
+      const lastTasteId = await this.api.getMyLastTasteId().toPromise();
+      this.selected.taste = v.filter(x => x.id === lastTasteId)[0] || v[0];
     });
     this.selected.otherPersonName.valueChanges.pipe(debounce(() => timer(500))).subscribe(val => {
       this.api.searchPersonNames(val).subscribe(personNames => {
@@ -52,8 +54,8 @@ export class OrderCreateDialog implements OnInit {
 }
 
 export class FoodOrderSelectedDto {
-  address: OrderAddress | undefined;
-  taste: FoodTaste | undefined;
+  address: LocationDto | undefined;
+  taste: TasteDto | undefined;
   comment: string | undefined;
   isMe: boolean = true;
   otherPersonName = new FormControl();

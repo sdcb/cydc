@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FoodOrderApiService } from 'src/app/foodOrder/food-order-api.service';
+import { FoodOrderApiService, LocationDto, TasteDto } from 'src/app/foodOrder/food-order-api.service';
 import { UserService } from 'src/app/services/user.service';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { AdminApiService } from '../admin-api.service';
@@ -10,6 +10,7 @@ import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Sort } from '@angular/material';
+import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 
 @Component({
   selector: 'app-orders',
@@ -19,21 +20,28 @@ import { Sort } from '@angular/material';
 export class OrdersComponent implements OnInit {
   dataSource: ApiDataSource<FoodOrderDto>;
   query = new AdminOrderQuery();
+  allLocation!: LocationDto[];
+  allTaste!: TasteDto[];
+  get displayedColumns() { return this.foodOrderApi.foodOrderColumnsForAdmin(); }
 
   userNameInput = new FormControl();
 
   constructor(
     private foodOrderApi: FoodOrderApiService,
-    private api: AdminApiService, 
+    private api: AdminApiService,
     private userService: UserService,
     public screenSize: ScreenSizeService,
-    private router: Router, private route: ActivatedRoute) {
+    private router: Router, private route: ActivatedRoute,
+    private loading: GlobalLoadingService) {
     this.dataSource = new ApiDataSource<FoodOrderDto>(() => this.api.getOrders(this.query));
     this.userNameInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyUserName(n));
   }
 
   async ngOnInit() {
     await this.userService.ensureAdmin();
+    this.foodOrderApi.getAllLocation().subscribe(v => this.allLocation = v);
+    this.foodOrderApi.getAllTaste().subscribe(v => this.allTaste = v);
+
     this.route.queryParams.subscribe(p => {
       this.query.replaceWith(p);
       this.dataSource.loadData();
@@ -71,12 +79,35 @@ export class OrdersComponent implements OnInit {
     this.afterApplied();
   }
 
+  applyLocationId(locationId: number | undefined) {
+    this.query.locationId = locationId;
+    this.afterApplied();
+  }
+
+  applyTasteId(tasteId: number | undefined) {
+    this.query.tasteId = tasteId;
+    this.afterApplied();
+  }
+
   async afterApplied() {
     this.query.resetPager();
     await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
   }
 
-  get displayedColumns() {
-    return this.foodOrderApi.foodOrderColumns();
-  };
+  async pay(item: FoodOrderDto) {
+    await this.loading.wrap(this.api.pay(item.id).toPromise());
+    this.dataSource.loadData();
+  }
+
+  async unpay(item: FoodOrderDto) {
+    await this.loading.wrap(this.api.unpay(item.id).toPromise());
+    this.dataSource.loadData();
+  }
+
+  async delete(item: FoodOrderDto) {
+    if (!confirm("确定要删除？")) return;
+
+    await this.loading.wrap(this.api.deleteOrder(item.id).toPromise());
+    this.dataSource.loadData();
+  }
 }

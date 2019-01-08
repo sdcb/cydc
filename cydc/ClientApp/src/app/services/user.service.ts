@@ -27,6 +27,10 @@ export class UserService {
     }
   }
 
+  async isAdmin() {
+    return (await this.loadUserStatus()).isAdmin;
+  }
+
   async ensureLogin() {
     if (!(await this.loadUserStatus()).isLoggedIn) {
       await this.router.navigateByUrl("/api/user/login", { queryParams: { redirectUrl: location.pathname + location.search } });
@@ -34,7 +38,7 @@ export class UserService {
   }
 
   async ensureAdmin() {
-    if (!(await this.loadUserStatus()).isAdmin) {
+    if (!this.isAdmin()) {
       await this.router.navigateByUrl("/admin/not-admin");
     };
   }
