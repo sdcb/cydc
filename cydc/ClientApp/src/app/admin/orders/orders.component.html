@@ -96,7 +96,7 @@
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef>操作</th>
         <td mat-cell *matCellDef="let item">
-          <button (click)="pay(item)" mat-icon-button matTooltip="付款" *ngIf="!item.isPayed">
+          <button (click)="pay(item)" mat-icon-button matTooltip="收到钱，付款" *ngIf="!item.isPayed">
             <mat-icon>payment</mat-icon>
           </button>
           <button (click)="unpay(item)" mat-icon-button matTooltip="取消付款" *ngIf="item.isPayed">
