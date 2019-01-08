@@ -10,10 +10,9 @@ import { UsersComponent } from './admin/users/users.component';
 import { NotAdminComponent } from './admin/not-admin/not-admin.component';
 import { OrdersComponent } from './admin/orders/orders.component';
 import { MenusComponent } from './admin/menus/menus.component';
-import { NotificationComponent } from './admin/notification/notification.component';
-import { TastesComponent } from './admin/tastes/tastes.component';
-import { LocationsComponent } from './admin/locations/locations.component';
-
+import { TastesComponent } from './admin/data-manages/tastes/tastes.component';
+import { LocationsComponent } from './admin/data-manages/locations/locations.component';
+import { NotificationComponent } from './admin/data-manages/notification/notification.component';
 export const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: "full",  },
   { path: 'welcome', component: HomeComponent, },

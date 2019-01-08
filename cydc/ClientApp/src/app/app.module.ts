@@ -29,9 +29,9 @@ import { OrdersComponent } from './admin/orders/orders.component';
 import { MenusComponent } from './admin/menus/menus.component';
 import { ClickEditComponent } from './shared/click-edit/click-edit.component';
 import { MenuCreateDialog } from './admin/menus/menu-create.dialog';
-import { NotificationComponent } from './admin/notification/notification.component';
-import { LocationsComponent } from './admin/locations/locations.component';
-import { TastesComponent } from './admin/tastes/tastes.component';
+import { TastesComponent } from './admin/data-manages/tastes/tastes.component';
+import { LocationsComponent } from './admin/data-manages/locations/locations.component';
+import { NotificationComponent } from './admin/data-manages/notification/notification.component';
 
 @NgModule({
   declarations: [
