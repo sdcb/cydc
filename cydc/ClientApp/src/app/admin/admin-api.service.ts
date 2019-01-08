@@ -38,4 +38,8 @@ export class AdminApiService {
   pay(orderId: number) {
     return this.http.post(`/api/admin/pay?orderId=${orderId}`, {});
   }
+
+  unpay(orderId: number) {
+    return this.http.post(`/api/admin/unpay?orderId=${orderId}`, {});
+  }
 }

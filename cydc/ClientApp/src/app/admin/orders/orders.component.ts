@@ -84,7 +84,14 @@ export class OrdersComponent implements OnInit {
     this.dataSource.loadData();
   }
 
+  async unpay(item: FoodOrderDto) {
+    await this.loading.wrap(this.api.unpay(item.id).toPromise());
+    this.dataSource.loadData();
+  }
+
   async delete(item: FoodOrderDto) {
+    if (!confirm("确定要删除？")) return;
+
     await this.loading.wrap(this.api.deleteOrder(item.id).toPromise());
     this.dataSource.loadData();
   }

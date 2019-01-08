@@ -48,32 +48,69 @@ namespace cydc.Controllers
         }
 
         [ValidateAntiForgeryToken]
-        public async Task DeleteOrder(int orderId)
+        public async Task<IActionResult> DeleteOrder(int orderId)
         {
-            FoodOrder order = await _db.FoodOrder.FindAsync(orderId);
-            _db.Entry(order).State = EntityState.Deleted;
-            await _db.SaveChangesAsync();
+            FoodOrder foodOrder = await _db.FoodOrder
+                .Include(x => x.FoodOrderPayment)
+                .Include(x => x.AccountDetails)
+                .FirstOrDefaultAsync(x => x.Id == orderId);
+
+            if (foodOrder.FoodOrderPayment != null) return BadRequest("Payment already exists.");
+            if (foodOrder.AccountDetails.Any(x => x.Amount > 0)) return BadRequest("Account already exists.");
+            
+            foreach (var item in foodOrder.AccountDetails)
+            {
+                _db.Entry(item).State = EntityState.Deleted;
+            }
+            _db.Entry(foodOrder).State = EntityState.Deleted;
+            return Ok(await _db.SaveChangesAsync());
         }
 
         [ValidateAntiForgeryToken]
-        public async Task Pay(int orderId)
+        public async Task<IActionResult> Pay(int orderId)
         {
-            FoodOrderPayment payment = await _db.FoodOrderPayment.FirstOrDefaultAsync(x => x.FoodOrderId == orderId);
-            if (payment == null)
+            FoodOrder foodOrder = await _db.FoodOrder
+                .Include(x => x.FoodOrderPayment)
+                .Include(x => x.AccountDetails)
+                .FirstOrDefaultAsync(x => x.Id == orderId);
+            if (foodOrder.FoodOrderPayment != null) return BadRequest("Payment already exists.");
+            if (foodOrder.AccountDetails.Sum(x => x.Amount) >= 0) return BadRequest("No amount exists.");
+
+            var payment = new FoodOrderPayment
             {
-                payment = new FoodOrderPayment
-                {
-                    FoodOrderId = orderId, 
-                    PayedTime = DateTime.Now, 
-                };
-                _db.Entry(payment).State = EntityState.Added;
-            }
-            else
+                FoodOrderId = orderId,
+                PayedTime = DateTime.Now,
+            };
+            _db.Entry(payment).State = EntityState.Added;
+
+            AccountDetails accounting = new AccountDetails
             {
-                payment.PayedTime = DateTime.Now;
-                _db.Entry(payment).State = EntityState.Modified;
+                Amount = -foodOrder.AccountDetails.Sum(x => x.Amount), 
+                CreateTime = DateTime.Now, 
+                FoodOrderId = orderId, 
+                UserId = foodOrder.OrderUserId,
+            };
+            _db.Entry(accounting).State = EntityState.Added;
+
+            return Ok(await _db.SaveChangesAsync());
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Unpay(int orderId)
+        {
+            FoodOrder foodOrder = await _db.FoodOrder
+                .Include(x => x.FoodOrderPayment)
+                .Include(x => x.AccountDetails)
+                .FirstOrDefaultAsync(x => x.Id == orderId);
+            if (foodOrder.FoodOrderPayment == null) return BadRequest("Payment does not exists.");
+
+            _db.Entry(foodOrder.FoodOrderPayment).State = EntityState.Deleted;
+            if (foodOrder.AccountDetails.Any(x => x.Amount > 0))
+            {
+                _db.Entry(foodOrder.AccountDetails.First(x => x.Amount > 0)).State = EntityState.Deleted;
             }
-            await _db.SaveChangesAsync();
+            
+            return Ok(await _db.SaveChangesAsync());
         }
     }
 }
