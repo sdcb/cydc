@@ -54,8 +54,13 @@ namespace cydc.Controllers
             await _db.SaveChangesAsync();
         }
 
-        public async Task<int> CreateLocation([FromBody][Required]Location location)
+        public async Task<int> CreateLocation([FromBody][Required]string name)
         {
+            var location = new Location
+            {
+                Enabled = true, 
+                Name = name
+            };
             _db.Add(location);
             await _db.SaveChangesAsync();
             return location.Id;
@@ -95,8 +100,13 @@ namespace cydc.Controllers
             await _db.SaveChangesAsync();
         }
 
-        public async Task<int> CreateTaste([FromBody][Required]TasteType taste)
+        public async Task<int> CreateTaste([FromBody][Required]string name)
         {
+            var taste = new TasteType
+            {
+                Enabled = true, 
+                Name = name, 
+            };
             _db.Add(taste);
             await _db.SaveChangesAsync();
             return taste.Id;
