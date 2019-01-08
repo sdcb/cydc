@@ -27,12 +27,10 @@
         </ng-container>
         <!-- admin stuff end -->
 
-        <a mat-button [routerLink]="['/api/user/login']"
-                *ngIf="!isLoggedIn">
+        <a mat-button [routerLink]="['/api/user/login']" *ngIf="!isLoggedIn">
           登录
         </a>
-        <a mat-button color="warn" (click)="logout()" matTooltip="已登录为: {{userService.userStatus.name}}"
-                *ngIf="isLoggedIn">
+        <a mat-button color="warn" (click)="logout()" matTooltip="已登录为: {{userService.userStatus.name}}" *ngIf="isLoggedIn">
           退出
         </a>
       </mat-toolbar-row>
@@ -41,7 +39,15 @@
 </header>
 
 <ng-template #adminButtons>
-  <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/users']">用户</a>
-  <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/orders']" [matBadge]="todayOrders > 0 ? todayOrders : ''">订单</a>
-  <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/menus']">菜单</a>
+  <button mat-button [matMenuTriggerFor]="dataManageMenu">
+    数据管理
+  </button><br/>
+  <mat-menu #dataManageMenu>
+    <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/tastes']">口味管理</a><br/>
+    <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/locations']">送餐地点</a><br/>
+    <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/notification']">通知管理</a><br/>
+  </mat-menu>
+  <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/users']">用户</a> <br/>
+  <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/orders']" [matBadge]="todayOrders > 0 ? todayOrders : ''">订单</a> <br/>
+  <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/menus']">菜单</a> <br/>
 </ng-template>

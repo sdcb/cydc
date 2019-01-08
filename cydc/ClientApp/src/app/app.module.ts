@@ -29,6 +29,9 @@ import { OrdersComponent } from './admin/orders/orders.component';
 import { MenusComponent } from './admin/menus/menus.component';
 import { ClickEditComponent } from './shared/click-edit/click-edit.component';
 import { MenuCreateDialog } from './admin/menus/menu-create.dialog';
+import { NotificationComponent } from './admin/notification/notification.component';
+import { LocationsComponent } from './admin/locations/locations.component';
+import { TastesComponent } from './admin/tastes/tastes.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +51,9 @@ import { MenuCreateDialog } from './admin/menus/menu-create.dialog';
     ClickEditComponent,
     MenuCreateDialog,
     PasswordResetDialog,
+    TastesComponent,
+    LocationsComponent,
+    NotificationComponent,
   ],
   entryComponents: [
     OrderCreateDialog,
