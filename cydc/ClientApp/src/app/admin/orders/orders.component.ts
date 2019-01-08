@@ -20,7 +20,7 @@ import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 export class OrdersComponent implements OnInit {
   dataSource: ApiDataSource<FoodOrderDto>;
   query = new AdminOrderQuery();
-  displayedColumns = this.foodOrderApi.foodOrderColumns();
+  get displayedColumns() { return this.foodOrderApi.foodOrderColumnsForAdmin(); }
 
   userNameInput = new FormControl();
 
@@ -29,7 +29,7 @@ export class OrdersComponent implements OnInit {
     private api: AdminApiService,
     private userService: UserService,
     public screenSize: ScreenSizeService,
-    private router: Router, private route: ActivatedRoute, 
+    private router: Router, private route: ActivatedRoute,
     private loading: GlobalLoadingService) {
     this.dataSource = new ApiDataSource<FoodOrderDto>(() => this.api.getOrders(this.query));
     this.userNameInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyUserName(n));

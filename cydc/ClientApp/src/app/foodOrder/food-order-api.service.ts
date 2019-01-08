@@ -52,11 +52,15 @@ export class FoodOrderApiService {
 
   foodOrderColumns() {
     if (this.size.md)
-      return ["orderTime", "menu", "comment", "price", "isPayed"];
+      return ["orderTime", "menu", "comment", "isPayed"];
     else if (this.size.lg)
-      return ["orderTime", "menu", "comment", "price", "isPayed", "action"]
+      return ["id", "orderTime", "menu", "comment", "price", "isPayed"];
     else
-      return ["id", "userName", "orderTime", "menu", "comment", "price", "isPayed", "action"];
+      return ["id", "userName", "orderTime", "menu", "comment", "price", "isPayed"];
+  };
+
+  foodOrderColumnsForAdmin() {
+    return this.foodOrderColumns().concat("action");
   };
 }
 
