@@ -20,13 +20,13 @@ namespace cydc.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public FoodOrderController(
-            CydcContext db, 
+            CydcContext db,
             IHttpContextAccessor httpContextAccessor)
         {
             _db = db;
             _httpContextAccessor = httpContextAccessor;
         }
-        
+
         public string SiteNotification()
         {
             return _db.SiteNotice.FirstOrDefault().Content;
@@ -39,7 +39,7 @@ namespace cydc.Controllers
             {
                 return BadRequest("Only admin can specify OtherPersonName.");
             }
-            
+
             string userId = await GetUserIdFromUserName(order.IsMe, order.OtherPersonName);
             if (userId == null)
             {
@@ -62,13 +62,13 @@ namespace cydc.Controllers
                 .OrderByDescending(x => x.OrderTime)
                 .Select(x => new FoodOrderDto
                 {
-                    Id = x.Id, 
-                    UserName = x.OrderUser.UserName, 
-                    OrderTime = x.OrderTime, 
-                    Menu = x.FoodMenu.Title, 
-                    Details = x.FoodMenu.Details, 
-                    Price = x.FoodMenu.Price, 
-                    Comment = x.Comment, 
+                    Id = x.Id,
+                    UserName = x.OrderUser.UserName,
+                    OrderTime = x.OrderTime,
+                    Menu = x.FoodMenu.Title,
+                    Details = x.FoodMenu.Details,
+                    Price = x.FoodMenu.Price,
+                    Comment = x.Comment,
                     IsPayed = x.FoodOrderPayment != null
                 })
                 .Take(100));
@@ -109,6 +109,26 @@ namespace cydc.Controllers
                 .Select(x => x.UserName)
                 .Take(5)
                 .ToListAsync();
+        }
+
+        public async Task<int> MyLastTaste()
+        {
+            int tasteId = await _db.FoodOrder
+                .OrderByDescending(x => x.Id)
+                .Where(x => x.OrderUserId == User.GetUserId())
+                .Select(x => x.TasteId)
+                .FirstOrDefaultAsync();
+            return tasteId;
+        }
+
+        public async Task<int> MyLastLocation()
+        {
+            int locationId = await _db.FoodOrder
+                .OrderByDescending(x => x.Id)
+                .Where(x => x.OrderUserId == User.GetUserId())
+                .Select(x => x.LocationId)
+                .FirstOrDefaultAsync();
+            return locationId;
         }
     }
 }

@@ -62,6 +62,14 @@ export class FoodOrderApiService {
   foodOrderColumnsForAdmin() {
     return this.foodOrderColumns().concat("action");
   };
+
+  getMyLastTasteId() {
+    return this.http.get<number>(`/api/foodOrder/myLastTaste`);
+  }
+
+  getMyLastLocationId() {
+    return this.http.get<number>(`/api/foodOrder/myLastLocation`);
+  }
 }
 
 export type OrderAddress = {
