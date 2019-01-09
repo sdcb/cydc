@@ -1,3 +1,5 @@
+import { ConfirmDialog } from './shared/dialogs/confirm/confirm.dialog';
+import { PromptDialog } from 'src/app/shared/dialogs/prompt/prompt.dialog';
 import { PasswordResetDialog as PasswordResetDialog } from './admin/users/password-reset.dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, InjectionToken } from '@angular/core';
@@ -32,6 +34,7 @@ import { MenuCreateDialog } from './admin/menus/menu-create.dialog';
 import { TastesComponent } from './admin/data-manages/tastes/tastes.component';
 import { LocationsComponent } from './admin/data-manages/locations/locations.component';
 import { NotificationComponent } from './admin/data-manages/notification/notification.component';
+import { SafeHtmlPipe } from './shared/pipes/safe-html.pipe';
 
 @NgModule({
   declarations: [
@@ -54,11 +57,14 @@ import { NotificationComponent } from './admin/data-manages/notification/notific
     TastesComponent,
     LocationsComponent,
     NotificationComponent,
+    PromptDialog, ConfirmDialog,
+    SafeHtmlPipe,
   ],
   entryComponents: [
     OrderCreateDialog,
     MenuCreateDialog,
-    PasswordResetDialog
+    PasswordResetDialog,
+    PromptDialog, ConfirmDialog
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -69,6 +75,9 @@ import { NotificationComponent } from './admin/data-manages/notification/notific
     LayoutModule,
     MaterialModule,
     RouterModule.forRoot(routes), BrowserAnimationsModule
+  ],
+  exports: [
+    SafeHtmlPipe,
   ],
   providers: [
     { provide: loginProvider, useValue: loginResolver },

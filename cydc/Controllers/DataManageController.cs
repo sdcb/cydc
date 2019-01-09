@@ -87,7 +87,7 @@ namespace cydc.Controllers
 
         public async Task<string> SaveTasteName(int tasteId, [FromBody][Required]string name)
         {
-            Location taste = await _db.Location.FindAsync(tasteId);
+            TasteType taste = await _db.TasteType.FindAsync(tasteId);
             taste.Name = name;
             await _db.SaveChangesAsync();
             return taste.Name;
