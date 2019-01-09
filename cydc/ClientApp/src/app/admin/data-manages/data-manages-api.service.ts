@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LocationDto, TasteDto } from 'src/app/foodOrder/food-order-api.service';
-import { LOCATION_INITIALIZED } from '@angular/common';
 
 @Injectable({providedIn: 'root'})
 export class DataManagesApiService {
