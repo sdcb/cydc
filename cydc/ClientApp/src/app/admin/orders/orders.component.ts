@@ -9,8 +9,9 @@ import { FormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Sort } from '@angular/material';
+import { Sort, MatDialog } from '@angular/material';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
+import { ConfirmDialog } from 'src/app/shared/dialogs/confirm/confirm.dialog';
 
 @Component({
   selector: 'app-orders',
@@ -29,6 +30,7 @@ export class OrdersComponent implements OnInit {
   constructor(
     private foodOrderApi: FoodOrderApiService,
     private api: AdminApiService,
+    private dialogService: MatDialog,
     private userService: UserService,
     public screenSize: ScreenSizeService,
     private router: Router, private route: ActivatedRoute,
@@ -105,7 +107,7 @@ export class OrdersComponent implements OnInit {
   }
 
   async delete(item: FoodOrderDto) {
-    if (!confirm("确定要删除？")) return;
+    if (!await ConfirmDialog.show(this.dialogService, `确定要删除？`)) return;
 
     await this.loading.wrap(this.api.deleteOrder(item.id).toPromise());
     this.dataSource.loadData();
