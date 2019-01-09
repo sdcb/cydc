@@ -1,6 +1,6 @@
 import { ConfirmDialog } from './../../../shared/dialogs/confirm/confirm.dialog';
-import { MatDialog } from '@angular/material';
-import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatTableDataSource, MatSort } from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { LocationManageDto, DataManagesApiService } from '../data-manages-api.service';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 import { PromptDialog } from 'src/app/shared/dialogs/prompt/prompt.dialog';
@@ -11,19 +11,22 @@ import { PromptDialog } from 'src/app/shared/dialogs/prompt/prompt.dialog';
   styleUrls: ['./locations.component.css'],
 })
 export class LocationsComponent implements OnInit {
-  allLocation!: LocationManageDto[];
-  displayedColumns = ["id", "location", "foodOrderCount", "status", "action"]
+  dataSource = new MatTableDataSource<LocationManageDto>();
+  displayedColumns = ["id", "location", "foodOrderCount", "enabled", "action"];
+  @ViewChild(MatSort) sort!: MatSort;
+
   constructor(
     private api: DataManagesApiService,
     private loading: GlobalLoadingService,
     private dialogService: MatDialog) { }
 
   ngOnInit() {
+    this.dataSource.sort = this.sort;
     this.loadData();
   }
 
   async loadData() {
-    this.allLocation = await this.loading.wrap(this.api.getAllLocation().toPromise());
+    this.dataSource.data = await this.loading.wrap(this.api.getAllLocation().toPromise());
   }
 
   async toggleEnabled(item: LocationManageDto) {
