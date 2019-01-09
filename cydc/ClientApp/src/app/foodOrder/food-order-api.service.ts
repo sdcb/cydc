@@ -65,7 +65,7 @@ export class FoodOrderApiService {
     else if (this.size.lg)
       return ["userName", "orderTime", "menu", "comment", "price", "isPayed", "action"];
     else
-      return ["userName", "location", "taste", "orderTime", "menu", "location", "comment", "price", "isPayed", "action"];
+      return ["userName", "location", "taste", "orderTime", "menu", "comment", "price", "isPayed", "action"];
   };
 
   getMyLastTasteId() {

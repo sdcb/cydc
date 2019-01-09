@@ -40,7 +40,7 @@
         <div class="col-6 col-md-3">
           <mat-form-field>
             <mat-select placeholder="口味..." [ngModel]="query.tasteId" (ngModelChange)="applyTasteId(tasteInput.value)"
-              name="location" #tasteInput>
+              name="taste" #tasteInput>
               <mat-option [value]="undefined">全部口味</mat-option>
               <mat-option *ngFor="let item of allTaste" [value]="item.id">{{item.name}}</mat-option>
             </mat-select>
