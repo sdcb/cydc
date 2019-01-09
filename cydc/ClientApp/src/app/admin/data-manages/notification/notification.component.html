@@ -13,5 +13,5 @@
       <textarea matInput rows="10" placeholder="编辑" [(ngModel)]="notification"></textarea>
     </mat-form-field>
   </div>
-  <div class="col-12 col-md-6" [innerHtml]="notification"></div>
+  <div class="col-12 col-md-6" [innerHtml]="notification | safeHtml"></div>
 </div>
