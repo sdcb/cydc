@@ -19,12 +19,12 @@ export class FoodOrderApiService {
     return this.http.get<FoodOrderMenu[]>("/api/info/menu");
   }
 
-  getAllAddress() {
-    return this.http.get<OrderAddress[]>("/api/info/address");
+  getAllLocation() {
+    return this.http.get<LocationDto[]>("/api/info/address");
   }
 
   getAllTaste() {
-    return this.http.get<FoodTaste[]>("/api/info/taste");
+    return this.http.get<TasteDto[]>("/api/info/taste");
   }
 
   create(dto: OrderCreateDto) {
@@ -52,20 +52,37 @@ export class FoodOrderApiService {
 
   foodOrderColumns() {
     if (this.size.md)
-      return ["orderTime", "menu", "comment", "price", "isPayed"];
+      return ["orderTime", "menu", "comment", "isPayed"];
     else if (this.size.lg)
-      return ["id", "orderTime", "menu", "comment", "price", "isPayed"]
+      return ["id", "orderTime", "menu", "comment", "price", "isPayed"];
     else
       return ["id", "userName", "orderTime", "menu", "comment", "price", "isPayed"];
   };
+
+  foodOrderColumnsForAdmin() {
+    if (this.size.md)
+      return ["userName", "orderTime", "menu", "comment", "action"];
+    else if (this.size.lg)
+      return ["userName", "orderTime", "menu", "comment", "price", "isPayed", "action"];
+    else
+      return ["userName", "location", "taste", "orderTime", "menu", "location", "comment", "price", "isPayed", "action"];
+  };
+
+  getMyLastTasteId() {
+    return this.http.get<number>(`/api/foodOrder/myLastTaste`);
+  }
+
+  getMyLastLocationId() {
+    return this.http.get<number>(`/api/foodOrder/myLastLocation`);
+  }
 }
 
-export type OrderAddress = {
+export type LocationDto = {
   id: number;
-  name: string;
+  location: string;
 }
 
-export type FoodTaste = {
+export type TasteDto = {
   id: number;
   name: string;
 }

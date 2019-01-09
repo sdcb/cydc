@@ -43,7 +43,7 @@ export class MyFoodOrderComponent implements OnInit {
   }
 
   isToday(item: FoodOrderItem) {
-    new Date(item.orderTime).getDate() === new Date().getDate();
+    return new Date(item.orderTime).getDate() === new Date().getDate();
   }
 
   get displayedColumns() {

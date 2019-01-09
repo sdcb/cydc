@@ -22,4 +22,24 @@ export class AdminApiService {
       params: <Params>query.toDto()
     });
   }
+
+  resetPassword(id: string, password: string) {
+    return this.http.post<boolean>(`/api/admin/resetPassword?userId=${id}`, password);
+  }
+  
+  todayOrders() {
+    return this.http.get<number>(`/api/admin/todayOrders`);
+  }
+
+  deleteOrder(orderId: number) {
+    return this.http.post(`/api/admin/deleteOrder?orderId=${orderId}`, {});
+  }
+
+  pay(orderId: number) {
+    return this.http.post(`/api/admin/pay?orderId=${orderId}`, {});
+  }
+
+  unpay(orderId: number) {
+    return this.http.post(`/api/admin/unpay?orderId=${orderId}`, {});
+  }
 }

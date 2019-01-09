@@ -4,7 +4,7 @@
       <div class="row">
         <h2 class="d-inline">点餐列表</h2>
         <span class="flex-fill"></span>
-        <h2 class="d-inline">余额：{{balance === undefined ? '--' : balance}}元</h2>
+        <h2 class="d-inline">余额：{{balance === undefined ? '--' : balance | currency: '￥'}}</h2>
       </div>
     </div>
   </div>
@@ -34,7 +34,7 @@
       <ng-container matColumnDef="comment">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>备注</th>
         <td mat-cell *matCellDef="let item">
-          <app-click-edit *ngIf="isToday(item)" [value]="item.comment" (save)="saveComment($event, item)" [matTooltip]="item.comment || '点击编辑'">
+          <app-click-edit *ngIf="isToday(item)" [value]="item.comment" (save)="saveComment($event, item)" [matTooltip]="(item.comment || '') + ' 点击编辑'">
             {{item.comment ? '💬' : '<无>'}}
           </app-click-edit>
           <span *ngIf="!isToday(item)" [matTooltip]="item.comment">{{item.comment ? '💬' : ''}}</span>

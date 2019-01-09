@@ -19,6 +19,10 @@ namespace cydc.Controllers.AdmimDtos
 
         public decimal Price { get; set; }
 
+        public string Location { get; set; }
+
+        public string Taste { get; set; }
+
         public string Comment { get; set; }
 
         public bool IsPayed { get; set; }
@@ -34,31 +38,42 @@ namespace cydc.Controllers.AdmimDtos
 
         public bool? IsPayed { get; set; }
 
+        public int? LocationId { get; set; }
+
+        public int? TasteId { get; set; }
+
         public override string GetDefaultSortString() => "Id DESC";
 
         public async Task<PagedResult<FoodOrderDto>> DoQuery(CydcContext db)
         {
-            IQueryable<FoodOrderDto> query = db.FoodOrder
-                .Select(x => new FoodOrderDto
-                {
-                    Id = x.Id,
-                    UserName = x.OrderUser.UserName,
-                    OrderTime = x.OrderTime,
-                    Menu = x.FoodMenu.Title,
-                    Details = x.FoodMenu.Details,
-                    Price = x.FoodMenu.Price,
-                    Comment = x.Comment,
-                    IsPayed = x.FoodOrderPayment != null
-                }).ToSorted(this);
+            IQueryable<FoodOrder> rawQuery = db.FoodOrder;
 
             if (!String.IsNullOrEmpty(UserName))
-                query = query.Where(x => x.UserName.Contains(UserName));
+                rawQuery = rawQuery.Where(x => x.OrderUser.UserName.Contains(UserName));
             if (StartTime != null)
-                query = query.Where(x => x.OrderTime >= StartTime.Value);
+                rawQuery = rawQuery.Where(x => x.OrderTime >= StartTime.Value);
             if (EndTime != null)
-                query = query.Where(x => x.OrderTime < EndTime.Value);
+                rawQuery = rawQuery.Where(x => x.OrderTime < EndTime.Value);
             if (IsPayed != null)
-                query = query.Where(x => x.IsPayed == IsPayed.Value);
+                rawQuery = rawQuery.Where(x => (x.FoodOrderPayment != null) == IsPayed.Value);
+            if (LocationId != null)
+                rawQuery = rawQuery.Where(x => x.LocationId == LocationId.Value);
+            if (TasteId != null)
+                rawQuery = rawQuery.Where(x => x.TasteId == TasteId.Value);
+
+            var query = rawQuery.Select(x => new FoodOrderDto
+            {
+                Id = x.Id,
+                UserName = x.OrderUser.UserName,
+                OrderTime = x.OrderTime,
+                Menu = x.FoodMenu.Title,
+                Details = x.FoodMenu.Details,
+                Price = x.FoodMenu.Price,
+                Location = x.Location.Name,
+                Taste = x.Taste.Name,
+                Comment = x.Comment,
+                IsPayed = x.FoodOrderPayment != null
+            }).ToSorted(this);
 
             return await query.ToPagedResultAsync(this);
         }

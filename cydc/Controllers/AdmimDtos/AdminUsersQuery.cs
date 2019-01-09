@@ -13,12 +13,15 @@ namespace cydc.Controllers.AdmimDtos
         public string Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public int OrderCount { get; set; }
         public decimal Balance { get; set; }
     }
 
     public class AdminUserQuery : SortedPagedQuery
     {
         public string Name { get; set; }
+
+        public string Email { get; set; }
 
         public SearchUserBalanceOperator Operator { get; set; } = SearchUserBalanceOperator.All;
 
@@ -32,11 +35,14 @@ namespace cydc.Controllers.AdmimDtos
                    Id = x.Id,
                    Name = x.UserName,
                    Email = x.Email,
-                   Balance = x.AccountDetails.Sum(a => a.Amount)
+                   Balance = x.AccountDetails.Sum(a => a.Amount), 
+                   OrderCount = x.FoodOrder.Count, 
                }).ToSorted(this);
 
             if (!string.IsNullOrWhiteSpace(Name))
                 query = query.Where(x => x.Name.Contains(Name));
+            if (!string.IsNullOrWhiteSpace(Email))
+                query = query.Where(x => x.Email.Contains(Email));
             query = ByOperator(query, Operator);
 
             return query.ToPagedResultAsync(this);

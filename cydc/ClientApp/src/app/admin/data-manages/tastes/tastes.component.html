@@ -1,0 +1,55 @@
+<div class="row mat-elevation-z2">
+  <div class="col-12">
+    <div class="container">
+      <div class="row">
+        <h2 class="d-inline">口味管理</h2>
+        <span class="flex-fill"></span>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <table mat-table matSort [dataSource]="dataSource" class="w100">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+        <td mat-cell *matCellDef="let item">{{item.id}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>名称</th>
+        <td mat-cell *matCellDef="let item">
+          <app-click-edit [value]="item.name" (save)="applyName(item, $event)">{{item.name}}</app-click-edit>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="enabled">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>状态</th>
+        <td mat-cell *matCellDef="let item">
+          <mat-checkbox color="primary" [ngModel]="item.enabled" (ngModelChange)="toggleEnabled(item)">
+            {{item.enabled? '已显示' : '已禁用'}}
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="foodOrderCount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>订单数量</th>
+        <td mat-cell *matCellDef="let item">{{item.foodOrderCount}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>操作</th>
+        <td mat-cell *matCellDef="let item">
+          <button (click)="delete(item)" mat-icon-button matTooltip="删除" [disabled]="item.foodOrderCount > 0">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</div>
+
+<button class="add-button" mat-fab color="primary" matTooltip="添加..." (click)="showAddDialog()">
+  <mat-icon>add</mat-icon>
+</button>

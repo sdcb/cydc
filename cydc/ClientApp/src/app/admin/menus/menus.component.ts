@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { menuColumns, AdminMenuQuery, MenuDto, AdminMenuApi } from './admin-menu-api';
+import { AdminMenuApi } from './admin-menu-api';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { FormControl } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiDataSource } from 'src/app/shared/utils/paged-query';
-import { Sort, MatInput } from '@angular/material';
+import { Sort, MatInput, MatDialog } from '@angular/material';
 import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
+import { MenuCreateDialog } from './menu-create.dialog';
+import { AdminMenuQuery, MenuDto } from './admin-menu-dtos';
 
 @Component({
   selector: 'app-menus',
@@ -25,15 +27,17 @@ export class MenusComponent implements OnInit {
     public screenSize: ScreenSizeService,
     private userService: UserService,
     private router: Router, private route: ActivatedRoute,
-    private api: AdminMenuApi, 
-    private loading: GlobalLoadingService) {
+    private api: AdminMenuApi,
+    private loading: GlobalLoadingService,
+    private dialogService: MatDialog) {
     this.dataSource = new ApiDataSource<MenuDto>(() => this.api.getMenus(this.query));
     this.detailsInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyDetails(n));
     this.priceInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyPrice(n));
   }
 
   get displayedColumns() {
-    return menuColumns(this.screenSize);
+    if (this.screenSize.md) return ["createTime", "details", "price", "orderCount", "enabled"];
+    return ["id", "createTime", "title", "details", "price", "orderCount", "enabled", "action"];
   }
 
   async ngOnInit() {
@@ -95,11 +99,20 @@ export class MenusComponent implements OnInit {
   async savePrice(editValue: string, item: MenuDto) {
     item.price = await this.api.savePrice(item.id, editValue).toPromise();
   }
-  
+
   async delete(item: MenuDto) {
     if (confirm("确定删除？")) {
       await this.loading.wrap(this.api.delete(item.id).toPromise());
       this.dataSource.loadData();
     }
+  }
+
+  async showAddDialog() {
+    let dto = await MenuCreateDialog.getCreateDto(this.dialogService);
+    if (dto === undefined) return;
+
+    await this.loading.wrap(this.api.createMenu(dto).toPromise());
+    this.query.resetPager();
+    this.dataSource.loadData();
   }
 }
