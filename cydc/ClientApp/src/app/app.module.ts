@@ -1,3 +1,5 @@
+import { ConfirmDialog } from './shared/dialogs/confirm/confirm.dialog';
+import { PromptDialog } from 'src/app/shared/dialogs/prompt/prompt.dialog';
 import { PasswordResetDialog as PasswordResetDialog } from './admin/users/password-reset.dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, InjectionToken } from '@angular/core';
@@ -54,11 +56,13 @@ import { NotificationComponent } from './admin/data-manages/notification/notific
     TastesComponent,
     LocationsComponent,
     NotificationComponent,
+    PromptDialog, ConfirmDialog
   ],
   entryComponents: [
     OrderCreateDialog,
     MenuCreateDialog,
-    PasswordResetDialog
+    PasswordResetDialog,
+    PromptDialog, ConfirmDialog
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

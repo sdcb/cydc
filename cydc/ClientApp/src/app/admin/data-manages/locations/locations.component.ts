@@ -1,25 +1,29 @@
+import { ConfirmDialog } from './../../../shared/dialogs/confirm/confirm.dialog';
+import { MatDialog } from '@angular/material';
 import { Component, OnInit } from '@angular/core';
 import { LocationManageDto, DataManagesApiService } from '../data-manages-api.service';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
+import { PromptDialog } from 'src/app/shared/dialogs/prompt/prompt.dialog';
 
 @Component({
   selector: 'app-location',
   templateUrl: './locations.component.html',
-  styles: []
+  styleUrls: ['./locations.component.css'],
 })
 export class LocationsComponent implements OnInit {
   allLocation!: LocationManageDto[];
   displayedColumns = ["id", "location", "foodOrderCount", "status", "action"]
   constructor(
-    private api: DataManagesApiService, 
-    private loading: GlobalLoadingService) { }
+    private api: DataManagesApiService,
+    private loading: GlobalLoadingService,
+    private dialogService: MatDialog) { }
 
   ngOnInit() {
     this.loadData();
   }
 
-  loadData() {
-    this.api.getAllLocation().subscribe(x => this.allLocation = x);
+  async loadData() {
+    this.allLocation = await this.loading.wrap(this.api.getAllLocation().toPromise());
   }
 
   async toggleEnabled(item: LocationManageDto) {
@@ -32,8 +36,16 @@ export class LocationsComponent implements OnInit {
     this.loadData();
   }
 
-  delete(item: LocationManageDto) {
-    if (!confirm(`确定要删除${item.location}吗？`)) return;
-    this.api.deleteLocation(item.id).subscribe(() => this.loadData());
+  async delete(item: LocationManageDto) {
+    if (!await ConfirmDialog.show(this.dialogService, `确定要删除${item.location}吗？`)) return;
+    await this.loading.wrap(this.api.deleteLocation(item.id).toPromise());
+    this.loadData();
+  }
+
+  async showAddDialog() {
+    let name: string | undefined = await PromptDialog.show(this.dialogService, "请输入送餐地点:");
+    if (name === undefined) return;
+    await this.loading.wrap(this.api.createLocation(name).toPromise());
+    this.loadData();
   }
 }

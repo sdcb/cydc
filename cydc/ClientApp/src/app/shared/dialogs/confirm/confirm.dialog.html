@@ -1,0 +1,8 @@
+<form (ngSubmit)="confirm()">
+  <h2>{{confirmText}}</h2>
+  <div mat-dialog-actions>
+    <span class="flex-fill"></span>
+    <button type="button" cdkFocusInitial mat-button (click)="cancel()">取消</button>
+    <button mat-button color="primary">确认</button>
+  </div>
+</form>
