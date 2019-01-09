@@ -27,6 +27,11 @@ export class LocationsComponent implements OnInit {
     this.loadData();
   }
 
+  async applyLocation(item: LocationManageDto, name: string) {
+    await this.loading.wrap(this.api.saveLocationName(item.id, name).toPromise());
+    this.loadData();
+  }
+
   delete(item: LocationManageDto) {
     if (!confirm(`确定要删除${item.location}吗？`)) return;
     this.api.deleteLocation(item.id).subscribe(() => this.loadData());
