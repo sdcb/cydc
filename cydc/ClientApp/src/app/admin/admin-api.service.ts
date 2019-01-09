@@ -23,10 +23,16 @@ export class AdminApiService {
     });
   }
 
+  saveOrderComment(orderId: number, comment: string): any {
+    return this.http.post(`/api/admin/saveOrderComment?orderId=${orderId}`, comment, {
+      responseType: "text"
+    });
+  }
+
   resetPassword(id: string, password: string) {
     return this.http.post<boolean>(`/api/admin/resetPassword?userId=${id}`, password);
   }
-  
+
   todayOrders() {
     return this.http.get<number>(`/api/admin/todayOrders`);
   }
