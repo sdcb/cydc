@@ -35,6 +35,7 @@ import { TastesComponent } from './admin/data-manages/tastes/tastes.component';
 import { LocationsComponent } from './admin/data-manages/locations/locations.component';
 import { NotificationComponent } from './admin/data-manages/notification/notification.component';
 import { SafeHtmlPipe } from './shared/pipes/safe-html.pipe';
+import { TruncatePipe } from './shared/pipes/truncate.pipe';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,7 @@ import { SafeHtmlPipe } from './shared/pipes/safe-html.pipe';
     LocationsComponent,
     NotificationComponent,
     PromptDialog, ConfirmDialog,
-    SafeHtmlPipe,
+    SafeHtmlPipe, TruncatePipe,
   ],
   entryComponents: [
     OrderCreateDialog,
@@ -77,7 +78,7 @@ import { SafeHtmlPipe } from './shared/pipes/safe-html.pipe';
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
   exports: [
-    SafeHtmlPipe,
+    SafeHtmlPipe, TruncatePipe
   ],
   providers: [
     { provide: loginProvider, useValue: loginResolver },

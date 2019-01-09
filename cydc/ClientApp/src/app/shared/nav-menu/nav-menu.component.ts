@@ -13,7 +13,7 @@ export class NavMenuComponent implements OnInit {
 
   constructor(
     public userService: UserService,
-    public size: ScreenSizeService, 
+    public size: ScreenSizeService,
     public api: AdminApiService) {
   }
 
