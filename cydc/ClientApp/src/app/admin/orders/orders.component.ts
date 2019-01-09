@@ -96,6 +96,10 @@ export class OrdersComponent implements OnInit {
     await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
   }
 
+  async saveComment(comment: string, item: FoodOrderDto) {
+    item.comment = await this.api.saveOrderComment(item.id, comment).toPromise();
+  }
+
   async pay(item: FoodOrderDto) {
     await this.loading.wrap(this.api.pay(item.id).toPromise());
     this.dataSource.loadData();

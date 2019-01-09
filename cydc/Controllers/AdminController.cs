@@ -34,6 +34,15 @@ namespace cydc.Controllers
         }
 
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveOrderComment(int orderId, [FromBody]string comment)
+        {
+            FoodOrder order = await _db.FoodOrder.FindAsync(orderId);
+            order.Comment = comment;
+            await _db.SaveChangesAsync();
+            return Ok(order.Comment);
+        }
+
+        [ValidateAntiForgeryToken]
         public async Task<bool> ResetPassword(string userId, [FromBody][Required] string password)
         {
             AspNetUsers user = await _userManager.FindByIdAsync(userId);
