@@ -57,7 +57,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
       let order = await this.foodOrderApi.getFoodOrder(orderId).toPromise();
       let msg = `新订单 ${order.userName} ${order.menu}，口味${order.taste}，送到${order.location} ` + 
         (order.comment && `备注 ${order.comment}`);
-      console.log(msg);
       speechSynthesis.speak(new SpeechSynthesisUtterance(msg));
     });
   }
