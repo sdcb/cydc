@@ -76,7 +76,6 @@ export class SortedPagedQuery<T extends SortedPagedDto> extends PagedQuery<T> {
 
   resetPager() {
     this.pageIndex = 0;
-    this.pageSize = 12;
   }
 }
 
