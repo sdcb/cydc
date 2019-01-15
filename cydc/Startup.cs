@@ -1,4 +1,5 @@
 using cydc.Database;
+using cydc.Hubs;
 using cydc.Managers.Identities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +37,7 @@ namespace cydc
             services.AddDbContext<CydcContext>(options => options.UseSqlServer(Configuration["CydcConnection"]));
             services.AddHttpContextAccessor();
             services.AddAntiforgery(o => o.HeaderName = "X-XSRF-TOKEN");
+            services.AddSignalR();
 
             services.AddDefaultIdentity<AspNetUsers>(o =>
                 {
@@ -79,6 +81,11 @@ namespace cydc
                 routes.MapRoute(
                     name: "default",
                     template: "api/{controller}/{action=Index}/{id?}");
+            });
+
+            app.UseSignalR(o =>
+            {
+                o.MapHub<NewOrderHub>("/hubs/newOrder");
             });
 
             app.UseSpa(spa =>
