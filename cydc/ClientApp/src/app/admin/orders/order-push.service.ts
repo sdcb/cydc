@@ -38,8 +38,8 @@ export class OrderPushService {
 
     const subscription = this.subject.subscribe(v => next(v));
     return new Subscription(() => {
-      console.log("unsubscribe");
       subscription.unsubscribe();
+      this.subscriptionCount -= 1;
       if (this.subscriptionCount === 0) {
         this.hubConnection.stop();
       }
