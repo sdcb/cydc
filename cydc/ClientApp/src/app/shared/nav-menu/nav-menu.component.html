@@ -48,6 +48,8 @@
     <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/notification']">通知管理</a><br/>
   </mat-menu>
   <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/users']">用户</a> <br/>
-  <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/orders']" [matBadge]="todayOrders > 0 ? todayOrders : ''">订单</a> <br/>
+  <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/orders']"
+    [queryParams]="{pageSize: 100, startTime: getToday()}"
+    [matBadge]="todayOrders > 0 ? todayOrders : ''">订单</a> <br/>
   <a mat-button routerLinkActive="mat-primary" [routerLink]="['/admin/menus']">菜单</a> <br/>
 </ng-template>

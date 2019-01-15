@@ -148,7 +148,7 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[12,20,50,100]" showFirstLastButtons #pager [length]="dataSource.dataCount"
+    <mat-paginator [pageSizeOptions]="[12,20,50,100]" pageSize="100" showFirstLastButtons #pager [length]="dataSource.dataCount"
       (page)="page(pager.pageIndex, pager.pageSize)"></mat-paginator>
   </div>
 </div>
