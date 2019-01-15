@@ -35,7 +35,8 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>备注</th>
         <td mat-cell *matCellDef="let item">
           <app-click-edit *ngIf="isToday(item)" [value]="item.comment" (save)="saveComment($event, item)" [matTooltip]="(item.comment || '') + ' 点击编辑'">
-            {{item.comment || '🖊' | truncate: 12}}
+            {{item.comment | truncate: 12}}
+            <mat-icon *ngIf="!item.comment">edit</mat-icon>
           </app-click-edit>
           <span *ngIf="!isToday(item) && screenSize.md" [matTooltip]="item.comment">{{item.comment && '💬'}}</span>
           <span *ngIf="!isToday(item) && !screenSize.md" [matTooltip]="item.comment">{{item.comment | truncate: 12}}</span>

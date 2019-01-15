@@ -61,6 +61,14 @@ namespace cydc.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin")]
+        public async Task<FoodOrderDto> GetFoodOrder(int id)
+        {
+            return await FoodOrderDto.FromFoodOrder(_db.FoodOrder)
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
+        }
+
         public IActionResult My()
         {
             return Ok(_db.FoodOrder

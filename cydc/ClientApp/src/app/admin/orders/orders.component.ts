@@ -52,11 +52,14 @@ export class OrdersComponent implements OnInit, OnDestroy {
       this.query.replaceWith(p);
       this.dataSource.loadData();
     });
-    this.subscription = this.orderPushService.onNewOrder().subscribe(() => {
-      speechSynthesis.speak(new SpeechSynthesisUtterance("你有新订单了"));
+    this.subscription = await this.orderPushService.subscribe(async orderId => {
       this.dataSource.loadData();
+      let order = await this.foodOrderApi.getFoodOrder(orderId).toPromise();
+      let msg = `新订单 ${order.userName} ${order.menu}，口味${order.taste}，送到${order.location} ` + 
+        (order.comment && `备注 ${order.comment}`);
+      console.log(msg);
+      speechSynthesis.speak(new SpeechSynthesisUtterance(msg));
     });
-    this.orderPushService.start();
   }
 
   async ngOnDestroy() {

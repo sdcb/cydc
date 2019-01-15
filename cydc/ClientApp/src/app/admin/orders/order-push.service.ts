@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HubConnectionBuilder, HubConnection, HubConnectionState } from "@aspnet/signalr";
-import { Observable, Subject, of } from 'rxjs';
+import { Subject, of, Subscription } from 'rxjs';
 import { timeout } from 'rxjs/operators';
+import { FoodOrderDto } from './admin-user-dtos';
 
 @Injectable({
   providedIn: "root"
 })
 export class OrderPushService {
-  subject = new Subject<number>();
-  hubConnection: HubConnection;
+  private subject = new Subject<number>();
+  private hubConnection: HubConnection;
+  private subscriptionCount = 0;
 
   constructor() {
     this.hubConnection = new HubConnectionBuilder()
@@ -18,18 +20,29 @@ export class OrderPushService {
       this.subject.next(orderId);
     });
     this.hubConnection.onclose(async () => {
-      await of(timeout(1000)).toPromise();
-      this.start();
+      if (this.subscriptionCount !== 0) {
+        await of(timeout(1000)).toPromise();
+        if (this.subscriptionCount !== 0) {
+          await this.hubConnection.start();
+        }
+      }
     });
   }
 
-  async start() {
+  async subscribe(next: (foodOrderId: number) => void) {
     if (this.hubConnection.state !== HubConnectionState.Connected) {
       await this.hubConnection.start();
     }
-  }
 
-  onNewOrder(): Observable<number> {
-    return this.subject;
+    this.subscriptionCount += 1;
+
+    const subscription = this.subject.subscribe(v => next(v));
+    return new Subscription(() => {
+      console.log("unsubscribe");
+      subscription.unsubscribe();
+      if (this.subscriptionCount === 0) {
+        this.hubConnection.stop();
+      }
+    });
   }
 }

@@ -44,6 +44,8 @@ export type FoodOrderDto = {
   userName: string;
   orderTime: Date;
   menu: string;
+  taste: string;
+  location: string;
   details: string;
   price: number;
   comment: string;

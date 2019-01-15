@@ -2,6 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { ScreenSizeService } from '../services/screen-size.service';
+import { FoodOrderDto } from '../admin/orders/admin-user-dtos';
 
 @Injectable({
   providedIn: 'root'
@@ -74,6 +75,10 @@ export class FoodOrderApiService {
 
   getMyLastLocationId() {
     return this.http.get<number>(`/api/foodOrder/myLastLocation`);
+  }
+
+  getFoodOrder(foodOrderId: number) {
+    return this.http.get<FoodOrderDto>(`/api/foodOrder/getFoodOrder/${foodOrderId}`);
   }
 }
 
