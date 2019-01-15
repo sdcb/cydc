@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { OrderPushService } from './order-push.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FoodOrderApiService, LocationDto, TasteDto } from 'src/app/foodOrder/food-order-api.service';
 import { UserService } from 'src/app/services/user.service';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
@@ -7,7 +8,7 @@ import { ApiDataSource } from 'src/app/shared/utils/paged-query';
 import { FoodOrderDto, AdminOrderQuery } from './admin-user-dtos';
 import { FormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
-import { timer } from 'rxjs';
+import { timer, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Sort, MatDialog } from '@angular/material';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
@@ -18,11 +19,13 @@ import { ConfirmDialog } from 'src/app/shared/dialogs/confirm/confirm.dialog';
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css']
 })
-export class OrdersComponent implements OnInit {
+export class OrdersComponent implements OnInit, OnDestroy {
   dataSource: ApiDataSource<FoodOrderDto>;
   query = new AdminOrderQuery();
   allLocation!: LocationDto[];
   allTaste!: TasteDto[];
+
+  subscription!: Subscription;
   get displayedColumns() { return this.foodOrderApi.foodOrderColumnsForAdmin(); }
 
   userNameInput = new FormControl();
@@ -34,7 +37,8 @@ export class OrdersComponent implements OnInit {
     private userService: UserService,
     public screenSize: ScreenSizeService,
     private router: Router, private route: ActivatedRoute,
-    private loading: GlobalLoadingService) {
+    private loading: GlobalLoadingService,
+    private orderPushService: OrderPushService) {
     this.dataSource = new ApiDataSource<FoodOrderDto>(() => this.api.getOrders(this.query));
     this.userNameInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyUserName(n));
   }
@@ -48,6 +52,15 @@ export class OrdersComponent implements OnInit {
       this.query.replaceWith(p);
       this.dataSource.loadData();
     });
+    this.subscription = this.orderPushService.onNewOrder().subscribe(() => {
+      speechSynthesis.speak(new SpeechSynthesisUtterance("你有新订单了"));
+      this.dataSource.loadData();
+    });
+    this.orderPushService.start();
+  }
+
+  async ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   async page(pageIndex: number, pageSize: number) {
