@@ -7,8 +7,8 @@ import { AdminApiService } from '../admin-api.service';
 import { ApiDataSource } from 'src/app/shared/utils/paged-query';
 import { FoodOrderDto, AdminOrderQuery } from './admin-user-dtos';
 import { FormControl } from '@angular/forms';
-import { debounce } from 'rxjs/operators';
-import { timer, Subscription } from 'rxjs';
+import { debounce, filter, reduce, count, map } from 'rxjs/operators';
+import { timer, Subscription, of, from, Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Sort, MatDialog } from '@angular/material';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
@@ -130,5 +130,19 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
     await this.loading.wrap(this.api.deleteOrder(item.id).toPromise());
     this.dataSource.loadData();
+  }
+
+  showBatchPay() {
+    return this.batchPayAmount().pipe(map(x => x > 0));
+  }
+
+  batchPayAmount() {
+    return from(this.dataSource.items).pipe(
+      filter(v => !v.isPayed), 
+      reduce<FoodOrderDto, number>((a, b) => a + b.price, 0));
+  }
+
+  batchPay() {
+    console.log("batch pay...");
   }
 }

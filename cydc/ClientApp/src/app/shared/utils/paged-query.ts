@@ -82,6 +82,7 @@ export class SortedPagedQuery<T extends SortedPagedDto> extends PagedQuery<T> {
 export class ApiDataSource<TData> extends DataSource<TData> {
   dataSubject = new BehaviorSubject(new PagedResult<TData>());
   dataCount: number = 0;
+  items: TData[] = [];
   loading = false;
 
   constructor(private searchApi: () => Observable<PagedResult<TData>>) {
@@ -101,8 +102,9 @@ export class ApiDataSource<TData> extends DataSource<TData> {
     this.searchApi()
       .pipe(finalize(() => this.loading = false))
       .subscribe(data => {
-        this.dataSubject.next(data);
+        this.items = data.pagedData;
         this.dataCount = data.totalCount;
+        this.dataSubject.next(data);
       });
   }
 }
