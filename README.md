@@ -4,7 +4,7 @@ Next version of cydc
 # Environments:
 | ID         | Branch       | Database   | Url                            |
 |------------|--------------|------------|--------------------------------|
-| Local      | master       | Test       | https://localhost:44301        |
+| Local      | master       | Test       | https://localhost:5001         |
 | Test       | release/dev  | Test       | https://cydc2-dev.starworks.cc |
 | Production | release/prod | Production | https://cydc2.starworks.cc     |
 
@@ -17,7 +17,7 @@ Next version of cydc
 # Build Notes:
 * Fork this repository
 * Ensure config from your usersecrets.json(YeluCasSsoEndpoint/CydcConnection)
-* run: `msbuild cydc.sln`
+* run: `dotnet watch run`
 
 # Contribute Notes:
 * Fork this repository
