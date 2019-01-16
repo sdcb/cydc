@@ -4,8 +4,8 @@
       <div class="row">
         <h2 class="d-inline">订单管理</h2>
         <span class="flex-fill"></span>
-        <button mat-button *ngIf="showBatchPay() | async" (click)="batchPay()">
-          批量付款: {{batchPayAmount() | async | currency: "￥"}}
+        <button mat-button *ngIf="showBatchPay()" (click)="batchPay()">
+          批量付款({{query.userName}}): {{batchPayAmount() | currency: "￥"}}
         </button>
       </div>
     </div>

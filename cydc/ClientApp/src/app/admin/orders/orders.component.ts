@@ -7,12 +7,13 @@ import { AdminApiService } from '../admin-api.service';
 import { ApiDataSource } from 'src/app/shared/utils/paged-query';
 import { FoodOrderDto, AdminOrderQuery } from './admin-user-dtos';
 import { FormControl } from '@angular/forms';
-import { debounce, filter, reduce, count, map } from 'rxjs/operators';
+import { debounce, filter, reduce, count, map, combineAll } from 'rxjs/operators';
 import { timer, Subscription, of, from, Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Sort, MatDialog } from '@angular/material';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 import { ConfirmDialog } from 'src/app/shared/dialogs/confirm/confirm.dialog';
+import { BatchPayDialog } from './batch-pay.dialog';
 
 @Component({
   selector: 'app-orders',
@@ -133,16 +134,20 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   showBatchPay() {
-    return this.batchPayAmount().pipe(map(x => x > 0));
+    return this.query.userName && this.batchPayAmount() > 0 && !this.dataSource.loading;
   }
 
   batchPayAmount() {
-    return from(this.dataSource.items).pipe(
-      filter(v => !v.isPayed), 
-      reduce<FoodOrderDto, number>((a, b) => a + b.price, 0));
+    return this.dataSource.items
+      .filter(x => !x.isPayed)
+      .reduce((a, b) => a + b.price, 0);
   }
 
   batchPay() {
-    console.log("batch pay...");
+    let data = {
+      userName: this.query.userName, 
+      unpayedOrders: this.dataSource.items.filter(x => !x.isPayed && x.userName === this.query.userName)
+    };
+    BatchPayDialog.show(this.dialogService, data);
   }
 }
