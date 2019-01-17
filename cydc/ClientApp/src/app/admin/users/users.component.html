@@ -12,23 +12,19 @@
       <div class="row">
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <input matInput placeholder="用户名" [formControl]="nameInput"
-                   [value]="query.name" />
+            <input matInput placeholder="用户名" [formControl]="nameInput" [value]="query.name" />
           </mat-form-field>
         </div>
 
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <input matInput placeholder="邮箱" [formControl]="emailInput"
-                   [value]="query.email" />
+            <input matInput placeholder="邮箱" [formControl]="emailInput" [value]="query.email" />
           </mat-form-field>
         </div>
 
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <mat-select #operator placeholder="余额" required
-                        [value]="query.operator"
-                        (selectionChange)="applyOperator(operator.value)">
+            <mat-select #operator placeholder="余额" required [value]="query.operator" (selectionChange)="applyOperator(operator.value)">
               <mat-option [value]="0">全部</mat-option>
               <mat-option [value]="1">&lt;0</mat-option>
               <mat-option [value]="2">=0</mat-option>
@@ -65,7 +61,12 @@
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef>操作</th>
         <td mat-cell *matCellDef="let item">
-          <button mat-button color="primary" (click)="resetPassword(item)">重置密码</button>
+          <button mat-icon-button color="primary" matTooltip="重置密码" (click)="resetPassword(item)">
+            <mat-icon>security</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="充值" (click)="charge(item)">
+            <mat-icon>attach_money</mat-icon>
+          </button>
         </td>
       </ng-container>
 
@@ -79,6 +80,6 @@
     </table>
 
     <mat-paginator #pager [pageSizeOptions]="[12,20,50,100]" [length]="dataSource.dataCount" (page)="page(pager.pageIndex, pager.pageSize)"
-                   showFirstLastButtons></mat-paginator>
+      showFirstLastButtons></mat-paginator>
   </div>
 </div>

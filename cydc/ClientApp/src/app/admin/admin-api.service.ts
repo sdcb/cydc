@@ -50,11 +50,10 @@ export class AdminApiService {
   }
 
   batchPay(userId: string, orderIds: number[], amount: number) {
-    return this.http.post(`/api/admin/batchPay`, {
+    return this.http.post(`/api/admin/batchPay`, orderIds, {
       params: {
         userId: userId,
-        orderIds: orderIds,
-        amount: amount
+        amount: amount.toString()
       }
     });
   }

@@ -33,7 +33,7 @@ export class BatchPayDialog implements OnInit, BatchPayDialogData {
   }
 
   static show(dialogService: MatDialog, data: BatchPayDialogData) {
-    const dialog = dialogService.open<BatchPayDialog, BatchPayDialogData>(BatchPayDialog, {
+    const dialog = dialogService.open<BatchPayDialog, BatchPayDialogData, boolean>(BatchPayDialog, {
       data: data,
       width: '800px'
     });

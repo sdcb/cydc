@@ -145,13 +145,15 @@ export class OrdersComponent implements OnInit, OnDestroy {
       .reduce((a, b) => a + b.price, 0);
   }
 
-  batchPay() {
+  async batchPay() {
     if (this.userId === null) { return; }
     const data = {
       userId: this.userId,
       userName: this.query.userName,
       unpayedOrders: this.dataSource.items.filter(x => !x.isPayed && x.userName === this.query.userName)
     };
-    BatchPayDialog.show(this.dialogService, data);
+    if (await BatchPayDialog.show(this.dialogService, data)) {
+      this.dataSource.loadData();
+    }
   }
 }

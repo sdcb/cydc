@@ -111,11 +111,8 @@ namespace cydc.Controllers
         }
 
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BatchPay(string userId, int[] orderIds, decimal amount)
+        public async Task<IActionResult> BatchPay([Required]string userId, [Required]decimal amount, [FromBody]int[] orderIds)
         {
-            _logger.LogDebug($"BatchPay: {userId}/{String.Join(",", orderIds)}/{amount}");
-            return Ok();
-
             foreach (var orderId in orderIds)
             {
                 FoodOrder foodOrder = await _db.FoodOrder
