@@ -5,7 +5,8 @@
         <h2 class="d-inline">订单管理</h2>
         <span class="flex-fill"></span>
         <button mat-button *ngIf="showBatchPay()" (click)="batchPay()">
-          批量付款({{query.userName}}): {{batchPayAmount() | currency: "￥"}}
+          <ng-container *ngIf="batchPayAmount() > 0">批量付款({{query.userName}}): {{batchPayAmount() | currency: "￥"}}</ng-container>
+          <ng-container *ngIf="batchPayAmount() === 0">充值({{query.userName}})</ng-container>
         </button>
       </div>
     </div>

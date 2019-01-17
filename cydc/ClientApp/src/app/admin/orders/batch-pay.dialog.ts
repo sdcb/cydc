@@ -1,6 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FoodOrderDto } from './admin-user-dtos';
+import { GlobalLoadingService } from 'src/app/services/global-loading.service';
+import { AdminApiService } from '../admin-api.service';
 
 @Component({
   selector: 'app-batch-pay-dialog',
@@ -8,6 +10,7 @@ import { FoodOrderDto } from './admin-user-dtos';
 })
 
 export class BatchPayDialog implements OnInit, BatchPayDialogData {
+  userId: string | undefined;
   userName: string;
   unpayedOrders: BatchPayOrderItem[];
   payedAmount = 0;
@@ -15,7 +18,9 @@ export class BatchPayDialog implements OnInit, BatchPayDialogData {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) data: BatchPayDialogData,
-    private dialogRef: MatDialogRef<BatchPayDialogData, boolean>) {
+    private dialogRef: MatDialogRef<BatchPayDialogData, boolean>, 
+    private loading: GlobalLoadingService, 
+    private api: AdminApiService) {
     this.userName = data.userName;
     this.unpayedOrders = data.unpayedOrders.map(x => {
       return {
@@ -26,10 +31,8 @@ export class BatchPayDialog implements OnInit, BatchPayDialogData {
     this.payedAmount = this.unpayedOrders.reduce((a, b) => a + b.price, 0);
   }
 
-  ngOnInit() { }
-
-  allItemSelected() {
-    return this.unpayedOrders.every(x => !!x.selected);
+  async ngOnInit() {
+    this.userId = await this.loading.wrap(this.api.getUserIdByUserName(this.userName).toPromise());
   }
 
   toggleSelectAll(selected: boolean) {
@@ -37,20 +40,21 @@ export class BatchPayDialog implements OnInit, BatchPayDialogData {
     for (const item of this.unpayedOrders) item.selected = selected;
   }
 
-  cancel() {
-    this.dialogRef.close();
-  }
+  cancel() { this.dialogRef.close(); }
 
-  confirm() {
+  allItemSelected() { return this.unpayedOrders.every(x => !!x.selected); }
+
+  selectedAmount() { return this.unpayedOrders.filter(x => x.selected).reduce((a, b) => a + b.price, 0); }
+
+  selectedCount() { return this.unpayedOrders.filter(x => x.selected).length; }
+
+  selectedOrderIds() { return this.unpayedOrders.filter(x => x.selected).map(x => x.id); }
+
+  async confirm() {
+    if (this.userId === undefined) return;
+
+    await this.loading.wrap(this.api.batchPay(this.userId, this.selectedOrderIds(), this.payedAmount).toPromise());
     this.dialogRef.close(true);
-  }
-
-  selectedAmount() {
-    return this.unpayedOrders.filter(x => x.selected).reduce((a, b) => a + b.price, 0);
-  }
-
-  selectedCount() {
-    return this.unpayedOrders.filter(x => x.selected).length;
   }
 
   static show(dialogService: MatDialog, data: BatchPayDialogData) {

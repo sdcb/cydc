@@ -134,7 +134,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   showBatchPay() {
-    return this.query.userName && this.batchPayAmount() > 0 && !this.dataSource.loading;
+    return this.query.userName && !this.dataSource.loading;
   }
 
   batchPayAmount() {

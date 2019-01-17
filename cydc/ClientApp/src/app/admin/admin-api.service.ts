@@ -48,4 +48,20 @@ export class AdminApiService {
   unpay(orderId: number) {
     return this.http.post(`/api/admin/unpay?orderId=${orderId}`, {});
   }
+
+  batchPay(userId: string, orderIds: number[], amount: number) {
+    return this.http.post(`/api/admin/batchPay`, {
+      query: {
+        userId: userId, 
+        orderIds: orderIds, 
+        amount: amount
+      }
+    })
+  }
+
+  getUserIdByUserName(userName: string) {
+    return this.http.get<string>(`/api/admin/getUserIdByUserName`, {
+      params: { userName: userName }
+    });
+  }
 }
