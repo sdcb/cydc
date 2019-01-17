@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HubConnectionBuilder, HubConnection, HubConnectionState } from "@aspnet/signalr";
+import { HubConnectionBuilder, HubConnection, HubConnectionState } from '@aspnet/signalr';
 import { Subject, of, Subscription } from 'rxjs';
 import { timeout } from 'rxjs/operators';
-import { FoodOrderDto } from './admin-user-dtos';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class OrderPushService {
   private subject = new Subject<number>();
@@ -14,9 +13,9 @@ export class OrderPushService {
 
   constructor() {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl("/hubs/newOrder")
+      .withUrl('/hubs/newOrder')
       .build();
-    this.hubConnection.on("onNewOrder", orderId => {
+    this.hubConnection.on('onNewOrder', orderId => {
       this.subject.next(orderId);
     });
     this.hubConnection.onclose(async () => {

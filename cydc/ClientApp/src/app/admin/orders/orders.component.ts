@@ -1,14 +1,14 @@
 import { OrderPushService } from './order-push.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Optional } from '@angular/core';
 import { FoodOrderApiService, LocationDto, TasteDto } from 'src/app/foodOrder/food-order-api.service';
 import { UserService } from 'src/app/services/user.service';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { AdminApiService } from '../admin-api.service';
 import { ApiDataSource } from 'src/app/shared/utils/paged-query';
-import { FoodOrderDto, AdminOrderQuery } from './admin-user-dtos';
+import { FoodOrderDto, AdminOrderQuery, FoodOrderQueryDto } from './admin-user-dtos';
 import { FormControl } from '@angular/forms';
-import { debounce, filter, reduce, count, map, combineAll } from 'rxjs/operators';
-import { timer, Subscription, of, from, Observable } from 'rxjs';
+import { debounce } from 'rxjs/operators';
+import { timer, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Sort, MatDialog } from '@angular/material';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
@@ -25,6 +25,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   query = new AdminOrderQuery();
   allLocation!: LocationDto[];
   allTaste!: TasteDto[];
+  userId: string | null = null;
 
   subscription!: Subscription;
   get displayedColumns() { return this.foodOrderApi.foodOrderColumnsForAdmin(); }
@@ -49,15 +50,16 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.foodOrderApi.getAllLocation().subscribe(v => this.allLocation = v);
     this.foodOrderApi.getAllTaste().subscribe(v => this.allTaste = v);
 
-    this.route.queryParams.subscribe(p => {
+    this.route.queryParams.subscribe(async (p: Partial<FoodOrderQueryDto>) => {
       this.query.replaceWith(p);
       this.dataSource.loadData();
+      this.userId = p.userName ? await this.api.getUserIdByUserName(p.userName).toPromise() : null;
     });
     this.subscription = await this.orderPushService.subscribe(async orderId => {
       this.dataSource.loadData();
-      let order = await this.foodOrderApi.getFoodOrder(orderId).toPromise();
-      let msg = `新订单 ${order.userName} ${order.menu}，口味${order.taste}，送到${order.location} ` + 
-        (order.comment ? `备注 ${order.comment}` : "");
+      const order = await this.foodOrderApi.getFoodOrder(orderId).toPromise();
+      const msg = `新订单 ${order.userName} ${order.menu}，口味${order.taste}，送到${order.location} ` +
+        (order.comment ? `备注 ${order.comment}` : '');
       speechSynthesis.speak(new SpeechSynthesisUtterance(msg));
     });
   }
@@ -69,15 +71,15 @@ export class OrdersComponent implements OnInit, OnDestroy {
   async page(pageIndex: number, pageSize: number) {
     this.query.pageIndex = pageIndex;
     this.query.pageSize = pageSize;
-    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+    await this.router.navigate(['.'], { relativeTo: this.route, queryParams: this.query.toDto() });
   }
 
   async applySort(sort: Sort) {
     this.query.applySort(sort);
-    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+    await this.router.navigate(['.'], { relativeTo: this.route, queryParams: this.query.toDto() });
   }
 
-  applyUserName(userName: string) {
+  async applyUserName(userName: string) {
     this.query.userName = userName;
     this.afterApplied();
   }
@@ -109,7 +111,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
   async afterApplied() {
     this.query.resetPager();
-    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+    await this.router.navigate(['.'], { relativeTo: this.route, queryParams: this.query.toDto() });
   }
 
   async saveComment(comment: string, item: FoodOrderDto) {
@@ -127,14 +129,14 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   async delete(item: FoodOrderDto) {
-    if (!await ConfirmDialog.show(this.dialogService, `确定要删除？`)) return;
+    if (!await ConfirmDialog.show(this.dialogService, `确定要删除？`)) { return; }
 
     await this.loading.wrap(this.api.deleteOrder(item.id).toPromise());
     this.dataSource.loadData();
   }
 
   showBatchPay() {
-    return this.query.userName && !this.dataSource.loading;
+    return this.userId && !this.dataSource.loading;
   }
 
   batchPayAmount() {
@@ -144,8 +146,10 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   batchPay() {
-    let data = {
-      userName: this.query.userName, 
+    if (this.userId === null) { return; }
+    const data = {
+      userId: this.userId,
+      userName: this.query.userName,
       unpayedOrders: this.dataSource.items.filter(x => !x.isPayed && x.userName === this.query.userName)
     };
     BatchPayDialog.show(this.dialogService, data);

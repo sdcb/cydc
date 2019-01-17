@@ -1,7 +1,8 @@
 <div mat-dialog-title>
   <div class="container">
     <div class="row">
-      <span>批量付款-{{userName}}</span>
+      <span *ngIf="unpayedOrders.length > 0">批量付款-{{userName}}</span>
+      <span *ngIf="unpayedOrders.length === 0">充值-{{userName}}</span>
       <span class="flex-fill"></span>
     </div>
   </div>
@@ -11,7 +12,7 @@
     <input matInput type="number" placeholder="用户充值金额：" [(ngModel)]="payedAmount" cdkFocusInitial>
   </mat-form-field>
 
-  <table mat-table [dataSource]="unpayedOrders" class="w100">
+  <table *ngIf="unpayedOrders.length > 0" mat-table [dataSource]="unpayedOrders" class="w100">
     <ng-container matColumnDef="selected">
       <th mat-header-cell *matHeaderCellDef>
         <mat-checkbox color="primary" [ngModel]="allItemSelected()" (ngModelChange)="toggleSelectAll(uiAll.checked)"
@@ -44,11 +45,14 @@
 
 <div mat-dialog-actions>
   <ng-container>
-    <ng-container *ngIf="allItemSelected()">已全选</ng-container><ng-container *ngIf="!allItemSelected()">未全选</ng-container>
-    选择订单<b>{{selectedCount()}}</b>个，
-    需<b>{{selectedAmount()}}</b>元，
-    付款<b>{{payedAmount}}</b>元，
-    <ng-container *ngIf="payedAmount >= selectedAmount()">结余<b>{{payedAmount - selectedAmount()}}</b>元</ng-container>
+    <ng-container *ngIf="unpayedOrders.length > 0">
+      <ng-container *ngIf="allItemSelected()">已全选</ng-container>
+      <ng-container *ngIf="!allItemSelected()">未全选</ng-container>
+      选择订单<b>{{selectedCount()}}</b>个，
+      需<b>{{selectedAmount()}}</b>元，
+      付款<b>{{payedAmount}}</b>元，
+    </ng-container>
+    <ng-container *ngIf="payedAmount >= selectedAmount()">充值<b>{{payedAmount - selectedAmount()}}</b>元</ng-container>
     <ng-container *ngIf="payedAmount < selectedAmount()">还少<b>{{selectedAmount() - payedAmount}}</b>元</ng-container>
   </ng-container>
   <span class="flex-fill"></span>

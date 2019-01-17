@@ -11,10 +11,10 @@ export interface PagedDto {
 
 export class PagedResult<T> {
   pagedData: T[] = [];
-  totalCount: number = 0;
+  totalCount = 0;
 }
 
-export class PagedQuery<T extends PagedDto> {
+export class PagedQuery {
   pageIndex!: number;
   pageSize!: number;
 
@@ -30,9 +30,9 @@ export class PagedQuery<T extends PagedDto> {
   }
 
   toDto(): PagedDto {
-    let o = <PagedDto>{};
-    if (this.pageIndex !== 0) o.page = this.page().toString();
-    if (this.pageSize !== 12) o.pageSize = this.pageSize.toString();
+    const o = <PagedDto>{};
+    if (this.pageIndex !== 0) { o.page = this.page().toString(); }
+    if (this.pageSize !== 12) { o.pageSize = this.pageSize.toString(); }
     return o;
   }
 
@@ -47,12 +47,12 @@ export interface SortedPagedDto extends PagedDto {
   direction: string;
 }
 
-export class SortedPagedQuery<T extends SortedPagedDto> extends PagedQuery<T> {
+export class SortedPagedQuery extends PagedQuery {
   sort: string | undefined;
   direction: string | undefined;
 
   applySort(s: Sort) {
-    if (s.direction === "") {
+    if (s.direction === '') {
       this.sort = undefined;
       this.direction = undefined;
     } else {
@@ -63,14 +63,14 @@ export class SortedPagedQuery<T extends SortedPagedDto> extends PagedQuery<T> {
 
   replaceWith(p: Partial<SortedPagedDto>) {
     super.replaceWith(p);
-    if (p.sort !== undefined) this.sort = p.sort;
-    if (p.direction) this.direction = p.direction;
+    if (p.sort !== undefined) { this.sort = p.sort; }
+    if (p.direction) { this.direction = p.direction; }
   }
 
   toDto(): SortedPagedDto {
-    let o = <SortedPagedDto>super.toDto();
-    if (this.sort !== undefined) o.sort = this.sort;
-    if (this.direction !== undefined) o.direction = this.direction;
+    const o = <SortedPagedDto>super.toDto();
+    if (this.sort !== undefined) { o.sort = this.sort; }
+    if (this.direction !== undefined) { o.direction = this.direction; }
     return o;
   }
 
@@ -81,7 +81,7 @@ export class SortedPagedQuery<T extends SortedPagedDto> extends PagedQuery<T> {
 
 export class ApiDataSource<TData> extends DataSource<TData> {
   dataSubject = new BehaviorSubject(new PagedResult<TData>());
-  dataCount: number = 0;
+  dataCount = 0;
   items: TData[] = [];
   loading = false;
 
@@ -110,11 +110,11 @@ export class ApiDataSource<TData> extends DataSource<TData> {
 }
 
 export function unwrapNumber(strNumber: string | undefined) {
-  if (strNumber === undefined) return undefined;
+  if (strNumber === undefined) { return undefined; }
   return parseFloat(strNumber);
 }
 
 export function unwrapBoolean(boolStr: string | undefined) {
-  if (boolStr === undefined) return undefined;
-  return boolStr === "true";
+  if (boolStr === undefined) { return undefined; }
+  return boolStr === 'true';
 }

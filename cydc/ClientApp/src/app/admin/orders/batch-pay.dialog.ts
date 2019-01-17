@@ -10,7 +10,7 @@ import { AdminApiService } from '../admin-api.service';
 })
 
 export class BatchPayDialog implements OnInit, BatchPayDialogData {
-  userId: string | undefined;
+  userId: string;
   userName: string;
   unpayedOrders: BatchPayOrderItem[];
   payedAmount = 0;
@@ -18,26 +18,33 @@ export class BatchPayDialog implements OnInit, BatchPayDialogData {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) data: BatchPayDialogData,
-    private dialogRef: MatDialogRef<BatchPayDialogData, boolean>, 
-    private loading: GlobalLoadingService, 
+    private dialogRef: MatDialogRef<BatchPayDialogData, boolean>,
+    private loading: GlobalLoadingService,
     private api: AdminApiService) {
+    this.userId = data.userId;
     this.userName = data.userName;
     this.unpayedOrders = data.unpayedOrders.map(x => {
       return {
-        ...x, 
-        selected: true, 
-      }
+        ...x,
+        selected: true,
+      };
     });
     this.payedAmount = this.unpayedOrders.reduce((a, b) => a + b.price, 0);
   }
 
-  async ngOnInit() {
-    this.userId = await this.loading.wrap(this.api.getUserIdByUserName(this.userName).toPromise());
+  static show(dialogService: MatDialog, data: BatchPayDialogData) {
+    const dialog = dialogService.open<BatchPayDialog, BatchPayDialogData>(BatchPayDialog, {
+      data: data,
+      width: '800px'
+    });
+    return dialog.afterClosed().toPromise();
   }
+
+  async ngOnInit() {}
 
   toggleSelectAll(selected: boolean) {
     console.log(arguments);
-    for (const item of this.unpayedOrders) item.selected = selected;
+    for (const item of this.unpayedOrders) { item.selected = selected; }
   }
 
   cancel() { this.dialogRef.close(); }
@@ -51,22 +58,13 @@ export class BatchPayDialog implements OnInit, BatchPayDialogData {
   selectedOrderIds() { return this.unpayedOrders.filter(x => x.selected).map(x => x.id); }
 
   async confirm() {
-    if (this.userId === undefined) return;
-
     await this.loading.wrap(this.api.batchPay(this.userId, this.selectedOrderIds(), this.payedAmount).toPromise());
     this.dialogRef.close(true);
-  }
-
-  static show(dialogService: MatDialog, data: BatchPayDialogData) {
-    const dialog = dialogService.open<BatchPayDialog, BatchPayDialogData>(BatchPayDialog, {
-      data: data,
-      width: "800px"
-    });
-    return dialog.afterClosed().toPromise();
   }
 }
 
 export interface BatchPayDialogData {
+  userId: string;
   userName: string;
   unpayedOrders: FoodOrderDto[];
 }
