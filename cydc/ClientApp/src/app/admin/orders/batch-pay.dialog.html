@@ -51,10 +51,18 @@
       选择订单<b>{{selectedCount()}}</b>个，
       需<b>{{selectedAmount()}}</b>元，
       付款<b>{{payedAmount}}</b>元，
+      <ng-container *ngIf="payedAmount >= selectedAmount()">充值<b>{{payedAmount - selectedAmount()}}</b>元</ng-container>
+      <ng-container *ngIf="payedAmount < selectedAmount()">还少<b>{{selectedAmount() - payedAmount}}</b>元</ng-container>
     </ng-container>
-    <ng-container *ngIf="payedAmount >= selectedAmount()">充值<b>{{payedAmount - selectedAmount()}}</b>元</ng-container>
-    <ng-container *ngIf="payedAmount < selectedAmount()">还少<b>{{selectedAmount() - payedAmount}}</b>元</ng-container>
+
+    <ng-container *ngIf="unpayedOrders.length === 0">
+      <ng-container *ngIf="payedAmount >= selectedAmount()">充值<b>{{payedAmount - selectedAmount()}}</b>元</ng-container>
+      <ng-container *ngIf="payedAmount < selectedAmount()">扣款<b>{{selectedAmount() - payedAmount}}</b>元</ng-container>
+    </ng-container>
   </ng-container>
   <span class="flex-fill"></span>
-  <button *ngIf="payedAmount >= selectedAmount()" mat-button cdkFocusInitial (click)="confirm()">确定充值</button>
+  <button *ngIf="unpayedOrders.length > 0 && payedAmount >= selectedAmount()" mat-button cdkFocusInitial (click)="confirm()">确定充值</button>
+  <button *ngIf="unpayedOrders.length === 0 && payedAmount !== 0" mat-button cdkFocusInitial (click)="confirm()">
+      确定{{payedAmount >= selectedAmount() ? "充值" : "扣款"}}
+  </button>
 </div>
