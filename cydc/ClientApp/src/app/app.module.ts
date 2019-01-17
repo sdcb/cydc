@@ -36,6 +36,20 @@ import { LocationsComponent } from './admin/data-manages/locations/locations.com
 import { NotificationComponent } from './admin/data-manages/notification/notification.component';
 import { SafeHtmlPipe } from './shared/pipes/safe-html.pipe';
 import { TruncatePipe } from './shared/pipes/truncate.pipe';
+import { BatchPayDialog } from './admin/orders/batch-pay.dialog';
+
+const dialogs = [
+  OrderCreateDialog,
+  MenuCreateDialog,
+  PasswordResetDialog,
+  PromptDialog, 
+  ConfirmDialog, 
+  BatchPayDialog
+];
+
+const pipes = [
+  SafeHtmlPipe, TruncatePipe
+];
 
 @NgModule({
   declarations: [
@@ -46,27 +60,19 @@ import { TruncatePipe } from './shared/pipes/truncate.pipe';
     OrderComponent,
     LoginComponent,
     LoggedOutComponent,
-    OrderCreateDialog,
     MyFoodOrderComponent,
     UsersComponent,
     NotAdminComponent,
     OrdersComponent,
     MenusComponent,
     ClickEditComponent,
-    MenuCreateDialog,
-    PasswordResetDialog,
     TastesComponent,
     LocationsComponent,
     NotificationComponent,
-    PromptDialog, ConfirmDialog,
-    SafeHtmlPipe, TruncatePipe,
+    ...dialogs,
+    ...pipes,
   ],
-  entryComponents: [
-    OrderCreateDialog,
-    MenuCreateDialog,
-    PasswordResetDialog,
-    PromptDialog, ConfirmDialog
-  ],
+  entryComponents: [ ...dialogs ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     FontAwesomeModule,
@@ -77,9 +83,7 @@ import { TruncatePipe } from './shared/pipes/truncate.pipe';
     MaterialModule,
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
-  exports: [
-    SafeHtmlPipe, TruncatePipe
-  ],
+  exports: [ ...pipes ],
   providers: [
     { provide: loginProvider, useValue: loginResolver },
     { provide: MatPaginatorIntl, useClass: AppPaginatorIntl, }

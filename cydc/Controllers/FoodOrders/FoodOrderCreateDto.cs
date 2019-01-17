@@ -20,7 +20,7 @@ namespace cydc.Controllers.FoodOrders
 
         public string Comment { get; set; }
 
-        public async Task Create(CydcContext db, string userId, FoodOrderClientInfo clientInfo)
+        public async Task<FoodOrder> Create(CydcContext db, string userId, FoodOrderClientInfo clientInfo)
         {
             var menu = await db.FoodMenu.FindAsync(MenuId);
             var dateNow = DateTime.Now;
@@ -48,6 +48,7 @@ namespace cydc.Controllers.FoodOrders
             {
                 await AutoPay(db, foodOrder);
             }
+            return foodOrder;
         }
 
         private async Task<int> AutoPay(CydcContext db, FoodOrder order)

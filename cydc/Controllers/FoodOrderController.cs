@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using cydc.Controllers.AdmimDtos;
 using cydc.Controllers.FoodOrders;
 using cydc.Database;
+using cydc.Hubs;
 using cydc.Managers.Identities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace cydc.Controllers
@@ -18,13 +20,16 @@ namespace cydc.Controllers
     {
         private readonly CydcContext _db;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHubContext<NewOrderHub, NewOrderHubClient> _newOrderHubContext;
 
         public FoodOrderController(
             CydcContext db,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IHubContext<NewOrderHub, NewOrderHubClient> newOrderHubContext)
         {
             _db = db;
             _httpContextAccessor = httpContextAccessor;
+            _newOrderHubContext = newOrderHubContext;
         }
 
         public string SiteNotification()
@@ -46,13 +51,22 @@ namespace cydc.Controllers
                 return BadRequest($"User {order.OtherPersonName} cannot found.");
             }
 
-            await order.Create(_db, userId, new FoodOrderClientInfo
+            FoodOrder foodOrder = await order.Create(_db, userId, new FoodOrderClientInfo
             {
                 Ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
                 UserAgent = $"{Request.Host}@{Request.Headers["User-Agent"]}"
             });
+            await _newOrderHubContext.OnNewOrder(foodOrder.Id);
 
             return Ok();
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<FoodOrderDto> GetFoodOrder(int id)
+        {
+            return await FoodOrderDto.FromFoodOrder(_db.FoodOrder)
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public IActionResult My()

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, LOCALE_ID } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { AdminApiService } from 'src/app/admin/admin-api.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-nav-menu',
@@ -14,7 +15,8 @@ export class NavMenuComponent implements OnInit {
   constructor(
     public userService: UserService,
     public size: ScreenSizeService,
-    public api: AdminApiService) {
+    public api: AdminApiService,
+    @Inject(LOCALE_ID)private locale: string) {
   }
 
   async ngOnInit() {
@@ -33,5 +35,9 @@ export class NavMenuComponent implements OnInit {
 
   get isLoggedIn() {
     return this.userService.userStatus.isLoggedIn;
+  }
+
+  getToday() {
+    return formatDate(new Date(), "yyyy-MM-dd", this.locale);
   }
 }

@@ -7,28 +7,28 @@ export interface UserQueryDto extends SortedPagedDto {
   email: string;
 }
 
-export class AdminUserQuery extends SortedPagedQuery<UserQueryDto> {
-  name: string = "";
-  email: string = "";
+export class AdminUserQuery extends SortedPagedQuery {
+  name = '';
+  email = '';
   operator: BalanceOperator = BalanceOperator.All;
 
   replaceWith(p: Partial<UserQueryDto>) {
     super.replaceWith(p);
-    this.name = p.name || "";
-    this.email = p.email || "";
-    this.operator = parseInt(p.operator!) || BalanceOperator.All;
+    this.name = p.name || '';
+    this.email = p.email || '';
+    this.operator = parseInt(p.operator!, 10) || BalanceOperator.All;
   }
 
   toDto(): UserQueryDto {
-    let o = <UserQueryDto>super.toDto();
-    if (this.name !== "") o.name = this.name;
-    if (this.email !== "") o.email = this.email;
-    if (this.operator !== BalanceOperator.All) o.operator = this.operator.toString();
+    const o = <UserQueryDto>super.toDto();
+    if (this.name !== '') { o.name = this.name; }
+    if (this.email !== '') { o.email = this.email; }
+    if (this.operator !== BalanceOperator.All) { o.operator = this.operator.toString(); }
     return o;
   }
 }
 
-export type AdminUserDto = {
+export interface AdminUserDto {
   id: string;
   name: string;
   email: string;

@@ -25,7 +25,7 @@ export class AdminApiService {
 
   saveOrderComment(orderId: number, comment: string): any {
     return this.http.post(`/api/admin/saveOrderComment?orderId=${orderId}`, comment, {
-      responseType: "text"
+      responseType: 'text'
     });
   }
 
@@ -47,5 +47,21 @@ export class AdminApiService {
 
   unpay(orderId: number) {
     return this.http.post(`/api/admin/unpay?orderId=${orderId}`, {});
+  }
+
+  batchPay(userId: string, orderIds: number[], amount: number) {
+    return this.http.post(`/api/admin/batchPay`, orderIds, {
+      params: {
+        userId: userId,
+        amount: amount.toString()
+      }
+    });
+  }
+
+  getUserIdByUserName(userName: string) {
+    return this.http.get(`/api/admin/getUserIdByUserName`, {
+      params: { userName: userName },
+      responseType: 'text',
+    });
   }
 }

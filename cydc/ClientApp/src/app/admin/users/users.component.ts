@@ -1,3 +1,4 @@
+import { BatchPayDialog } from './../orders/batch-pay.dialog';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
@@ -80,5 +81,13 @@ export class UsersComponent implements OnInit {
     } else {
       alert("密码重置失败");
     }
+  }
+
+  async charge(item: AdminUserDto) {
+    if (await BatchPayDialog.show(this.dialogService, {
+      userId: item.id,
+      userName: item.name,
+      unpayedOrders: [],
+    })) { this.dataSource.loadData(); }
   }
 }
