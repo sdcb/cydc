@@ -26,6 +26,23 @@ namespace cydc.Controllers.AdmimDtos
         public string Comment { get; set; }
 
         public bool IsPayed { get; set; }
+
+        public static IQueryable<FoodOrderDto> FromFoodOrder(IQueryable<FoodOrder> foodOrders)
+        {
+            return foodOrders.Select(foodOrder => new FoodOrderDto
+            {
+                Id = foodOrder.Id,
+                UserName = foodOrder.OrderUser.UserName,
+                OrderTime = foodOrder.OrderTime,
+                Menu = foodOrder.FoodMenu.Title,
+                Details = foodOrder.FoodMenu.Details,
+                Price = foodOrder.FoodMenu.Price,
+                Location = foodOrder.Location.Name,
+                Taste = foodOrder.Taste.Name,
+                Comment = foodOrder.Comment,
+                IsPayed = foodOrder.FoodOrderPayment != null
+            });
+        }
     }
 
     public class FoodOrderQuery : SortedPagedQuery
@@ -61,19 +78,7 @@ namespace cydc.Controllers.AdmimDtos
             if (TasteId != null)
                 rawQuery = rawQuery.Where(x => x.TasteId == TasteId.Value);
 
-            var query = rawQuery.Select(x => new FoodOrderDto
-            {
-                Id = x.Id,
-                UserName = x.OrderUser.UserName,
-                OrderTime = x.OrderTime,
-                Menu = x.FoodMenu.Title,
-                Details = x.FoodMenu.Details,
-                Price = x.FoodMenu.Price,
-                Location = x.Location.Name,
-                Taste = x.Taste.Name,
-                Comment = x.Comment,
-                IsPayed = x.FoodOrderPayment != null
-            }).ToSorted(this);
+            var query = FoodOrderDto.FromFoodOrder(rawQuery).ToSorted(this);
 
             return await query.ToPagedResultAsync(this);
         }
