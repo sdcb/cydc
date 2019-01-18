@@ -5,45 +5,42 @@
 </div>
 
 <div class="row">
-  <div class="col-12 col-lg-4">
+  <div class="col-12 mb-3">
     <mat-card class="mat-elevation-z2 card-bg">
-      <mat-card-title>点餐</mat-card-title>
+      <mat-card-title>快捷链接</mat-card-title>
       <mat-card-content>
         <ul>
-          <li *ngIf="!user.userStatus.isLoggedIn">先点击左上角或者 <a [routerLink]="['/api/user/login']">这里</a> 登录。</li>
-          <li *ngIf="!user.userStatus.isLoggedIn">如果你想用老帐号/密码，请使用<a href="/identity/account/login">老密码登录</a></li>
-          <li>要点餐，请点击 <a [routerLink]="['/food-order/create']">此处</a> 进入点餐页面。</li>
-          <li>查看订单，点击 <a [routerLink]="['/food-order/my']">此处</a> 进入订单页面。</li>
-          <li>查看帐单余额，点击 <a [routerLink]="['/food-order/my']">此处</a> 进入订单页面。</li>
+          <li *ngIf="!user.userStatus.isLoggedIn">OA登录：<a [routerLink]="['/api/user/login']">HERE</a></li>
+          <li *ngIf="!user.userStatus.isLoggedIn">老密码登录： <a href="/identity/account/login">HERE</a></li>
+          <li>点餐： <a [routerLink]="['/food-order/create']">HERE</a></li>
+          <li>订单： <a [routerLink]="['/food-order/my']">HERE</a></li>
+          <li>余额： <a [routerLink]="['/food-order/my']">HERE</a></li>
         </ul>
       </mat-card-content>
     </mat-card>
   </div>
 
-  <div class="col-12 col-lg-4">
+  <div class="col-12">
     <mat-card class="card-bg">
-      <mat-card-title>BUG/问题/创意</mat-card-title>
-      <mat-card-content>
-        如果你遇到了BUG，或者有任意使用上的疑问，或者有什么创意，可以使用以下方式向我们反馈:
-        <ul>
-          <li>Github: <a [href]="source + '/issues'" target="_blank">{{source + '/issues'}}</a></li>
-          <li>邮件: sdflysha#qq.com</li>
-        </ul>
-      </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="col-12 col-lg-4">
-    <mat-card class="card-bg">
-      <mat-card-title>开发者</mat-card-title>
-      <mat-card-content>
-        如果你是开发者，可以访问 <a [href]="source" target="_blank">{{source}}</a> 提交PR。
-        本网站使用的技术包括：
-        <ul>
-          <li>TypeScript/C#</li>
-          <li>ASP.NET Core 2.2/Entity Framework 2.1</li>
-          <li>Angular 7.x/Angular Material 7.x</li>
-        </ul>
+      <mat-card-title>技术框架</mat-card-title>
+      <mat-card-content class="container">
+        <div class="row">
+          <div>
+            前端: Angular <br>
+            后端: ASP.NET Core 2.2/EF Core 2.2 <br>
+            登录: YeluCasSSO & ASP.NET Identity <br>
+            UI: Angular Material 2 and Bootstrap 4 <br>
+            <hr>
+            IDE: Visual Studio Code <br>
+            数据库: SQL Server 2017 <br>
+            CI: Jenkins <br>
+          </div>
+          <span class="flex-fill"></span>
+          <div>
+            <b>点餐技术讨论：</b><br>
+            <img src="/api/qrcode/dev" matTooltip="请备注：点餐开发讨论(姓名/部门)">
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>

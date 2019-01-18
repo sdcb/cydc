@@ -10,6 +10,14 @@ namespace cydc.Controllers
     [Authorize]
     public class QrCodeController : Controller
     {
+        [AllowAnonymous]
+        public IActionResult Dev()
+        {
+            string id = "HTTPS://QR.ALIPAY.COM/LPX06836V926QKAB6FAR64";
+            byte[] qrImageData = GetQRImage(id);
+            return File(qrImageData, "image/png");
+        }
+
         public IActionResult Pay()
         {
             string id = "HTTPS://QR.ALIPAY.COM/LPX06836V926QKAB6FAR64";
