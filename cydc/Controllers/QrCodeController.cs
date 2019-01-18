@@ -13,7 +13,7 @@ namespace cydc.Controllers
         [AllowAnonymous]
         public IActionResult Dev()
         {
-            string id = "HTTPS://QR.ALIPAY.COM/LPX06836V926QKAB6FAR64";
+            string id = "https://u.wechat.com/MFDpcGQFjwnH0udlvS1nm0w";
             byte[] qrImageData = GetQRImage(id);
             return File(qrImageData, "image/png");
         }
