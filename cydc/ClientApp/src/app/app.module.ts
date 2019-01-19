@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatPaginatorIntl } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
+import { ChartsModule } from 'ng2-charts';
 
 import { MaterialModule } from './shared/material/material.module';
 
@@ -37,6 +38,7 @@ import { NotificationComponent } from './admin/data-manages/notification/notific
 import { SafeHtmlPipe } from './shared/pipes/safe-html.pipe';
 import { TruncatePipe } from './shared/pipes/truncate.pipe';
 import { BatchPayDialog } from './admin/orders/batch-pay.dialog';
+import { DayOrderComponent } from './report/dayorders/day-orders.component';
 
 const dialogs = [
   OrderCreateDialog,
@@ -69,6 +71,7 @@ const pipes = [
     TastesComponent,
     LocationsComponent,
     NotificationComponent,
+    DayOrderComponent, 
     ...dialogs,
     ...pipes,
   ],
@@ -81,6 +84,7 @@ const pipes = [
     ReactiveFormsModule,
     LayoutModule,
     MaterialModule,
+    ChartsModule, 
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
   exports: [ ...pipes ],
