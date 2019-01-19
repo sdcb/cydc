@@ -1,26 +1,14 @@
 <div class="row">
   <div class="col-md-6">
-    <div style="display: block;">
-      <canvas baseChart width="400" height="400"
-              [datasets]="lineChartData"
-              [labels]="lineChartLabels"
-              [options]="lineChartOptions"
-              [colors]="lineChartColors"
-              [legend]="lineChartLegend"
-              [chartType]="lineChartType"
-              (chartHover)="chartHovered($event)"
-              (chartClick)="chartClicked($event)"></canvas>
-    </div>
-  </div>
-  <div class="col-md-6" style="margin-bottom: 10px">
-    <table class="table table-responsive table-condensed">
-      <tr>
-        <th *ngFor="let label of lineChartLabels">{{label}}</th>
-      </tr>
-      <tr *ngFor="let d of lineChartData">
-        <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
-      </tr>
-    </table>
-    <button (click)="randomize()">CLICK</button>
+    <mat-card>
+      <mat-card-title>
+        Week Day订单数
+      </mat-card-title>
+      <canvas baseChart width="400" height="300"
+              [data]="data"
+              [labels]="['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']"
+              [legend]="true"
+              chartType="bar"></canvas>
+    </mat-card>
   </div>
 </div>
