@@ -30,6 +30,6 @@ export const routes: Routes = [
   { path: 'admin/notification', component: NotificationComponent, },
   { path: 'admin/not-admin', component: NotAdminComponent, },
 
-  { path: 'report/dayorder', component: DayOrderComponent }, 
+  { path: 'report', component: DayOrderComponent },
   { path: '**', component: NotFoundComponent },
 ];

@@ -2,13 +2,34 @@
   <div class="col-md-6">
     <mat-card>
       <mat-card-title>
-        Week Day订单数
+        每天订单统计（近{{days}}天）
       </mat-card-title>
       <canvas baseChart width="400" height="300"
-              [data]="data"
+              [datasets]="dayOrdersData"
               [labels]="['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']"
-              [legend]="true"
               chartType="bar"></canvas>
+    </mat-card>
+  </div>
+  <div class="col-md-6">
+    <mat-card>
+      <mat-card-title>
+        小时统计（近{{days}}天）
+      </mat-card-title>
+      <canvas baseChart width="400" height="300"
+              [datasets]="hourOrdersData"
+              [labels]="['7', '8', '9', '10', '11', '12']"
+              chartType="line"></canvas>
+    </mat-card>
+  </div>
+  <div class="col-md-6">
+    <mat-card>
+      <mat-card-title>
+        口味统计（近{{days}}天）
+      </mat-card-title>
+      <canvas baseChart width="400" height="300"
+              [data]="tasteOrdersData"
+              [labels]="tasteOrdersLabels"
+              chartType="doughnut"></canvas>
     </mat-card>
   </div>
 </div>

@@ -8,7 +8,15 @@ export class DayOrdersApi {
   constructor(private http: HttpClient) {
   }
 
-  dayOrders(days = 60) {
-    return this.http.get<number[]>(`/api/report/dayorders?days=${days}`);
+  dayOrders(days: number) {
+    return this.http.get<number[]>(`/api/report/dayOrders?days=${days}`);
+  }
+
+  hourOrders(days: number) {
+    return this.http.get<number[]>(`/api/report/hourOrders?days=${days}`);
+  }
+
+  tasteOrders(days: number) {
+    return this.http.get<{[key: string]: number}>(`/api/report/tasteOrders?days=${days}`);
   }
 }
