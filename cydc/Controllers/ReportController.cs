@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using cydc.Database;
@@ -37,7 +38,11 @@ namespace cydc.Controllers
 
             return Ok(new[] { 1, 2, 3, 4, 5, 6, 0 }
                 .Select(x => (DayOfWeek)x)
-                .Select(x => dayOrdersNotAll.ContainsKey(x) ? dayOrdersNotAll[x] : 0)
+                .Select(x => new 
+                {
+                    Name = DateTimeFormatInfo.CurrentInfo.GetDayName(x), 
+                    Value = dayOrdersNotAll.ContainsKey(x) ? dayOrdersNotAll[x] : 0
+                })
                 .ToArray());
         }
 
@@ -55,8 +60,12 @@ namespace cydc.Controllers
                 })
                 .ToDictionaryAsync(k => k.Hour, v => v.Count);
 
-            return Ok(Enumerable.Range(7, 6)
-                .Select(x => hourOrdersNotAll.ContainsKey(x) ? hourOrdersNotAll[x] : 0)
+            return Ok(new []{7, 8, 9, 10, 11, 12}
+                .Select(x => new 
+                {
+                    Name = x.ToString(), 
+                    Value = hourOrdersNotAll.ContainsKey(x) ? hourOrdersNotAll[x] : 0
+                })
                 .ToArray());
         }
 

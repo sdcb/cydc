@@ -10,6 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatPaginatorIntl } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 import { ChartsModule } from 'ng2-charts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { MaterialModule } from './shared/material/material.module';
 
@@ -44,8 +45,8 @@ const dialogs = [
   OrderCreateDialog,
   MenuCreateDialog,
   PasswordResetDialog,
-  PromptDialog, 
-  ConfirmDialog, 
+  PromptDialog,
+  ConfirmDialog,
   BatchPayDialog
 ];
 
@@ -71,7 +72,7 @@ const pipes = [
     TastesComponent,
     LocationsComponent,
     NotificationComponent,
-    DayOrderComponent, 
+    DayOrderComponent,
     ...dialogs,
     ...pipes,
   ],
@@ -84,7 +85,8 @@ const pipes = [
     ReactiveFormsModule,
     LayoutModule,
     MaterialModule,
-    ChartsModule, 
+    ChartsModule,
+    NgxChartsModule,
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
   exports: [ ...pipes ],

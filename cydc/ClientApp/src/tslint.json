@@ -17,6 +17,6 @@
           true,
           "Component", "Dialog"
         ],
-        "no-non-null-assertion": false,
+        "no-non-null-assertion": false
     }
 }

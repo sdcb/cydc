@@ -9,14 +9,19 @@ export class DayOrdersApi {
   }
 
   dayOrders(days: number) {
-    return this.http.get<number[]>(`/api/report/dayOrders?days=${days}`);
+    return this.http.get<ReportDataItem[]>(`/api/report/dayOrders?days=${days}`);
   }
 
   hourOrders(days: number) {
-    return this.http.get<number[]>(`/api/report/hourOrders?days=${days}`);
+    return this.http.get<ReportDataItem[]>(`/api/report/hourOrders?days=${days}`);
   }
 
   tasteOrders(days: number) {
-    return this.http.get<{[key: string]: number}>(`/api/report/tasteOrders?days=${days}`);
+    return this.http.get<ReportDataItem[]>(`/api/report/tasteOrders?days=${days}`);
   }
+}
+
+export interface ReportDataItem {
+  name: string;
+  value: number;
 }

@@ -1,35 +1,20 @@
-<div class="row">
-  <div class="col-md-6">
-    <mat-card>
-      <mat-card-title>
-        每天订单统计（近{{days}}天）
-      </mat-card-title>
-      <canvas baseChart width="400" height="300"
-              [datasets]="dayOrdersData"
-              [labels]="['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']"
-              chartType="bar"></canvas>
-    </mat-card>
-  </div>
-  <div class="col-md-6">
-    <mat-card>
-      <mat-card-title>
-        小时统计（近{{days}}天）
-      </mat-card-title>
-      <canvas baseChart width="400" height="300"
-              [datasets]="hourOrdersData"
-              [labels]="['7', '8', '9', '10', '11', '12']"
-              chartType="line"></canvas>
-    </mat-card>
-  </div>
-  <div class="col-md-6">
-    <mat-card>
-      <mat-card-title>
-        口味统计（近{{days}}天）
-      </mat-card-title>
-      <canvas baseChart width="400" height="300"
-              [data]="tasteOrdersData"
-              [labels]="tasteOrdersLabels"
-              chartType="doughnut"></canvas>
-    </mat-card>
+<div class="col-md-12">
+  <div class="row">
+    <div class="col-md-6 mat-elevation-z1 mb-3">
+      <h2>每天订单统计（近{{days}}天）</h2>
+      <!-- <ngx-charts-bar-vertical [results]="dayOrdersData"></ngx-charts-bar-vertical> -->
+    </div>
+    <div class="col-md-6 mat-elevation-z1 mb-3">
+      <h2>小时订单统计（近{{days}}天）</h2>
+      <ngx-charts-line-chart [results]="hourOrdersData"></ngx-charts-line-chart>
+    </div>
+    <div class="col-md-6">
+      <mat-card>
+        <mat-card-title>
+          口味统计（近{{days}}天）
+        </mat-card-title>
+        <!-- <canvas baseChart width="400" height="300" [data]="tasteOrdersData" [labels]="tasteOrdersLabels" chartType="doughnut"></canvas> -->
+      </mat-card>
+    </div>
   </div>
 </div>
