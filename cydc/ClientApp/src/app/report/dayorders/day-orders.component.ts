@@ -10,7 +10,7 @@ import { DayOrdersApi, ReportDataItem } from './day-orders.api';
 export class DayOrderComponent implements OnInit {
   days = 60;
   dayOrdersData: ReportDataItem[] = [];
-  hourOrdersData: ReportDataItem[] = [];
+  hourOrdersData!: any;
   tasteOrdersData: ReportDataItem[] = [];
 
   constructor(private api: DayOrdersApi) {
@@ -18,7 +18,10 @@ export class DayOrderComponent implements OnInit {
 
   ngOnInit() {
     this.api.dayOrders(this.days).subscribe(v => this.dayOrdersData = v);
-    this.api.hourOrders(this.days).subscribe(v => this.hourOrdersData = v);
+    this.api.hourOrders(this.days).subscribe(v => {
+      this.hourOrdersData = {name: "数量", series: v};
+      console.log(this.hourOrdersData);
+    });
     this.api.tasteOrders(this.days).subscribe(v => this.tasteOrdersData = v);
   }
 }
