@@ -19,4 +19,8 @@ export class DayOrdersApi {
   tasteOrders(days: number) {
     return this.http.get<{[key: string]: number}>(`/api/report/tasteOrders?days=${days}`);
   }
+
+  locationOrders(days: number) {
+    return this.http.get<{[key: string]: number}>(`/api/report/locationOrders?days=${days}`);
+  }
 }

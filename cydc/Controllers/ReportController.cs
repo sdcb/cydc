@@ -50,7 +50,7 @@ namespace cydc.Controllers
                 .GroupBy(x => x.OrderTime.Hour)
                 .Select(x => new
                 {
-                    Hour = x.Key, 
+                    Hour = x.Key,
                     Count = x.Count(),
                 })
                 .ToDictionaryAsync(k => k.Hour, v => v.Count);
@@ -79,19 +79,16 @@ namespace cydc.Controllers
         {
             if (days > MaxDay) return BadRequest($"Days should never greater than {MaxDay}.");
 
-            Dictionary<int, int> hourOrdersNotAll = await _db.FoodOrder
+            var data = await _db.FoodOrder
                 .Where(f => f.OrderTime > DateTime.Now.AddDays(-days))
-                .GroupBy(x => x.OrderTime.Hour)
+                .GroupBy(x => x.Location.Name)
                 .Select(x => new
                 {
-                    Hour = x.Key,
+                    Location = x.Key,
                     Count = x.Count(),
                 })
-                .ToDictionaryAsync(k => k.Hour, v => v.Count);
-
-            return Ok(Enumerable.Range(7, 6)
-                .Select(x => hourOrdersNotAll.ContainsKey(x) ? hourOrdersNotAll[x] : 0)
-                .ToArray());
+                .ToDictionaryAsync(k => k.Location, v => v.Count);
+            return Ok(data);
         }
     }
 }

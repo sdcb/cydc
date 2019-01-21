@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatPaginatorIntl } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
-import { ChartsModule } from 'ng2-charts';
+import { ChartsModule } from 'ng2-charts-x';
 
 import { MaterialModule } from './shared/material/material.module';
 
