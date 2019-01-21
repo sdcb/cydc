@@ -8,8 +8,6 @@ import { version } from "../../environments/version";
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  source = "https://github.com/sdcb/cydc";
-
   constructor(public user: UserService) {
   }
 
@@ -19,5 +17,9 @@ export class HomeComponent {
 
   rv() {
     return version.rv;
+  }
+
+  source() {
+    return version.source;
   }
 }

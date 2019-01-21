@@ -38,7 +38,7 @@ import { NotificationComponent } from './admin/data-manages/notification/notific
 import { SafeHtmlPipe } from './shared/pipes/safe-html.pipe';
 import { TruncatePipe } from './shared/pipes/truncate.pipe';
 import { BatchPayDialog } from './admin/orders/batch-pay.dialog';
-import { DayOrderComponent } from './report/dayorders/day-orders.component';
+import { ReportComponent } from './report/report.component';
 
 const dialogs = [
   OrderCreateDialog,
@@ -71,7 +71,7 @@ const pipes = [
     TastesComponent,
     LocationsComponent,
     NotificationComponent,
-    DayOrderComponent, 
+    ReportComponent, 
     ...dialogs,
     ...pipes,
   ],
