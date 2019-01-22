@@ -1,3 +1,4 @@
+import { UserService } from './../services/user.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { ReportApi } from './report.api';
 
@@ -13,10 +14,13 @@ export class ReportComponent implements OnInit {
   tasteOrders = new DataLabel();
   locationOrders = new DataLabel();
 
-  constructor(private api: ReportApi) {
+  constructor(
+    private api: ReportApi,
+    private user: UserService) {
   }
 
   async ngOnInit() {
+    await this.user.ensureLogin();
     this.dayOrdersData = datasetFromArray(await this.api.dayOrders(this.days).toPromise());
     this.hourOrdersData = datasetFromArray(await this.api.hourOrders(this.days).toPromise());
     this.tasteOrders = DataLabel.from(await this.api.tasteOrders(this.days).toPromise());
@@ -29,7 +33,7 @@ export function datasetFromArray(data: number[], label = "数量") {
 }
 
 export function datasetFromObject() {
-  
+
 }
 
 export function empty() {
@@ -42,7 +46,7 @@ export class DataLabel {
 
   static from(obj: { [key: string]: number }): DataLabel {
     return {
-      data: Object.values(obj), 
+      data: Object.values(obj),
       labels: Object.keys(obj)
     }
   }

@@ -1,3 +1,4 @@
+import { UserService } from 'src/app/services/user.service';
 import { ConfirmDialog } from './../../../shared/dialogs/confirm/confirm.dialog';
 import { MatDialog, MatTableDataSource, MatSort } from '@angular/material';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -18,9 +19,11 @@ export class TastesComponent implements OnInit {
   constructor(
     private api: DataManagesApiService,
     private loading: GlobalLoadingService,
-    private dialogService: MatDialog) { }
+    private dialogService: MatDialog,
+    private user: UserService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.user.ensureAdmin();
     this.dataSource.sort = this.sort;
     this.loadData();
   }
