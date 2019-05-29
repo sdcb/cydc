@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace cydc
 {
@@ -28,6 +29,14 @@ namespace cydc
                 .AddTextPlainInput()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.MSSqlServer(
+                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
+                    connectionString: Configuration["CydcConnection"],
+                    tableName: "Log",
+                    autoCreateSqlTable: true)
+                .CreateLogger();
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -39,14 +48,14 @@ namespace cydc
             services.AddAntiforgery(o => o.HeaderName = "X-XSRF-TOKEN");
             services.AddSignalR();
 
-            services.AddDefaultIdentity<AspNetUsers>(o =>
+            services.AddDefaultIdentity<User>(o =>
                 {
                     o.User.RequireUniqueEmail = true;
                     o.User.AllowedUserNameCharacters = null;
                 })
                 .AddDefaultUI()
                 .AddUserManager<UserManager>()
-                .AddRoles<IdentityRole>()
+                .AddRoles<IdentityRole<int>>()
                 .AddEntityFrameworkStores<CydcContext>()
                 .AddDefaultTokenProviders();
 

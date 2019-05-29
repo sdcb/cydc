@@ -20,11 +20,11 @@ namespace cydc.Controllers.FoodOrders
 
         public string Comment { get; set; }
 
-        public async Task<FoodOrder> Create(CydcContext db, string userId, FoodOrderClientInfo clientInfo)
+        public async Task<FoodOrder> Create(CydcContext db, int userId, FoodOrderClientInfo clientInfo)
         {
             var menu = await db.FoodMenu.FindAsync(MenuId);
             var dateNow = DateTime.Now;
-            FoodOrder foodOrder = new FoodOrder
+            var foodOrder = new FoodOrder
             {
                 OrderUserId = userId, 
                 OrderTime = dateNow, 

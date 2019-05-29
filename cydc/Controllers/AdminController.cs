@@ -8,7 +8,6 @@ using cydc.Managers.Identities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace cydc.Controllers
 {
@@ -17,16 +16,13 @@ namespace cydc.Controllers
     {
         private readonly CydcContext _db;
         private readonly UserManager _userManager;
-        private readonly ILogger<AdminController> _logger;
 
         public AdminController(
             CydcContext db, 
-            UserManager userManager, 
-            ILogger<AdminController> logger)
+            UserManager userManager)
         {
             _db = db;
             _userManager = userManager;
-            _logger = logger;
         }
 
         public async Task<PagedResult<AdminUserDto>> Users(AdminUserQuery searchDto)
@@ -51,7 +47,7 @@ namespace cydc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<bool> ResetPassword(string userId, [FromBody][Required] string password)
         {
-            AspNetUsers user = await _userManager.FindByIdAsync(userId);
+            User user = await _userManager.FindByIdAsync(userId);
             string token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var ok = await _userManager.ResetPasswordAsync(user, token, password);
             return ok.Succeeded;
@@ -98,7 +94,7 @@ namespace cydc.Controllers
             };
             _db.Entry(payment).State = EntityState.Added;
 
-            AccountDetails accounting = new AccountDetails
+            var accounting = new AccountDetails
             {
                 Amount = -foodOrder.AccountDetails.Sum(x => x.Amount),
                 CreateTime = DateTime.Now,
@@ -111,7 +107,7 @@ namespace cydc.Controllers
         }
 
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BatchPay([Required]string userId, [Required]decimal amount, [FromBody]int[] orderIds)
+        public async Task<IActionResult> BatchPay([Required]int userId, [Required]decimal amount, [FromBody]int[] orderIds)
         {
             foreach (var orderId in orderIds)
             {
@@ -130,7 +126,7 @@ namespace cydc.Controllers
                 _db.Entry(payment).State = EntityState.Added;
             }
 
-            AccountDetails accounting = new AccountDetails
+            var accounting = new AccountDetails
             {
                 Amount = amount,
                 CreateTime = DateTime.Now,
@@ -159,7 +155,7 @@ namespace cydc.Controllers
             return Ok(await _db.SaveChangesAsync());
         }
 
-        public async Task<string> GetUserIdByUserName(string userName)
+        public async Task<int> GetUserIdByUserName(string userName)
         {
             userName = userName.Trim();
             return await _db.Users

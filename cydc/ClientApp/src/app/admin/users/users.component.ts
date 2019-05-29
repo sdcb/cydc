@@ -18,12 +18,13 @@ import { PasswordResetDialog as PasswordResetDialog } from './password-reset.dia
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  displayedColumns = ["name", "email", "balance", "orderCount", "action"];
+  displayedColumns = ["id", "name", "email", "phone", "balance", "orderCount", "action"];
   query = new AdminUserQuery();
   dataSource: ApiDataSource<AdminUserDto>;
 
   nameInput = new FormControl("");
   emailInput = new FormControl("");
+  phoneInput = new FormControl("");
 
   constructor(
     private userService: UserService,
@@ -34,6 +35,7 @@ export class UsersComponent implements OnInit {
     this.dataSource = new ApiDataSource<AdminUserDto>(() => this.api.getUsers(this.query));
     this.nameInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyName(n));
     this.emailInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyEmail(n));
+    this.phoneInput.valueChanges.pipe(debounce(() => timer(500))).subscribe(n => this.applyPhone(n));
   }
 
   async ngOnInit() {
@@ -69,6 +71,12 @@ export class UsersComponent implements OnInit {
 
   async applyEmail(email: string) {
     this.query.email = email;
+    this.query.resetPager();
+    await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
+  }
+
+  async applyPhone(phone: string) {
+    this.query.phone = phone;
     this.query.resetPager();
     await this.router.navigate(["."], { relativeTo: this.route, queryParams: this.query.toDto() });
   }

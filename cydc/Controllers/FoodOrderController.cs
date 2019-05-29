@@ -45,13 +45,13 @@ namespace cydc.Controllers
                 return BadRequest("Only admin can specify OtherPersonName.");
             }
 
-            string userId = await GetUserIdFromUserName(order.IsMe, order.OtherPersonName);
+            int? userId = await GetUserIdFromUserName(order.IsMe, order.OtherPersonName);
             if (userId == null)
             {
                 return BadRequest($"User {order.OtherPersonName} cannot found.");
             }
 
-            FoodOrder foodOrder = await order.Create(_db, userId, new FoodOrderClientInfo
+            FoodOrder foodOrder = await order.Create(_db, userId.Value, new FoodOrderClientInfo
             {
                 Ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
                 UserAgent = $"{Request.Host}@{Request.Headers["User-Agent"]}"
@@ -71,8 +71,9 @@ namespace cydc.Controllers
 
         public IActionResult My()
         {
+            int userId = int.Parse(User.GetUserId());
             return Ok(_db.FoodOrder
-                .Where(x => x.OrderUserId == User.GetUserId())
+                .Where(x => x.OrderUserId == userId)
                 .OrderByDescending(x => x.OrderTime)
                 .Select(x => new FoodOrderDto
                 {
@@ -90,8 +91,9 @@ namespace cydc.Controllers
 
         public async Task<IActionResult> MyBalance()
         {
+            int userId = int.Parse(User.GetUserId());
             decimal balance = await _db.AccountDetails
-                .Where(x => x.UserId == User.GetUserId())
+                .Where(x => x.UserId == userId)
                 .SumAsync(x => x.Amount);
             return Ok(balance);
         }
@@ -100,7 +102,7 @@ namespace cydc.Controllers
         public async Task<IActionResult> SaveComment(int orderId, [FromBody]string comment)
         {
             FoodOrder order = await _db.FoodOrder.FindAsync(orderId);
-            if (order.OrderUserId != User.GetUserId()) return Forbid();
+            if (order.OrderUserId != int.Parse(User.GetUserId())) return Forbid();
             if (order.OrderTime < DateTime.Now.Date) return BadRequest("Order must be today.");
 
             order.Comment = comment;
@@ -108,9 +110,9 @@ namespace cydc.Controllers
             return Ok(order.Comment);
         }
 
-        private async Task<string> GetUserIdFromUserName(bool isMe, string userName)
+        private async Task<int?> GetUserIdFromUserName(bool isMe, string userName)
         {
-            if (isMe) return User.GetUserId();
+            if (isMe) return int.Parse(User.GetUserId());
             return (await _db.Users.FirstOrDefaultAsync(x => x.UserName == userName))?.Id;
         }
 
@@ -127,9 +129,10 @@ namespace cydc.Controllers
 
         public async Task<int> MyLastTaste()
         {
+            int userId = int.Parse(User.GetUserId());
             int tasteId = await _db.FoodOrder
                 .OrderByDescending(x => x.Id)
-                .Where(x => x.OrderUserId == User.GetUserId())
+                .Where(x => x.OrderUserId == userId)
                 .Select(x => x.TasteId)
                 .FirstOrDefaultAsync();
             return tasteId;
@@ -137,9 +140,10 @@ namespace cydc.Controllers
 
         public async Task<int> MyLastLocation()
         {
+            int userId = int.Parse(User.GetUserId());
             int locationId = await _db.FoodOrder
                 .OrderByDescending(x => x.Id)
-                .Where(x => x.OrderUserId == User.GetUserId())
+                .Where(x => x.OrderUserId == userId)
                 .Select(x => x.LocationId)
                 .FirstOrDefaultAsync();
             return locationId;

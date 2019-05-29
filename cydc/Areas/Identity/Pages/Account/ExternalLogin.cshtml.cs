@@ -16,13 +16,13 @@ namespace cydc.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
-        private readonly SignInManager<AspNetUsers> _signInManager;
-        private readonly UserManager<AspNetUsers> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
-            SignInManager<AspNetUsers> signInManager,
-            UserManager<AspNetUsers> userManager,
+            SignInManager<User> signInManager,
+            UserManager<User> userManager,
             ILogger<ExternalLoginModel> logger)
         {
             _signInManager = signInManager;
@@ -115,13 +115,13 @@ namespace cydc.Areas.Identity.Pages.Account
             string email = info.Principal.FindFirstValue(CasConstants.Email);
             string userName = info.Principal.FindFirstValue(CasConstants.Name);
 
-            AspNetUsers user = 
+            User user = 
                 await _userManager.FindByEmailAsync(email) ??
                 await _userManager.FindByNameAsync(userName);
 
             if (user == null)
             {
-                user = new AspNetUsers
+                user = new User
                 {
                     UserName = info.Principal.FindFirstValue(CasConstants.Name),
                     Email = info.Principal.FindFirstValue(CasConstants.Email),
@@ -156,7 +156,7 @@ namespace cydc.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new AspNetUsers { UserName = Input.Email, Email = Input.Email };
+                var user = new User { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

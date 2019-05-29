@@ -17,11 +17,11 @@ namespace cydc.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<AspNetUsers> _signInManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly UserManager _userManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<AspNetUsers> signInManager, UserManager userManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<User> signInManager, UserManager userManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
