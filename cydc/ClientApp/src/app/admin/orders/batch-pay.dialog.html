@@ -1,0 +1,68 @@
+<div mat-dialog-title>
+  <div class="container">
+    <div class="row">
+      <span *ngIf="unpayedOrders.length > 0">批量付款-{{userName}}</span>
+      <span *ngIf="unpayedOrders.length === 0">充值-{{userName}}</span>
+      <span class="flex-fill"></span>
+    </div>
+  </div>
+</div>
+<div mat-dialog-content>
+  <mat-form-field class="w100">
+    <input matInput type="number" placeholder="用户充值金额：" [(ngModel)]="payedAmount" cdkFocusInitial>
+  </mat-form-field>
+
+  <table *ngIf="unpayedOrders.length > 0" mat-table [dataSource]="unpayedOrders" class="w100">
+    <ng-container matColumnDef="selected">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox color="primary" [ngModel]="allItemSelected()" (ngModelChange)="toggleSelectAll(uiAll.checked)"
+          #uiAll>全选</mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let item">
+        <mat-checkbox color="primary" [(ngModel)]="item.selected"></mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>名字</th>
+      <td mat-cell *matCellDef="let item">{{item.userName}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="time">
+      <th mat-header-cell *matHeaderCellDef>时间</th>
+      <td mat-cell *matCellDef="let item">{{item.orderTime | date: 'yyyy-M-d H:mm'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef>价格</th>
+      <td mat-cell *matCellDef="let item">{{item.price | currency: '￥'}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-row *matRowDef="let row; columns: columns"></tr>
+  </table>
+</div>
+
+<div mat-dialog-actions>
+  <ng-container>
+    <ng-container *ngIf="unpayedOrders.length > 0">
+      <ng-container *ngIf="allItemSelected()">已全选</ng-container>
+      <ng-container *ngIf="!allItemSelected()">未全选</ng-container>
+      选择订单<b>{{selectedCount()}}</b>个，
+      需<b>{{selectedAmount()}}</b>元，
+      付款<b>{{payedAmount}}</b>元，
+      <ng-container *ngIf="payedAmount >= selectedAmount()">充值<b>{{payedAmount - selectedAmount()}}</b>元</ng-container>
+      <ng-container *ngIf="payedAmount < selectedAmount()">还少<b>{{selectedAmount() - payedAmount}}</b>元</ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="unpayedOrders.length === 0">
+      <ng-container *ngIf="payedAmount >= selectedAmount()">充值<b>{{payedAmount - selectedAmount()}}</b>元</ng-container>
+      <ng-container *ngIf="payedAmount < selectedAmount()">扣款<b>{{selectedAmount() - payedAmount}}</b>元</ng-container>
+    </ng-container>
+  </ng-container>
+  <span class="flex-fill"></span>
+  <button *ngIf="unpayedOrders.length > 0 && payedAmount >= selectedAmount()" mat-button cdkFocusInitial (click)="confirm()">确定充值</button>
+  <button *ngIf="unpayedOrders.length === 0 && payedAmount !== 0" mat-button cdkFocusInitial (click)="confirm()">
+      确定{{payedAmount >= selectedAmount() ? "充值" : "扣款"}}
+  </button>
+</div>

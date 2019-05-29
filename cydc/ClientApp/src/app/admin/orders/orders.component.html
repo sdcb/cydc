@@ -1,0 +1,159 @@
+<div class="row mat-elevation-z2">
+  <div class="col-12">
+    <div class="container">
+      <div class="row">
+        <h2 class="d-inline">订单管理</h2>
+        <span class="flex-fill"></span>
+        <button mat-button *ngIf="showBatchPay()" (click)="batchPay()">
+          <ng-container *ngIf="batchPayAmount() > 0">批量付款({{query.userName}}): {{batchPayAmount() | currency: "￥"}}</ng-container>
+          <ng-container *ngIf="batchPayAmount() === 0">充值({{query.userName}})</ng-container>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="container table-search-container">
+      <div class="row">
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <input matInput placeholder="用户名" [formControl]="userNameInput" [value]="query.userName" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <mat-select placeholder="付款..." [ngModel]="query.isPayed" (ngModelChange)="applyIsPayed(payedInput.value)"
+              name="isPayed" #payedInput>
+              <mat-option [value]="undefined">全部付款</mat-option>
+              <mat-option [value]="true">已付</mat-option>
+              <mat-option [value]="false">未付</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <mat-select placeholder="地点..." [ngModel]="query.locationId" (ngModelChange)="applyLocationId(locationInput.value)"
+              name="location" #locationInput>
+              <mat-option [value]="undefined">全部地点</mat-option>
+              <mat-option *ngFor="let item of allLocation" [value]="item.id">{{item.location}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <mat-select placeholder="口味..." [ngModel]="query.tasteId" (ngModelChange)="applyTasteId(tasteInput.value)"
+              name="taste" #tasteInput>
+              <mat-option [value]="undefined">全部口味</mat-option>
+              <mat-option *ngFor="let item of allTaste" [value]="item.id">{{item.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <!-- start date datepicker -->
+            <input matInput [matDatepicker]="startPicker" placeholder="开始时间" name="startDate" [ngModel]="query.startTime"
+              (ngModelChange)="applyStartTime(startDateInput.value)" #startDateInput>
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker startView="month"></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <!-- start date datepicker -->
+            <input matInput [matDatepicker]="endPicker" placeholder="结束时间" name="endDate" [min]="query.startTime"
+              [ngModel]="query.endTime" (ngModelChange)="applyEndTime(endDateInput.value)" #endDateInput>
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker startView="month" [startAt]="query.startTime"></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <table mat-table matSort [dataSource]="dataSource" (matSortChange)="applySort($event)" class="w100">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
+        <td mat-cell *matCellDef="let item">{{item.id}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>用户名</th>
+        <td mat-cell *matCellDef="let item">{{item.userName}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="orderTime">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>时间</th>
+        <td mat-cell *matCellDef="let item" [matTooltip]="item.orderTime | date: 'yyyy-M-d H:mm'">
+          {{item.orderTime | date: screenSize.sm ? 'yyyy-M-d' : 'yyyy-M-d H:mm'}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="menu">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>菜单</th>
+        <td mat-cell *matCellDef="let item" [matTooltip]="item.details">
+          {{item.menu}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>地点</th>
+        <td mat-cell *matCellDef="let item">
+          {{item.location}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="taste">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>口味</th>
+        <td mat-cell *matCellDef="let item">
+          {{item.taste}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="comment">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>备注</th>
+        <td mat-cell *matCellDef="let item">
+          <app-click-edit [value]="item.comment" (save)="saveComment($event, item)" [matTooltip]="item.comment">
+            {{item.comment | truncate: 12}}
+            <mat-icon *ngIf="!item.comment" matTooltip="点击编辑">edit</mat-icon>
+          </app-click-edit>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>价格</th>
+        <td mat-cell *matCellDef="let item">{{item.price}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="isPayed">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>付款</th>
+        <td mat-cell *matCellDef="let item" [matTooltip]="item.isPayed ? '已付' : '未付'">
+          {{item.isPayed ? '✅' : '❌'}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>操作</th>
+        <td mat-cell *matCellDef="let item">
+          <button (click)="pay(item)" mat-icon-button color="primary" matTooltip="收到钱，付款" *ngIf="!item.isPayed">
+            <mat-icon>payment</mat-icon>
+          </button>
+          <button (click)="unpay(item)" mat-icon-button matTooltip="取消付款" *ngIf="item.isPayed">
+            <mat-icon>cancel</mat-icon>
+          </button>
+          <button (click)="delete(item)" mat-icon-button matTooltip="删除订单" *ngIf="!item.isPayed">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[12,20,50,100]" [pageSize]="query.pageSize" showFirstLastButtons #pager [length]="dataSource.dataCount"
+      (page)="page(pager.pageIndex, pager.pageSize)"></mat-paginator>
+  </div>
+</div>

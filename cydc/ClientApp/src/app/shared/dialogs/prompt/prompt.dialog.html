@@ -1,0 +1,12 @@
+<h2>{{promptText}}</h2>
+
+<form (ngSubmit)="confirm()">
+  <mat-form-field class="w100">
+    <input required matInput cdkFocusInitial placeholder="请输入..." [(ngModel)]="inputText" name="promptText">
+  </mat-form-field>
+
+  <div mat-dialog-actions>
+    <span class="flex-fill"></span>
+    <button mat-button>确认</button>
+  </div>
+</form>

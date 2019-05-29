@@ -8,10 +8,44 @@
     </div>
   </div>
   <div class="col-12">
-    <table mat-table matSort [dataSource]="dataSource" class="w100">
+    <div class="container table-search-container">
+      <div class="row">
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <input matInput placeholder="用户名" [formControl]="nameInput" [value]="query.name" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <input matInput placeholder="邮箱" [formControl]="emailInput" [value]="query.email" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <mat-form-field>
+            <mat-select #operator placeholder="余额" required [value]="query.operator" (selectionChange)="applyOperator(operator.value)">
+              <mat-option [value]="0">全部</mat-option>
+              <mat-option [value]="1">&lt;0</mat-option>
+              <mat-option [value]="2">=0</mat-option>
+              <mat-option [value]="3">&gt;0</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <table mat-table matSort [dataSource]="dataSource" class="w100" (matSortChange)="applySort($event)">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+        <td mat-cell *matCellDef="let item">{{item.id}}</td>
+      </ng-container>
+
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>名字</th>
-        <td mat-cell *matCellDef="let item">{{item.name}}</td>
+        <td mat-cell *matCellDef="let item">
+          <a [routerLink]="['/admin/orders']" [queryParams]="{userName: item.name, pageSize: 100}" [matTooltip]="item.id">{{item.name}}</a>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="email">
@@ -21,13 +55,31 @@
 
       <ng-container matColumnDef="balance">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>余额</th>
-        <td mat-cell *matCellDef="let item">{{item.balance}}</td>
+        <td mat-cell *matCellDef="let item">{{item.balance | currency: '￥'}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>操作</th>
+        <td mat-cell *matCellDef="let item">
+          <button mat-icon-button color="primary" matTooltip="重置密码" (click)="resetPassword(item)">
+            <mat-icon>security</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="充值" (click)="charge(item)">
+            <mat-icon>attach_money</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="orderCount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>订单数</th>
+        <td mat-cell *matCellDef="let item">{{item.orderCount}}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[12,20,50,100]" showFirstLastButtons itemsPerPageLabel="每页条数:"></mat-paginator>
+    <mat-paginator #pager [pageSizeOptions]="[12,20,50,100]" [length]="dataSource.dataCount" (page)="page(pager.pageIndex, pager.pageSize)"
+      showFirstLastButtons></mat-paginator>
   </div>
 </div>

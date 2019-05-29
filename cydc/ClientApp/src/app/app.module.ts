@@ -1,3 +1,6 @@
+import { ConfirmDialog } from './shared/dialogs/confirm/confirm.dialog';
+import { PromptDialog } from 'src/app/shared/dialogs/prompt/prompt.dialog';
+import { PasswordResetDialog as PasswordResetDialog } from './admin/users/password-reset.dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, InjectionToken } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -6,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatPaginatorIntl } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
+import { ChartsModule } from 'ng2-charts-x';
 
 import { MaterialModule } from './shared/material/material.module';
 
@@ -24,6 +28,30 @@ import { MyFoodOrderComponent } from './foodOrder/my-food-order/my-food-order.co
 import { AppPaginatorIntl } from './shared/utils/app-paginator-intl';
 import { UsersComponent } from './admin/users/users.component';
 import { NotAdminComponent } from './admin/not-admin/not-admin.component';
+import { OrdersComponent } from './admin/orders/orders.component';
+import { MenusComponent } from './admin/menus/menus.component';
+import { ClickEditComponent } from './shared/click-edit/click-edit.component';
+import { MenuCreateDialog } from './admin/menus/menu-create.dialog';
+import { TastesComponent } from './admin/data-manages/tastes/tastes.component';
+import { LocationsComponent } from './admin/data-manages/locations/locations.component';
+import { NotificationComponent } from './admin/data-manages/notification/notification.component';
+import { SafeHtmlPipe } from './shared/pipes/safe-html.pipe';
+import { TruncatePipe } from './shared/pipes/truncate.pipe';
+import { BatchPayDialog } from './admin/orders/batch-pay.dialog';
+import { ReportComponent } from './report/report.component';
+
+const dialogs = [
+  OrderCreateDialog,
+  MenuCreateDialog,
+  PasswordResetDialog,
+  PromptDialog,
+  ConfirmDialog,
+  BatchPayDialog
+];
+
+const pipes = [
+  SafeHtmlPipe, TruncatePipe
+];
 
 @NgModule({
   declarations: [
@@ -31,27 +59,35 @@ import { NotAdminComponent } from './admin/not-admin/not-admin.component';
     NavMenuComponent,
     HomeComponent,
     NotFoundComponent,
-    OrderComponent, 
+    OrderComponent,
     LoginComponent,
     LoggedOutComponent,
-    OrderCreateDialog,
     MyFoodOrderComponent,
     UsersComponent,
-    NotAdminComponent, 
+    NotAdminComponent,
+    OrdersComponent,
+    MenusComponent,
+    ClickEditComponent,
+    TastesComponent,
+    LocationsComponent,
+    NotificationComponent,
+    ReportComponent,
+    ...dialogs,
+    ...pipes,
   ],
-  entryComponents: [
-    OrderCreateDialog
-  ], 
+  entryComponents: [ ...dialogs ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    FontAwesomeModule, 
+    FontAwesomeModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    LayoutModule, 
-    MaterialModule, 
+    LayoutModule,
+    MaterialModule,
+    ChartsModule,
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
+  exports: [ ...pipes ],
   providers: [
     { provide: loginProvider, useValue: loginResolver },
     { provide: MatPaginatorIntl, useClass: AppPaginatorIntl, }

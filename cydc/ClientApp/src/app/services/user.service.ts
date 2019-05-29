@@ -8,7 +8,7 @@ import { GlobalLoadingService } from './global-loading.service';
 })
 export class UserService {
   userStatus = new UserStatus();
-  loaded: boolean = false;
+  private loadingPromise: Promise<UserStatus> | undefined = undefined;
 
   constructor(
     private http: HttpClient,
@@ -18,23 +18,27 @@ export class UserService {
   }
 
   async loadUserStatus() {
-    if (this.loaded) {
-      return this.userStatus;
+    if (this.loadingPromise !== undefined) {
+      return await this.loadingPromise;
     } else {
-      this.userStatus = await this.loading.wrap(this.getUserStatusAsync());
-      this.loaded = true;
+      this.loadingPromise = this.loading.wrap(this.getUserStatusAsync());
+      this.userStatus = await this.loadingPromise;
       return this.userStatus;
     }
   }
 
+  async isAdmin() {
+    return (await this.loadUserStatus()).isAdmin;
+  }
+
   async ensureLogin() {
     if (!(await this.loadUserStatus()).isLoggedIn) {
-      await this.router.navigateByUrl("/api/user/login", { queryParams: { redirectUrl: location.href } });
+      await this.router.navigateByUrl("/api/user/login", { queryParams: { redirectUrl: location.pathname + location.search } });
     };
   }
 
   async ensureAdmin() {
-    if (!(await this.loadUserStatus()).isAdmin) {
+    if (!this.isAdmin()) {
       await this.router.navigateByUrl("/admin/not-admin");
     };
   }
@@ -44,9 +48,9 @@ export class UserService {
   }
 
   async logout() {
-    await this.http.post("/user/logout", {});
-    await this.router.navigateByUrl("/user/logged-out");
+    await this.http.get("/api/user/logout").toPromise();
     this.userStatus = new UserStatus();
+    await this.router.navigateByUrl("/user/logged-out");
   }
 }
 

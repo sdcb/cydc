@@ -1,21 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using cydc.Database;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using cydc.Hubs;
+using cydc.Managers.Identities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Sdcb.AspNetCore.Authentication.YeluCasSso;
 
 namespace cydc
 {
@@ -31,7 +24,9 @@ namespace cydc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .AddTextPlainInput()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -41,41 +36,25 @@ namespace cydc
 
             services.AddDbContext<CydcContext>(options => options.UseSqlServer(Configuration["CydcConnection"]));
             services.AddHttpContextAccessor();
+            services.AddAntiforgery(o => o.HeaderName = "X-XSRF-TOKEN");
+            services.AddSignalR();
 
-            services.AddAuthentication(o =>
-            {
-                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = YeluCasSsoDefaults.AuthenticationScheme;
-            }).AddCookie().AddYeluCasSso(o =>
+            services.AddDefaultIdentity<AspNetUsers>(o =>
+                {
+                    o.User.RequireUniqueEmail = true;
+                    o.User.AllowedUserNameCharacters = null;
+                })
+                .AddDefaultUI()
+                .AddUserManager<UserManager>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<CydcContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication().AddYeluCasSso(o =>
             {
                 o.YeluCasSsoEndpoint = Configuration["YeluCasSsoEndpoint"];
-                o.Events.OnCreatingClaims = OnCreatingClaims;
+                o.Events.OnCreatingClaims = UserManager.OnCreatingClaims;
             });
-        }
-
-        private async Task OnCreatingClaims(HttpContext httpContext, ClaimsIdentity claimsIdentity)
-        {
-            var db = httpContext.RequestServices.GetRequiredService<CydcContext>();
-            var userName = claimsIdentity.FindFirst(CasConstants.Name).Value;
-            var email = claimsIdentity.FindFirst(CasConstants.Email).Value;
-
-            string systemId = await db.AspNetUsers
-                .Where(x => x.NormalizedEmail == email || x.NormalizedUserName == userName)
-                .Select(x => x.Id)
-                .FirstOrDefaultAsync();
-            if (systemId == null) throw new Exception("User not found in system.");
-
-            List<string> roles = await db.AspNetUserRoles
-                .Where(x => x.UserId == systemId)
-                .Select(x => x.Role.Name)
-                .ToListAsync();
-
-            // commit
-            claimsIdentity.AddClaim(new Claim(claimsIdentity.NameClaimType, systemId));
-            foreach (var role in roles)
-            {
-                claimsIdentity.AddClaim(new Claim(claimsIdentity.RoleClaimType, role));
-            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,7 +67,6 @@ namespace cydc
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -96,6 +74,7 @@ namespace cydc
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseAuthentication();
+            app.UseAntiforgeryToken();
 
             app.UseMvc(routes =>
             {
@@ -104,11 +83,13 @@ namespace cydc
                     template: "api/{controller}/{action=Index}/{id?}");
             });
 
+            app.UseSignalR(o =>
+            {
+                o.MapHub<NewOrderHub>("/hubs/newOrder");
+            });
+
             app.UseSpa(spa =>
             {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())

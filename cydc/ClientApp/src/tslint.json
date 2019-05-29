@@ -12,6 +12,11 @@
             "element",
             "app",
             "kebab-case"
-        ]
+        ],
+        "component-class-suffix": [
+          true,
+          "Component", "Dialog"
+        ],
+        "no-non-null-assertion": false,
     }
 }

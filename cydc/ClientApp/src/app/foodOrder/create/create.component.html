@@ -5,9 +5,11 @@
       <mat-card-content>
         <div class="container">
           <div class="row">
-            <div class="col-12 col-md-6 col-lg-8" [innerHtml]="siteNotification"></div>
+            <div class="col-12 col-md-6 col-lg-8" [innerHtml]="siteNotification | safeHtml"></div>
             <div class="col-12 col-md-6 col-lg-4">
-              <img matTooltip="付款请用支付宝扫二维码" class="w100" src="https://cydc.starworks.cc/images/pay.png" />
+              <img matTooltip="付款请用支付宝扫二维码" src="/api/qrcode/pay" />
+              &nbsp;
+              <img matTooltip="红包" src="/api/qrcode/redPacket" />
             </div>
           </div>
         </div>
@@ -17,7 +19,7 @@
 </div>
 
 <div class="row">
-  <div class="col-6" *ngFor="let menu of menus">
+  <div class="col-6 mb-3" *ngFor="let menu of menus">
     <mat-card class="card-bg">
       <mat-card-title>
         <div class="container">
@@ -40,5 +42,8 @@
         </div>
       </mat-card-actions>
     </mat-card>
+  </div>
+  <div class="col-6 mb-3" *ngIf="menus.length === 0">
+    非点餐时间，要点餐请联系赵叔。
   </div>
 </div>
