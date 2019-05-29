@@ -23,9 +23,10 @@ namespace cydc.Managers.Identities
         internal static async Task OnCreatingClaims(HttpContext httpContext, ClaimsIdentity claimsIdentity)
         {
             var db = httpContext.RequestServices.GetRequiredService<CydcContext>();
-            var userManager = httpContext.RequestServices.GetRequiredService<UserManager>();
-            var userName = claimsIdentity.FindFirst(CasConstants.Name).Value;
-            var email = claimsIdentity.FindFirst(CasConstants.Email).Value;
+            UserManager userManager = httpContext.RequestServices.GetRequiredService<UserManager>();
+            string userName = claimsIdentity.FindFirst(CasConstants.Name).Value;
+            string email = claimsIdentity.FindFirst(CasConstants.Email).Value;
+            string phone = claimsIdentity.FindFirst(CasConstants.Phone).Value;
 
             var systemUser = 
                 await userManager.FindByEmailAsync(email) ?? 
@@ -36,8 +37,16 @@ namespace cydc.Managers.Identities
                 {
                     UserName = userName, 
                     Email = email, 
+                    PhoneNumber = phone, 
+                    PhoneNumberConfirmed = true, 
                 });
                 systemUser = await userManager.FindByEmailAsync(email);
+            }
+            if (systemUser.PhoneNumber == null)
+            {
+                systemUser.PhoneNumber = phone;
+                systemUser.PhoneNumberConfirmed = true;
+                await userManager.UpdateAsync(systemUser);
             }
 
             IList<string> roles = await userManager.GetRolesAsync(systemUser);
