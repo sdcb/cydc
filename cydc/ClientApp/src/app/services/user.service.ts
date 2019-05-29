@@ -8,7 +8,7 @@ import { GlobalLoadingService } from './global-loading.service';
 })
 export class UserService {
   userStatus = new UserStatus();
-  private loadingPromise: Promise<any> | undefined = undefined;
+  private loadingPromise: Promise<UserStatus> | undefined = undefined;
 
   constructor(
     private http: HttpClient,

@@ -44,8 +44,8 @@ const dialogs = [
   OrderCreateDialog,
   MenuCreateDialog,
   PasswordResetDialog,
-  PromptDialog, 
-  ConfirmDialog, 
+  PromptDialog,
+  ConfirmDialog,
   BatchPayDialog
 ];
 
@@ -71,7 +71,7 @@ const pipes = [
     TastesComponent,
     LocationsComponent,
     NotificationComponent,
-    ReportComponent, 
+    ReportComponent,
     ...dialogs,
     ...pipes,
   ],
@@ -84,7 +84,7 @@ const pipes = [
     ReactiveFormsModule,
     LayoutModule,
     MaterialModule,
-    ChartsModule, 
+    ChartsModule,
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
   exports: [ ...pipes ],
