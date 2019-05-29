@@ -16,6 +16,8 @@ export class OrderComponent implements OnInit {
   selectedMenu: FoodOrderMenu | undefined;
   menus: FoodOrderMenu[] = [];
 
+  isHttps = location.protocol === "https:";
+
   @ViewChild("confirmDialog")
   confirmDialog!: ElementRef;
 
@@ -35,6 +37,10 @@ export class OrderComponent implements OnInit {
         this.menus = v;
         this.selectedMenu = v[0];
     }));
+  }
+
+  httpsRedirect() {
+    location.href = location.href.replace("http:", "https:");
   }
 
   async select(menu: FoodOrderMenu) {

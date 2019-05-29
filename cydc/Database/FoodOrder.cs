@@ -15,12 +15,12 @@ namespace cydc.Database
         public int FoodMenuId { get; set; }
         public int LocationId { get; set; }
         public DateTime OrderTime { get; set; }
-        public string OrderUserId { get; set; }
+        public int OrderUserId { get; set; }
         public int TasteId { get; set; }
 
         public virtual FoodMenu FoodMenu { get; set; }
         public virtual Location Location { get; set; }
-        public virtual AspNetUsers OrderUser { get; set; }
+        public virtual User OrderUser { get; set; }
         public virtual TasteType Taste { get; set; }
         public virtual FoodOrderClientInfo FoodOrderClientInfo { get; set; }
         public virtual FoodOrderPayment FoodOrderPayment { get; set; }
