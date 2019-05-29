@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace cydc
 {
@@ -27,6 +28,14 @@ namespace cydc
             services.AddMvc()
                 .AddTextPlainInput()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.MSSqlServer(
+                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
+                    connectionString: Configuration["CydcConnection"],
+                    tableName: "Log",
+                    autoCreateSqlTable: true)
+                .CreateLogger();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

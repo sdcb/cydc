@@ -8,7 +8,6 @@ using cydc.Managers.Identities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace cydc.Controllers
 {
@@ -17,16 +16,13 @@ namespace cydc.Controllers
     {
         private readonly CydcContext _db;
         private readonly UserManager _userManager;
-        private readonly ILogger<AdminController> _logger;
 
         public AdminController(
             CydcContext db, 
-            UserManager userManager, 
-            ILogger<AdminController> logger)
+            UserManager userManager)
         {
             _db = db;
             _userManager = userManager;
-            _logger = logger;
         }
 
         public async Task<PagedResult<AdminUserDto>> Users(AdminUserQuery searchDto)
@@ -98,7 +94,7 @@ namespace cydc.Controllers
             };
             _db.Entry(payment).State = EntityState.Added;
 
-            AccountDetails accounting = new AccountDetails
+            var accounting = new AccountDetails
             {
                 Amount = -foodOrder.AccountDetails.Sum(x => x.Amount),
                 CreateTime = DateTime.Now,
@@ -130,7 +126,7 @@ namespace cydc.Controllers
                 _db.Entry(payment).State = EntityState.Added;
             }
 
-            AccountDetails accounting = new AccountDetails
+            var accounting = new AccountDetails
             {
                 Amount = amount,
                 CreateTime = DateTime.Now,
