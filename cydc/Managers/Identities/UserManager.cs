@@ -14,15 +14,14 @@ using System.Threading.Tasks;
 
 namespace cydc.Managers.Identities
 {
-    public class UserManager : UserManager<AspNetUsers>
+    public class UserManager : UserManager<User>
     {
-        public UserManager(IUserStore<AspNetUsers> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<AspNetUsers> passwordHasher, IEnumerable<IUserValidator<AspNetUsers>> userValidators, IEnumerable<IPasswordValidator<AspNetUsers>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<AspNetUsers>> logger) : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+        public UserManager(IUserStore<User> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<User> passwordHasher, IEnumerable<IUserValidator<User>> userValidators, IEnumerable<IPasswordValidator<User>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<User>> logger) : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
         }
 
         internal static async Task OnCreatingClaims(HttpContext httpContext, ClaimsIdentity claimsIdentity)
         {
-            var db = httpContext.RequestServices.GetRequiredService<CydcContext>();
             UserManager userManager = httpContext.RequestServices.GetRequiredService<UserManager>();
             string userName = claimsIdentity.FindFirst(CasConstants.Name).Value;
             string email = claimsIdentity.FindFirst(CasConstants.Email).Value;
@@ -33,7 +32,7 @@ namespace cydc.Managers.Identities
                 await userManager.FindByNameAsync(userName);
             if (systemUser == null)
             {
-                await userManager.CreateAsync(new AspNetUsers
+                await userManager.CreateAsync(new User
                 {
                     UserName = userName, 
                     Email = email, 
@@ -52,8 +51,8 @@ namespace cydc.Managers.Identities
             IList<string> roles = await userManager.GetRolesAsync(systemUser);
 
             // commit
-            claimsIdentity.AddClaim(new Claim(claimsIdentity.NameClaimType, systemUser.Id));
-            claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, systemUser.Id));
+            claimsIdentity.AddClaim(new Claim(claimsIdentity.NameClaimType, systemUser.Id.ToString()));
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, systemUser.Id.ToString()));
             foreach (var role in roles)
             {
                 claimsIdentity.AddClaim(new Claim(claimsIdentity.RoleClaimType, role));

@@ -1,12 +1,10 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace cydc.Database
 {
-    public partial class CydcContext : IdentityDbContext<AspNetUsers, IdentityRole, string>
+    public partial class CydcContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public CydcContext()
         {
@@ -29,24 +27,30 @@ namespace cydc.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-preview3-35497");
+            //modelBuilder.HasAnnotation("ProductVersion", "2.2.0-preview3-35497");
 
-            modelBuilder.Entity<AspNetUsers>()
-                .HasMany(e => e.AspNetUserClaims)
+            modelBuilder.Entity<IdentityUserRole<int>>().ToTable("UserRole");
+            modelBuilder.Entity<IdentityRole<int>>().ToTable("Role");
+            modelBuilder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaim");
+            modelBuilder.Entity<IdentityUserClaim<int>>().ToTable("UserClaim");
+            modelBuilder.Entity<IdentityUserLogin<int>>().ToTable("UserLogin");
+            modelBuilder.Entity<User>()
+                .ToTable("User")
+                .HasMany(e => e.UserClaims)
                 .WithOne()
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<AspNetUsers>()
-                .HasMany(e => e.AspNetUserLogins)
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.UserLogins)
                 .WithOne()
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<AspNetUsers>()
-                .HasMany(e => e.AspNetUserRoles)
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.UserRoles)
                 .WithOne()
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
@@ -57,8 +61,7 @@ namespace cydc.Database
                 entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.UserId)
-                    .IsRequired()
-                    .HasMaxLength(450);
+                    .IsRequired();
 
                 entity.HasOne(d => d.FoodOrder)
                     .WithMany(p => p.AccountDetails)

@@ -48,14 +48,14 @@ namespace cydc
             services.AddAntiforgery(o => o.HeaderName = "X-XSRF-TOKEN");
             services.AddSignalR();
 
-            services.AddDefaultIdentity<AspNetUsers>(o =>
+            services.AddDefaultIdentity<User>(o =>
                 {
                     o.User.RequireUniqueEmail = true;
                     o.User.AllowedUserNameCharacters = null;
                 })
                 .AddDefaultUI()
                 .AddUserManager<UserManager>()
-                .AddRoles<IdentityRole>()
+                .AddRoles<IdentityRole<int>>()
                 .AddEntityFrameworkStores<CydcContext>()
                 .AddDefaultTokenProviders();
 

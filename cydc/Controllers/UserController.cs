@@ -15,11 +15,11 @@ namespace cydc.Controllers
     public class UserController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly SignInManager<AspNetUsers> _signInManager;
+        private readonly SignInManager<User> _signInManager;
 
         public UserController(
             IHostingEnvironment hostingEnvironment,
-            SignInManager<AspNetUsers> signInManager)
+            SignInManager<User> signInManager)
         {
             _hostingEnvironment = hostingEnvironment;
             _signInManager = signInManager;
