@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Serilog.Events;
+using System;
 
 namespace cydc
 {
@@ -31,7 +33,7 @@ namespace cydc
 
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.MSSqlServer(
-                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
+                    restrictedToMinimumLevel: (LogEventLevel)Enum.Parse(typeof(LogEventLevel), Configuration["Logging:LogLevel:Default"]),
                     connectionString: Configuration["CydcConnection"],
                     tableName: "Log",
                     autoCreateSqlTable: true)
