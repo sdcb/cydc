@@ -31,14 +31,6 @@ namespace cydc
                 .AddTextPlainInput()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.MSSqlServer(
-                    restrictedToMinimumLevel: (LogEventLevel)Enum.Parse(typeof(LogEventLevel), Configuration["Logging:LogLevel:Default"]),
-                    connectionString: Configuration["CydcConnection"],
-                    tableName: "Log",
-                    autoCreateSqlTable: true)
-                .CreateLogger();
-
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

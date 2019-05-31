@@ -13,7 +13,13 @@ namespace cydc
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseSerilog()
+                .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
+                    .ReadFrom.Configuration(hostingContext.Configuration)
+                    .Enrich.FromLogContext()
+                    .WriteTo.MSSqlServer(
+                        connectionString: hostingContext.Configuration["CydcConnection"],
+                        tableName: "Log",
+                        autoCreateSqlTable: true))
                 .UseStartup<Startup>();
     }
 }
