@@ -27,6 +27,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.8",
     "@fortawesome/free-solid-svg-icons": "^5.5.0",
     "@ng-bootstrap/ng-bootstrap": "^4.0.0",
+    "@nguniversal/aspnetcore-engine": "^7.1.1",
     "@nguniversal/module-map-ngfactory-loader": "7.0.2",
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.1.3",
