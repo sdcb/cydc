@@ -9,7 +9,8 @@ import { FormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
 import { ApiDataSource } from 'src/app/shared/utils/paged-query';
 import { AdminUserQuery, AdminUserDto, BalanceOperator } from './admin-user-dtos';
-import { Sort, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { Sort } from '@angular/material/sort';
 import { PasswordResetDialog as PasswordResetDialog } from './password-reset.dialog';
 
 @Component({

@@ -9,7 +9,7 @@ export class ClickEditComponent implements OnInit {
   editMode = false;
   editValue!: string;
 
-  @ViewChild("input") input!: ElementRef<HTMLInputElement>;
+  @ViewChild("input", { static: false }) input!: ElementRef<HTMLInputElement>;
 
   _value!: string;
 
