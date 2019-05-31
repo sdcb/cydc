@@ -14,7 +14,7 @@ import { PromptDialog } from 'src/app/shared/dialogs/prompt/prompt.dialog';
 export class TastesComponent implements OnInit {
   dataSource = new MatTableDataSource<TasteManageDto>();
   displayedColumns = ["id", "name", "foodOrderCount", "enabled", "action"];
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
   constructor(
     private api: DataManagesApiService,

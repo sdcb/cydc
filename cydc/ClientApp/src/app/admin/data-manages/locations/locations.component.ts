@@ -14,7 +14,7 @@ import { PromptDialog } from 'src/app/shared/dialogs/prompt/prompt.dialog';
 export class LocationsComponent implements OnInit {
   dataSource = new MatTableDataSource<LocationManageDto>();
   displayedColumns = ["id", "location", "foodOrderCount", "enabled", "action"];
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
   constructor(
     private api: DataManagesApiService,

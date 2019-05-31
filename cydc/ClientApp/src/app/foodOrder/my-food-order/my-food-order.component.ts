@@ -16,10 +16,10 @@ export class MyFoodOrderComponent implements OnInit {
   dataSource = new MatTableDataSource<FoodOrderItem>();
   balance!: number;
 
-  @ViewChild(MatPaginator)
+  @ViewChild(MatPaginator, { static: true })
   paginator!: MatPaginator;
 
-  @ViewChild(MatSort)
+  @ViewChild(MatSort, { static: true })
   sort!: MatSort;
 
   constructor(
