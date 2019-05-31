@@ -1,6 +1,8 @@
 import { UserService } from 'src/app/services/user.service';
 import { ConfirmDialog } from './../../../shared/dialogs/confirm/confirm.dialog';
-import { MatDialog, MatTableDataSource, MatSort } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataManagesApiService, TasteManageDto } from '../data-manages-api.service';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';

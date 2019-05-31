@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FoodOrderDto } from './admin-user-dtos';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 import { AdminApiService } from '../admin-api.service';

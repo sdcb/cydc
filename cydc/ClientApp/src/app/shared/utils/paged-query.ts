@@ -2,7 +2,7 @@ import { DataSource } from '@angular/cdk/table';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { map, finalize } from 'rxjs/operators';
-import { Sort } from '@angular/material';
+import { Sort } from '@angular/material/sort';
 
 export interface PagedDto {
   page: string;
