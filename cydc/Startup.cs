@@ -9,9 +9,6 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-using Serilog.Events;
-using System;
 
 namespace cydc
 {
@@ -27,17 +24,12 @@ namespace cydc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string key = Configuration["ApplicationInsights:InstrumentationKey"];
+            services.AddApplicationInsightsTelemetry(key);
+
             services.AddMvc()
                 .AddTextPlainInput()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.MSSqlServer(
-                    restrictedToMinimumLevel: (LogEventLevel)Enum.Parse(typeof(LogEventLevel), Configuration["Logging:LogLevel:Default"]),
-                    connectionString: Configuration["CydcConnection"],
-                    tableName: "Log",
-                    autoCreateSqlTable: true)
-                .CreateLogger();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
