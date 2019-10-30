@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,12 +24,8 @@ namespace cydc.Infrastructure.InputFormats
 
         public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
         {
-            string data = null;
-            using (var streamReader = context.ReaderFactory(context.HttpContext.Request.Body, encoding))
-            {
-                data = await streamReader.ReadToEndAsync();
-            }
-            return InputFormatterResult.Success(data);
+            using var streamReader = new StreamReader(context.HttpContext.Request.Body, encoding);
+            return InputFormatterResult.Success(await streamReader.ReadToEndAsync());
         }
     }
 }

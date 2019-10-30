@@ -14,14 +14,11 @@ namespace cydc.Controllers
 {
     public class UserController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly SignInManager<User> _signInManager;
 
         public UserController(
-            IHostingEnvironment hostingEnvironment,
             SignInManager<User> signInManager)
         {
-            _hostingEnvironment = hostingEnvironment;
             _signInManager = signInManager;
         }
 
@@ -51,22 +48,6 @@ namespace cydc.Controllers
                 return new ChallengeResult(YeluCasSsoDefaults.AuthenticationScheme, properties);
             }
             return Redirect(fromUrl);
-        }
-
-        public IActionResult Dump()
-        {
-            if (_hostingEnvironment.EnvironmentName == "Development" ||
-                User.IsInRole("Admin"))
-            {
-                return Json(User.Claims
-                    .Select(x => new { x.Type, x.Value })
-                    .GroupBy(x => x.Type)
-                    .ToDictionary(k => k.Key, v => String.Join(";", v.Select(x => x.Value))));
-            }
-            else
-            {
-                return BadRequest("Dump not allowed");
-            }
         }
     }
 

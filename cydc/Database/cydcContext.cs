@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System;
+using System.Linq;
+using System.Reflection;
 
 namespace cydc.Database
 {
@@ -24,10 +28,11 @@ namespace cydc.Database
         public virtual DbSet<SiteNotice> SiteNotice { get; set; }
         public virtual DbSet<TasteType> TasteType { get; set; }
 
+        public int? DatePart(string datePartArg, DateTime? date) => throw new Exception();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            //modelBuilder.HasAnnotation("ProductVersion", "2.2.0-preview3-35497");
 
             modelBuilder.Entity<IdentityUserRole<int>>().ToTable("UserRole");
             modelBuilder.Entity<IdentityRole<int>>().ToTable("Role");
@@ -90,11 +95,9 @@ namespace cydc.Database
 
             modelBuilder.Entity<FoodOrder>(entity =>
             {
-                entity.HasKey(e => e.Id)
-                    .ForSqlServerIsClustered(false);
+                entity.HasKey(e => e.Id).IsClustered(false);
 
-                entity.HasIndex(e => e.OrderTime)
-                    .ForSqlServerIsClustered();
+                entity.HasIndex(e => e.OrderTime).IsClustered();
 
                 entity.Property(e => e.Comment).HasMaxLength(100);
 
