@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace cydc
 {
@@ -29,7 +30,7 @@ namespace cydc
 
             services.AddMvc()
                 .AddTextPlainInput()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -61,7 +62,7 @@ namespace cydc
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -73,22 +74,20 @@ namespace cydc
                 app.UseHsts();
             }
 
+            app.UseRouting();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseAntiforgeryToken();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "api/{controller}/{action=Index}/{id?}");
-            });
-
-            app.UseSignalR(o =>
-            {
-                o.MapHub<NewOrderHub>("/hubs/newOrder");
+                endpoints.MapControllerRoute("default", "api/{controller}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+                endpoints.MapHub<NewOrderHub>("/hubs/newOrder");
             });
 
             app.UseSpa(spa =>

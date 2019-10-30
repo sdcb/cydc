@@ -23,19 +23,21 @@ namespace cydc.Controllers
 
         public bool IsAdmin => User.IsInRole("Admin");
 
-        public async Task<IActionResult> DayOrders(int days)
+        public IActionResult DayOrders(int days)
         {
             if (days > MaxDay) return BadRequest($"Days should never greater than {MaxDay}.");
 
-            Dictionary<DayOfWeek, int> dayOrdersNotAll = await _db.FoodOrder
+            Dictionary<DayOfWeek, int> dayOrdersNotAll = _db.FoodOrder
                 .Where(f => f.OrderTime > DateTime.Now.AddDays(-days))
-                .GroupBy(x => x.OrderTime.DayOfWeek)
+                .Select(v => v.OrderTime)
+                .AsEnumerable()
+                .GroupBy(x => x.DayOfWeek)
                 .Select(x => new
                 {
                     DayOfWeek = x.Key,
                     Count = x.Count(),
                 })
-                .ToDictionaryAsync(k => k.DayOfWeek, v => v.Count);
+                .ToDictionary(k => k.DayOfWeek, v => v.Count);
             var total = IsAdmin ? 100.0f : dayOrdersNotAll.Sum(x => x.Value);
 
             return Ok(new[] { 1, 2, 3, 4, 5, 6, 0 }
