@@ -1,4 +1,5 @@
 import { unwrapBoolean, SortedPagedQuery, SortedPagedDto, unwrapNumber } from 'src/app/shared/utils/paged-query';
+import * as moment from 'moment';
 
 export interface FoodOrderQueryDto extends SortedPagedDto {
   userName: string;
@@ -20,8 +21,8 @@ export class AdminOrderQuery extends SortedPagedQuery {
   toDto(): FoodOrderQueryDto {
     const o = <FoodOrderQueryDto>super.toDto();
     if (this.userName !== '') { o.userName = this.userName; }
-    if (this.startTime !== '' && this.startTime !== undefined) { o.startTime = new Date(this.startTime).toISOString(); }
-    if (this.endTime !== '' && this.endTime !== undefined) { o.endTime = new Date(this.endTime).toISOString(); }
+    if (this.startTime !== '' && this.startTime !== undefined) { o.startTime = moment(this.startTime).format('YYYY-MM-DD'); }
+    if (this.endTime !== '' && this.endTime !== undefined) { o.endTime = moment(this.endTime).format('YYYY-MM-DD'); }
     if (this.isPayed !== undefined) { o.isPayed = this.isPayed ? 'true' : 'false'; }
     if (this.locationId !== undefined) { o.locationId = this.locationId.toString(); }
     if (this.tasteId !== undefined) { o.tasteId = this.tasteId.toString(); }
@@ -31,8 +32,8 @@ export class AdminOrderQuery extends SortedPagedQuery {
   replaceWith(p: Partial<FoodOrderQueryDto>) {
     super.replaceWith(p);
     this.userName = p.userName || '';
-    this.startTime = p.startTime;
-    this.endTime = p.endTime;
+    this.startTime = p.startTime && moment(p.startTime).format();
+    this.endTime = p.endTime && moment(p.endTime).format();
     this.isPayed = unwrapBoolean(p.isPayed);
     this.locationId = unwrapNumber(p.locationId);
     this.tasteId = unwrapNumber(p.tasteId);

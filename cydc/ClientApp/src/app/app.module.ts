@@ -2,7 +2,7 @@ import { ConfirmDialog } from './shared/dialogs/confirm/confirm.dialog';
 import { PromptDialog } from 'src/app/shared/dialogs/prompt/prompt.dialog';
 import { PasswordResetDialog as PasswordResetDialog } from './admin/users/password-reset.dialog';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, InjectionToken } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -90,7 +90,7 @@ const pipes = [
   exports: [ ...pipes ],
   providers: [
     { provide: loginProvider, useValue: loginResolver },
-    { provide: MatPaginatorIntl, useClass: AppPaginatorIntl, }
+    { provide: MatPaginatorIntl, useClass: AppPaginatorIntl, }, 
   ],
   bootstrap: [AppComponent]
 })

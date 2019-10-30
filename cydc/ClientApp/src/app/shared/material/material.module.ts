@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatOptionModule, MatNativeDateModule } from '@angular/material/core';
+import { MatOptionModule, MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
@@ -47,7 +47,10 @@ const materialModules = [
 
 @NgModule({
   imports: materialModules,
-  exports: materialModules, 
+  exports: materialModules,
+    providers: [
+      { provide: MAT_DATE_LOCALE, useValue: 'zh-CN' }, 
+  ], 
 })
 export class MaterialModule {
 }
