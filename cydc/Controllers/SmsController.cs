@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using qcloudsms_csharp;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,7 @@ namespace cydc.Controllers
             if (user.Balance >= 0) return BadRequest($"用户账户余额必须大于0: {user.Balance}。");
             if (user.HasToday) return BadRequest($"一天只能给用户催一次帐。");
 
-            string[] parameters = new[] { user.UserName, (-user.Balance).ToString("C") };
+            string[] parameters = new[] { user.UserName, (-user.Balance).ToString("N2") };
 
             var smsSendLog = new SmsSendLog
             {
@@ -60,7 +61,7 @@ namespace cydc.Controllers
                 SendTime = DateTime.Now, 
                 TemplateId = _smsTemplateConfig.RemindTemplateId, 
                 ReceiveUserPhone = user.Phone, 
-                Parameter = JsonSerializer.Serialize(parameters), 
+                Parameter = JsonConvert.SerializeObject(parameters), 
             };
             _db.SmsSendLog.Add(smsSendLog);
             await _db.SaveChangesAsync();
