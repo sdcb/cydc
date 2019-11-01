@@ -30,7 +30,17 @@ namespace cydc.Controllers
 
         public async Task<PagedResult<AdminUserDto>> Users(AdminUserQuery searchDto)
         {
-            return await searchDto.DoQuery(_db);
+            var data = await searchDto.DoQuery(_db);
+            foreach (var item in data.PagedData)
+            {
+                item.Phone = item.Phone switch
+                {
+                    null => item.Phone,
+                    { Length: 11 } => item.Phone[..3] + "****" + item.Phone[^4..], 
+                    _ => item.Phone, 
+                };
+            }
+            return data;
         }
 
         public async Task<PagedResult<FoodOrderDto>> Orders(FoodOrderQuery query)
