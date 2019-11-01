@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using System;
-using System.Linq;
-using System.Reflection;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace cydc.Database
 {
@@ -26,9 +24,9 @@ namespace cydc.Database
         public virtual DbSet<FoodOrderPayment> FoodOrderPayment { get; set; }
         public virtual DbSet<Location> Location { get; set; }
         public virtual DbSet<SiteNotice> SiteNotice { get; set; }
+        public virtual DbSet<SmsSendLog> SmsSendLog { get; set; }
+        public virtual DbSet<SmsSendResult> SmsSendResult { get; set; }
         public virtual DbSet<TasteType> TasteType { get; set; }
-
-        public int? DatePart(string datePartArg, DateTime? date) => throw new Exception();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,12 +38,12 @@ namespace cydc.Database
             modelBuilder.Entity<IdentityUserClaim<int>>().ToTable("UserClaim");
             modelBuilder.Entity<IdentityUserLogin<int>>().ToTable("UserLogin");
             modelBuilder.Entity<User>()
-                .ToTable("User")
-                .HasMany(e => e.UserClaims)
-                .WithOne()
-                .HasForeignKey(e => e.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+               .ToTable("User")
+               .HasMany(e => e.UserClaims)
+               .WithOne()
+               .HasForeignKey(e => e.UserId)
+               .IsRequired()
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                 .HasMany(e => e.UserLogins)
@@ -63,15 +61,6 @@ namespace cydc.Database
 
             modelBuilder.Entity<AccountDetails>(entity =>
             {
-                entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
-
-                entity.Property(e => e.UserId)
-                    .IsRequired();
-
-                entity.HasOne(d => d.FoodOrder)
-                    .WithMany(p => p.AccountDetails)
-                    .HasForeignKey(d => d.FoodOrderId);
-
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.AccountDetails)
                     .HasForeignKey(d => d.UserId)
@@ -81,97 +70,84 @@ namespace cydc.Database
             modelBuilder.Entity<FoodMenu>(entity =>
             {
                 entity.Property(e => e.CreateTime).HasDefaultValueSql("('0001-01-01 00:00:00.0000000')");
-
-                entity.Property(e => e.Details)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
-
-                entity.Property(e => e.Title)
-                    .IsRequired()
-                    .HasMaxLength(10);
             });
 
             modelBuilder.Entity<FoodOrder>(entity =>
             {
-                entity.HasKey(e => e.Id).IsClustered(false);
+                entity.HasKey(e => e.Id)
+                    .IsClustered(false);
 
-                entity.HasIndex(e => e.OrderTime).IsClustered();
-
-                entity.Property(e => e.Comment).HasMaxLength(100);
-
-                entity.Property(e => e.OrderUserId)
-                    .IsRequired()
-                    .HasMaxLength(450);
-
-                entity.HasOne(d => d.FoodMenu)
-                    .WithMany(p => p.FoodOrder)
-                    .HasForeignKey(d => d.FoodMenuId);
-
-                entity.HasOne(d => d.Location)
-                    .WithMany(p => p.FoodOrder)
-                    .HasForeignKey(d => d.LocationId);
+                entity.HasIndex(e => e.OrderTime)
+                    .IsClustered();
 
                 entity.HasOne(d => d.OrderUser)
                     .WithMany(p => p.FoodOrder)
                     .HasForeignKey(d => d.OrderUserId)
                     .HasConstraintName("FK_FoodOrder_ApplicationUser_OrderUserId");
-
-                entity.HasOne(d => d.Taste)
-                    .WithMany(p => p.FoodOrder)
-                    .HasForeignKey(d => d.TasteId);
             });
 
             modelBuilder.Entity<FoodOrderClientInfo>(entity =>
             {
-                entity.HasKey(e => e.FoodOrderId);
-
                 entity.Property(e => e.FoodOrderId).ValueGeneratedNever();
-
-                entity.Property(e => e.Ip)
-                    .IsRequired()
-                    .HasColumnName("IP")
-                    .HasMaxLength(15);
-
-                entity.Property(e => e.UserAgent).IsRequired();
-
-                entity.HasOne(d => d.FoodOrder)
-                    .WithOne(p => p.FoodOrderClientInfo)
-                    .HasForeignKey<FoodOrderClientInfo>(d => d.FoodOrderId);
             });
 
             modelBuilder.Entity<FoodOrderPayment>(entity =>
             {
-                entity.HasKey(e => e.FoodOrderId);
-
                 entity.Property(e => e.FoodOrderId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.FoodOrder)
-                    .WithOne(p => p.FoodOrderPayment)
-                    .HasForeignKey<FoodOrderPayment>(d => d.FoodOrderId);
             });
 
-            modelBuilder.Entity<Location>(entity =>
+            modelBuilder.Entity<SmsSendLog>(entity =>
             {
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(15);
+                entity.HasKey(e => e.Id)
+                    .IsClustered(false);
+
+                entity.Property(e => e.ReceiveUserPhone).IsUnicode(false);
+
+                entity.HasOne(d => d.OperationUser)
+                    .WithMany(p => p.SmsSendLogOperationUser)
+                    .HasForeignKey(d => d.OperationUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SmsSendLog_OperationUser");
+
+                entity.HasOne(d => d.ReceiveUser)
+                    .WithMany(p => p.SmsSendLogReceiveUser)
+                    .HasForeignKey(d => d.ReceiveUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SmsSendLog_ReceiveUser");
             });
 
-            modelBuilder.Entity<SiteNotice>(entity =>
+            modelBuilder.Entity<SmsSendResult>(entity =>
             {
-                entity.Property(e => e.Content)
-                    .IsRequired()
-                    .HasMaxLength(500);
+                entity.HasKey(e => e.SmsId)
+                    .HasName("PK_SmsResult");
+
+                entity.HasIndex(e => e.Sid)
+                    .HasName("IX_SmsResult")
+                    .IsUnique();
+
+                entity.Property(e => e.SmsId).ValueGeneratedNever();
+
+                entity.Property(e => e.Sid).IsUnicode(false);
+
+                entity.HasOne(d => d.Sms)
+                    .WithOne(p => p.SmsSendResult)
+                    .HasForeignKey<SmsSendResult>(d => d.SmsId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SmsResult_SmsSendLog");
             });
 
-            modelBuilder.Entity<TasteType>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(10);
+                entity.HasIndex(e => e.NormalizedEmail)
+                    .HasName("EmailIndex");
+
+                entity.HasIndex(e => e.NormalizedUserName)
+                    .HasName("UserNameIndex");
             });
+
+            OnModelCreatingPartial(modelBuilder);
         }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
