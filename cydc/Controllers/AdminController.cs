@@ -8,6 +8,9 @@ using cydc.Managers.Identities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using OfficeOpenXml;
+using System.Reflection;
 
 namespace cydc.Controllers
 {
@@ -33,6 +36,41 @@ namespace cydc.Controllers
         public async Task<PagedResult<FoodOrderDto>> Orders(FoodOrderQuery query)
         {
             return await query.DoQuery(_db);
+        }
+
+        public async Task<IActionResult> ExportOrders(FoodOrderQuery query)
+        {
+            var data = await query.DoQuery(_db);
+
+            using var stream = new MemoryStream();
+            using var excel = new ExcelPackage(stream);
+            ExcelWorksheet sheet = excel.Workbook.Worksheets.Add("Sheet1");
+            PropertyInfo[] props = typeof(FoodOrderDto).GetProperties();
+            for (var i = 0; i < props.Length; ++i)
+            {
+                sheet.Cells[1, i + 1].Value = props[i].Name;
+            }
+            for (var i = 0; i < data.PagedData.Count; ++i)
+            {
+                for (var j = 0; j < props.Length; ++j)
+                {
+                    var value = props[j].GetValue(data.PagedData[i]);
+                    sheet.Cells[i + 2, j + 1].Value = value;
+                    sheet.Cells[i + 2, j + 1].Style.Numberformat.Format = value?.GetType() switch
+                    {
+                        var x when x == typeof(DateTime) => "yyyy-mm-dd",
+                        _ => "General",
+                    };
+                }
+            }
+            for (var i = 0; i < props.Length; ++i)
+            {
+                sheet.Column(i + 1).AutoFit();
+            }
+            excel.Save();
+
+            string fileName = $"{query.StartTime?.ToString("yyyy-MM-dd") ?? "Excel"}.xlsx";
+            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
 
         [ValidateAntiForgeryToken]

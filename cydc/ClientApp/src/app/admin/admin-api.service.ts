@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { PagedResult } from '../shared/utils/paged-query';
 import { AdminUserQuery, AdminUserDto } from './users/admin-user-dtos';
@@ -21,6 +21,15 @@ export class AdminApiService {
     return this.http.get<PagedResult<FoodOrderDto>>(`/api/admin/orders`, {
       params: <Params>query.toDto()
     });
+  }
+
+  exportToExcel(dto: import("./orders/admin-user-dtos").FoodOrderQueryDto) {
+    const fake = <any>dto;
+    const filteredDto = Object.keys(dto).filter(v => !!fake[v]).reduce((a, b) => {
+      a[b] = fake[b];
+      return a;
+    }, <any>{});
+    open('/api/admin/exportOrders?' + new HttpParams({fromObject: filteredDto}).toString());
   }
 
   saveOrderComment(orderId: number, comment: string): any {
