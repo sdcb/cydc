@@ -38,6 +38,12 @@ export class AdminApiService {
     });
   }
 
+  remind(userId: string) {
+    return this.http.post(`/api/sms/remind?toUserId=${userId}`, {}, {
+      responseType: 'text'
+    });
+  }
+
   resetPassword(id: string, password: string) {
     return this.http.post<boolean>(`/api/admin/resetPassword?userId=${id}`, password);
   }

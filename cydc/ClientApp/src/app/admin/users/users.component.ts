@@ -92,6 +92,13 @@ export class UsersComponent implements OnInit {
     }
   }
 
+  remind(item: AdminUserDto) {
+    if (!confirm(`确定要发短信吗？\n短信参考内容：${item.name} 您好，您的点餐网站帐下有${-item.balance}元未结账，请尽早付清哦。`)) return;
+    this.api.remind(item.id).subscribe(() => {
+      alert("催帐短信发送成功！");
+    }, err => alert(err.error));
+  }
+
   async charge(item: AdminUserDto) {
     if (await BatchPayDialog.show(this.dialogService, {
       userId: item.id,
