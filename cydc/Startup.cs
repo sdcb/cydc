@@ -1,3 +1,4 @@
+using cydc.Controllers.SmsDtos;
 using cydc.Database;
 using cydc.Hubs;
 using cydc.Managers.Identities;
@@ -39,6 +40,8 @@ namespace cydc
             });
 
             services.AddDbContext<CydcContext>(options => options.UseSqlServer(Configuration["CydcConnection"]));
+            services.Configure<TencentSmsConfig>(Configuration.GetSection("Tencent:SmsConfig"));
+            services.Configure<TencentSmsTemplateConfig>(Configuration.GetSection("Tencent:SmsTemplateConfig"));
             services.AddHttpContextAccessor();
             services.AddAntiforgery(o => o.HeaderName = "X-XSRF-TOKEN");
             services.AddSignalR();

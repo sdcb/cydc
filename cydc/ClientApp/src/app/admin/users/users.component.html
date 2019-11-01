@@ -75,6 +75,9 @@
           <button mat-icon-button color="primary" matTooltip="重置密码" (click)="resetPassword(item)">
             <mat-icon>security</mat-icon>
           </button>
+          <button mat-icon-button color="warn" (click)="remind(item)" mat-icon-button matTooltip="催账" *ngIf="item.phone && item.balance < 0">
+            <mat-icon>cancel</mat-icon>
+          </button>
           <button mat-icon-button matTooltip="充值" (click)="charge(item)">
             <mat-icon>attach_money</mat-icon>
           </button>
