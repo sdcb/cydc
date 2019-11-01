@@ -65,6 +65,10 @@ export class OrdersComponent implements OnInit, OnDestroy {
     });
   }
 
+  exportToExcel() {
+    this.api.exportToExcel(this.query.toDto());
+  }
+
   async ngOnDestroy() {
     this.subscription.unsubscribe();
   }

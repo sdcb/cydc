@@ -8,6 +8,9 @@
           <ng-container *ngIf="batchPayAmount() > 0">批量付款({{query.userName}}): {{batchPayAmount() | currency: "￥"}}</ng-container>
           <ng-container *ngIf="batchPayAmount() === 0">充值({{query.userName}})</ng-container>
         </button>
+        <button mat-button (click)="exportToExcel()" matTooltip="导出Excel">
+          <mat-icon>cloud_download</mat-icon>
+        </button>
       </div>
     </div>
   </div>
