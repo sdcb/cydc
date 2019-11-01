@@ -10,7 +10,7 @@ import { AdminUserDto } from './admin-user-dtos';
 })
 export class PasswordResetDialog implements OnInit {
   constructor(
-    public dialogRef: MatDialogRef<PasswordResetDialog, string>, 
+    public dialogRef: MatDialogRef<PasswordResetDialog, string>,
     @Inject(MAT_DIALOG_DATA)public user: AdminUserDto) {}
 
   hide = false;
@@ -37,7 +37,7 @@ export class PasswordResetDialog implements OnInit {
 
   static getPassword(dialogService: MatDialog, user: AdminUserDto) {
     return dialogService.open<PasswordResetDialog, AdminUserDto, string>(PasswordResetDialog, {
-        data: user, width: "400px", 
+        data: user, width: "400px",
       })
       .afterClosed()
       .toPromise();
@@ -45,7 +45,7 @@ export class PasswordResetDialog implements OnInit {
 }
 
 function generatePassword() {
-  const length = 8;
+  const length = 32;
   const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`!@#$%^&*()-=_+[]{};':\",./<>?~";
   let retVal = "";
   for (var i = 0, n = charset.length; i < length; ++i) {
