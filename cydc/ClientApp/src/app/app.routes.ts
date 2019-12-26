@@ -13,7 +13,6 @@ import { MenusComponent } from './admin/menus/menus.component';
 import { TastesComponent } from './admin/data-manages/tastes/tastes.component';
 import { LocationsComponent } from './admin/data-manages/locations/locations.component';
 import { NotificationComponent } from './admin/data-manages/notification/notification.component';
-import { ReportComponent } from './report/report.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: "full",  },
@@ -31,6 +30,6 @@ export const routes: Routes = [
   { path: 'admin/notification', component: NotificationComponent, },
   { path: 'admin/not-admin', component: NotAdminComponent, },
 
-  { path: 'report', component: ReportComponent },
+  { path: 'report', loadChildren: () => import('./report/report.module').then(m => m.ReportModule) },
   { path: '**', component: NotFoundComponent },
 ];
