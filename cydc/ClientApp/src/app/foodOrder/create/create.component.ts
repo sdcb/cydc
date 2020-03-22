@@ -18,7 +18,7 @@ export class OrderComponent implements OnInit {
 
   isHttps = location.protocol === "https:";
 
-  @ViewChild("confirmDialog", { static: false })
+  @ViewChild("confirmDialog")
   confirmDialog!: ElementRef;
 
   constructor(
