@@ -147,5 +147,8 @@
       }
     }
   },
-  "defaultProject": "cydc"
+  "defaultProject": "cydc",
+  "cli": {
+    "analytics": "49963345-447a-4bc6-9229-0f8ac13a898d"
+  }
 }
