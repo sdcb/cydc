@@ -1,5 +1,6 @@
 import { unwrapBoolean, SortedPagedQuery, SortedPagedDto, unwrapNumber } from 'src/app/shared/utils/paged-query';
 import * as moment from 'moment';
+import { formatDate } from '@angular/common';
 
 export interface FoodOrderQueryDto extends SortedPagedDto {
   userName: string;
@@ -21,8 +22,8 @@ export class AdminOrderQuery extends SortedPagedQuery {
   toDto(): FoodOrderQueryDto {
     const o = <FoodOrderQueryDto>super.toDto();
     if (this.userName !== '') { o.userName = this.userName; }
-    if (this.startTime !== '' && this.startTime !== undefined) { o.startTime = moment(this.startTime).format('YYYY-MM-DD'); }
-    if (this.endTime !== '' && this.endTime !== undefined) { o.endTime = moment(this.endTime).format('YYYY-MM-DD'); }
+    if (this.startTime !== '' && this.startTime !== undefined) { o.startTime = formatDate(this.startTime, 'yyyy-MM-dd', 'en-us'); }
+    if (this.endTime !== '' && this.endTime !== undefined) { o.endTime = formatDate(this.endTime, 'yyyy-MM-dd', 'en-us'); }
     if (this.isPayed !== undefined) { o.isPayed = this.isPayed ? 'true' : 'false'; }
     if (this.locationId !== undefined) { o.locationId = this.locationId.toString(); }
     if (this.tasteId !== undefined) { o.tasteId = this.tasteId.toString(); }

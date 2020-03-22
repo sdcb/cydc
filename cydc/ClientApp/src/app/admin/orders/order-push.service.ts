@@ -29,11 +29,10 @@ export class OrderPushService {
   }
 
   async subscribe(next: (foodOrderId: number) => void) {
-    if (this.hubConnection.state !== HubConnectionState.Connected) {
+    this.subscriptionCount += 1;
+    if (this.subscriptionCount === 1) {
       await this.hubConnection.start();
     }
-
-    this.subscriptionCount += 1;
 
     const subscription = this.subject.subscribe(v => next(v));
     return new Subscription(() => {

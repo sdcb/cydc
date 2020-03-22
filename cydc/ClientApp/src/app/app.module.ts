@@ -6,7 +6,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { LayoutModule } from '@angular/cdk/layout';
 
@@ -37,6 +36,7 @@ import { NotificationComponent } from './admin/data-manages/notification/notific
 import { SafeHtmlPipe } from './shared/pipes/safe-html.pipe';
 import { TruncatePipe } from './shared/pipes/truncate.pipe';
 import { BatchPayDialog } from './admin/orders/batch-pay.dialog';
+
 
 const dialogs = [
   OrderCreateDialog,
@@ -72,10 +72,9 @@ const pipes = [
     ...dialogs,
     ...pipes,
   ],
-  entryComponents: [ ...dialogs ],
+  entryComponents: [...dialogs],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    FontAwesomeModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -83,10 +82,10 @@ const pipes = [
     MaterialModule,
     RouterModule.forRoot(routes), BrowserAnimationsModule
   ],
-  exports: [ ...pipes ],
+  exports: [...pipes],
   providers: [
     { provide: loginProvider, useValue: loginResolver },
-    { provide: MatPaginatorIntl, useClass: AppPaginatorIntl, }, 
+    { provide: MatPaginatorIntl, useClass: AppPaginatorIntl, },
   ],
   bootstrap: [AppComponent]
 })
