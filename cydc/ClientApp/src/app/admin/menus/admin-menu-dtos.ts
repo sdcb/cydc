@@ -44,5 +44,5 @@ export interface MenuQueryDto extends SortedPagedDto {
   export class MenuCreateDto {
     title = '普通套餐';
     details = '';
-    price = 12;
+    price = 15;
   }
