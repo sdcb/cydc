@@ -122,7 +122,7 @@ namespace cydc.Database
                     .HasName("PK_SmsResult");
 
                 entity.HasIndex(e => e.Sid)
-                    .HasName("IX_SmsResult")
+                    .HasDatabaseName("IX_SmsResult")
                     .IsUnique();
 
                 entity.Property(e => e.SmsId).ValueGeneratedNever();
@@ -139,10 +139,10 @@ namespace cydc.Database
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasIndex(e => e.NormalizedEmail)
-                    .HasName("EmailIndex");
+                    .HasDatabaseName("EmailIndex");
 
                 entity.HasIndex(e => e.NormalizedUserName)
-                    .HasName("UserNameIndex");
+                    .HasDatabaseName("UserNameIndex");
             });
 
             OnModelCreatingPartial(modelBuilder);
