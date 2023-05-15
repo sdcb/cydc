@@ -73,7 +73,6 @@ namespace cydc
 
             app.UseRouting();
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseAuthentication();

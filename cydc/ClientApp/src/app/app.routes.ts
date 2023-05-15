@@ -30,6 +30,5 @@ export const routes: Routes = [
   { path: 'admin/notification', component: NotificationComponent, },
   { path: 'admin/not-admin', component: NotAdminComponent, },
 
-  { path: 'report', loadChildren: () => import('./report/report.module').then(m => m.ReportModule) },
   { path: '**', component: NotFoundComponent },
 ];
