@@ -6,7 +6,7 @@ import { ScreenSizeService } from 'src/app/services/screen-size.service';
 import { AdminApiService } from '../admin-api.service';
 import { ApiDataSource } from 'src/app/shared/utils/paged-query';
 import { FoodOrderDto, AdminOrderQuery, FoodOrderQueryDto } from './admin-user-dtos';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
 import { timer, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -31,7 +31,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   get displayedColumns() { return this.foodOrderApi.foodOrderColumnsForAdmin(); }
 
-  userNameInput = new FormControl();
+  userNameInput = new UntypedFormControl();
 
   constructor(
     private foodOrderApi: FoodOrderApiService,

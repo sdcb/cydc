@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AdminUserDto } from './admin-user-dtos';
@@ -14,8 +14,8 @@ export class PasswordResetDialog implements OnInit {
     @Inject(MAT_DIALOG_DATA)public user: AdminUserDto) {}
 
   hide = false;
-  password = new FormControl(generatePassword());
-  confirmPassword = new FormControl("", c => {
+  password = new UntypedFormControl(generatePassword());
+  confirmPassword = new UntypedFormControl("", c => {
     if (c.value != this.password.value) {
       return {
         "ConfirmPasswordNeedMatch": true

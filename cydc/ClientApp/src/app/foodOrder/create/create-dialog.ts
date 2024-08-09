@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user.service';
 import { FoodOrderApiService, TasteDto, LocationDto, OrderCreateDto, FoodOrderMenu } from '../food-order-api.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
 import { timer } from 'rxjs';
 
@@ -58,7 +58,7 @@ export class FoodOrderSelectedDto {
   taste: TasteDto | undefined;
   comment: string | undefined;
   isMe: boolean = true;
-  otherPersonName = new FormControl();
+  otherPersonName = new UntypedFormControl();
 
   constructor(public menu: FoodOrderMenu) {
   }

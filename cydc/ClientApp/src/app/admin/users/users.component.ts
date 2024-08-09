@@ -5,7 +5,7 @@ import { UserService } from 'src/app/services/user.service';
 import { AdminApiService } from '../admin-api.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { timer } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
 import { ApiDataSource } from 'src/app/shared/utils/paged-query';
 import { AdminUserQuery, AdminUserDto, BalanceOperator } from './admin-user-dtos';
@@ -23,9 +23,9 @@ export class UsersComponent implements OnInit {
   query = new AdminUserQuery();
   dataSource: ApiDataSource<AdminUserDto>;
 
-  nameInput = new FormControl("");
-  emailInput = new FormControl("");
-  phoneInput = new FormControl("");
+  nameInput = new UntypedFormControl("");
+  emailInput = new UntypedFormControl("");
+  phoneInput = new UntypedFormControl("");
 
   constructor(
     private userService: UserService,

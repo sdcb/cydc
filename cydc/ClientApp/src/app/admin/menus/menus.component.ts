@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminMenuApi } from './admin-menu-api';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiDataSource } from 'src/app/shared/utils/paged-query';
@@ -19,8 +19,8 @@ import { AdminMenuQuery, MenuDto } from './admin-menu-dtos';
   styleUrls: ['./menus.component.css']
 })
 export class MenusComponent implements OnInit {
-  detailsInput = new FormControl();
-  priceInput = new FormControl();
+  detailsInput = new UntypedFormControl();
+  priceInput = new UntypedFormControl();
   query = new AdminMenuQuery();
   dataSource: ApiDataSource<MenuDto>;
 
