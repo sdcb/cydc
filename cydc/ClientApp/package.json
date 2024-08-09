@@ -39,7 +39,7 @@
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
     "typescript": "5.4.5",
-    "webpack-dev-server": "3.9.0"
+    "webpack-dev-server": "5.0.4"
   },
   "optionalDependencies": {
     "node-sass": "^4.9.3",
