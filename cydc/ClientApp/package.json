@@ -42,7 +42,7 @@
     "webpack-dev-server": "3.9.0"
   },
   "optionalDependencies": {
-    "node-sass": "^4.9.3",
+    "node-sass": "^9.0.0",
     "ts-node": "~5.0.1",
     "tslint": "~6.1.0"
   }
