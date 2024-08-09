@@ -80,7 +80,7 @@ const pipes = [
     ReactiveFormsModule,
     LayoutModule,
     MaterialModule,
-    RouterModule.forRoot(routes), BrowserAnimationsModule
+    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }), BrowserAnimationsModule
   ],
   exports: [...pipes],
   providers: [
