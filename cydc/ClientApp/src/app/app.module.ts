@@ -52,41 +52,40 @@ const pipes = [
 ];
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavMenuComponent,
-    HomeComponent,
-    NotFoundComponent,
-    OrderComponent,
-    LoginComponent,
-    LoggedOutComponent,
-    MyFoodOrderComponent,
-    UsersComponent,
-    NotAdminComponent,
-    OrdersComponent,
-    MenusComponent,
-    ClickEditComponent,
-    TastesComponent,
-    LocationsComponent,
-    NotificationComponent,
-    ...dialogs,
-    ...pipes,
-  ],
-  entryComponents: [...dialogs],
-  imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    LayoutModule,
-    MaterialModule,
-    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }), BrowserAnimationsModule
-  ],
-  exports: [...pipes],
-  providers: [
-    { provide: loginProvider, useValue: loginResolver },
-    { provide: MatPaginatorIntl, useClass: AppPaginatorIntl, },
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        NavMenuComponent,
+        HomeComponent,
+        NotFoundComponent,
+        OrderComponent,
+        LoginComponent,
+        LoggedOutComponent,
+        MyFoodOrderComponent,
+        UsersComponent,
+        NotAdminComponent,
+        OrdersComponent,
+        MenusComponent,
+        ClickEditComponent,
+        TastesComponent,
+        LocationsComponent,
+        NotificationComponent,
+        ...dialogs,
+        ...pipes,
+    ],
+    imports: [
+        BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        LayoutModule,
+        MaterialModule,
+        RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }), BrowserAnimationsModule
+    ],
+    exports: [...pipes],
+    providers: [
+        { provide: loginProvider, useValue: loginResolver },
+        { provide: MatPaginatorIntl, useClass: AppPaginatorIntl, },
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
