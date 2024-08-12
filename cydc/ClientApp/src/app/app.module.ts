@@ -4,7 +4,7 @@ import { PasswordResetDialog as PasswordResetDialog } from './admin/users/passwo
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -51,8 +51,7 @@ const pipes = [
   SafeHtmlPipe, TruncatePipe
 ];
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         NavMenuComponent,
         HomeComponent,
@@ -72,20 +71,15 @@ const pipes = [
         ...dialogs,
         ...pipes,
     ],
-    imports: [
-        BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-        HttpClientModule,
+    exports: [...pipes],
+    bootstrap: [AppComponent], imports: [BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
         FormsModule,
         ReactiveFormsModule,
         LayoutModule,
         MaterialModule,
-        RouterModule.forRoot(routes, {}), BrowserAnimationsModule
-    ],
-    exports: [...pipes],
-    providers: [
+        RouterModule.forRoot(routes, {}), BrowserAnimationsModule], providers: [
         { provide: loginProvider, useValue: loginResolver },
         { provide: MatPaginatorIntl, useClass: AppPaginatorIntl, },
-    ],
-    bootstrap: [AppComponent]
-})
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule { }
