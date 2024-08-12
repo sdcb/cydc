@@ -90,6 +90,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   applyStartTime(startTime: string) {
+    console.log(startTime);
     this.query.startTime = startTime;
     this.afterApplied();
   }

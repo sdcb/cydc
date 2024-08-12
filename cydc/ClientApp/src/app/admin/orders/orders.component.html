@@ -63,7 +63,7 @@
             <!-- start date datepicker -->
             <mat-label>开始时间</mat-label>
             <input matInput [matDatepicker]="startPicker" name="startDate" [ngModel]="query.startTime"
-              (ngModelChange)="applyStartTime(startDateInput.value)" #startDateInput>
+              (dateChange)="applyStartTime(startDateInput.value)" #startDateInput>
             <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
             <mat-datepicker #startPicker startView="month"></mat-datepicker>
           </mat-form-field>
@@ -74,7 +74,7 @@
             <!-- start date datepicker -->
             <mat-label>结束时间</mat-label>
             <input matInput [matDatepicker]="endPicker" name="endDate" [min]="query.startTime"
-              [ngModel]="query.endTime" (ngModelChange)="applyEndTime(endDateInput.value)" #endDateInput>
+              [ngModel]="query.endTime" (dateChange)="applyEndTime(endDateInput.value)" #endDateInput>
             <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
             <mat-datepicker #endPicker startView="month" [startAt]="query.startTime"></mat-datepicker>
           </mat-form-field>

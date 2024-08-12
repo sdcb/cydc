@@ -1,5 +1,4 @@
 import { unwrapBoolean, SortedPagedQuery, SortedPagedDto, unwrapNumber } from 'src/app/shared/utils/paged-query';
-import * as moment from 'moment';
 import { formatDate } from '@angular/common';
 
 export interface FoodOrderQueryDto extends SortedPagedDto {
@@ -33,8 +32,8 @@ export class AdminOrderQuery extends SortedPagedQuery {
   replaceWith(p: Partial<FoodOrderQueryDto>) {
     super.replaceWith(p);
     this.userName = p.userName || '';
-    this.startTime = p.startTime && moment(p.startTime).format();
-    this.endTime = p.endTime && moment(p.endTime).format();
+    this.startTime = p.startTime || '';
+    this.endTime = p.endTime || '';
     this.isPayed = unwrapBoolean(p.isPayed);
     this.locationId = unwrapNumber(p.locationId);
     this.tasteId = unwrapNumber(p.tasteId);
