@@ -5,10 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:ssr": "ng run cydc:server:dev",
-    "test": "ng test --browsers ChromeHeadless",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "build:prod": "ng build --configuration=production"
   },
   "private": true,
   "dependencies": {

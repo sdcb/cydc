@@ -23,4 +23,12 @@ jobs:
       
       - name: Build code locally
         run: |
-          dotnet build -c Release
+          cd cydc
+          dotnet publish ./cydc.csproj -c Release --os linux --arch x64 /t:PublishContainer
+
+      - name: Tag container and push to Docker Hub
+        run: |
+          docker tag cydc ${{ secrets.DOCKER_USERNAME }}/cydc:latest
+          docker tag cydc ${{ secrets.DOCKER_USERNAME }}/cydc:r-${{ github.run_number }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/cydc:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/cydc:r-${{ github.run_number }}
