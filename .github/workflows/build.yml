@@ -1,0 +1,22 @@
+name: Build Container
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+  workflow_dispatch:
+    
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login container
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_REGISTRY }} --password-stdin
+        
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Build code locally
+        run: |
+          dotnet build -c Release
