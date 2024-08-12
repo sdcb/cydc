@@ -24,6 +24,7 @@ jobs:
       - name: Build code locally
         run: |
           cd cydc
+          echo "export const version = { job: '${{ github.event_name }}', buildId: '${{ github.run_number }}', rv: '$(git rev-parse HEAD)', source: 'https://github.com/sdcb/cydc' };" > ./ClientApp/src/environments/version.ts
           dotnet publish ./cydc.csproj -c Release --os linux --arch x64 /t:PublishContainer
 
       - name: Tag container and push to Docker Hub
