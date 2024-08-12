@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HubConnectionBuilder, HubConnection, HubConnectionState } from '@aspnet/signalr';
+import { HubConnectionBuilder, HubConnection } from '@microsoft/signalr';
 import { Subject, of, Subscription } from 'rxjs';
 import { timeout } from 'rxjs/operators';
 
