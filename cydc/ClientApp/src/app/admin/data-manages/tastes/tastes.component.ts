@@ -1,8 +1,8 @@
 import { UserService } from 'src/app/services/user.service';
 import { ConfirmDialog } from './../../../shared/dialogs/confirm/confirm.dialog';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataManagesApiService, TasteManageDto } from '../data-manages-api.service';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';

@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FoodOrderApiService, FoodOrderItem } from '../food-order-api.service';
 import { UserService } from 'src/app/services/user.service';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 import { ScreenSizeService } from 'src/app/services/screen-size.service';

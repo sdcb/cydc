@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { MatLegacyPaginatorIntl as MatPaginatorIntl } from '@angular/material/legacy-paginator';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 import { LayoutModule } from '@angular/cdk/layout';
 
 import { MaterialModule } from './shared/material/material.module';

@@ -6,8 +6,10 @@
 
 <div class="row">
   <div class="col-12 mb-3">
-    <mat-card class="mat-elevation-z2 card-bg">
-      <mat-card-title>快捷链接</mat-card-title>
+    <mat-card appearance="outlined" class="mat-elevation-z2 card-bg">
+      <mat-card-header>
+        <mat-card-title>快捷链接</mat-card-title>
+      </mat-card-header>
       <mat-card-content>
         <ul>
           <li *ngIf="!user.userStatus.isLoggedIn">OA登录：<a [routerLink]="['/api/user/login']">HERE</a></li>
@@ -21,27 +23,31 @@
   </div>
 
   <div class="col-12">
-    <mat-card class="card-bg">
-      <mat-card-title>技术框架</mat-card-title>
-      <mat-card-content class="container">
-        <div class="row">
-          <div>
-            <ng-container *ngIf="user.userStatus.isLoggedIn">
-              源代码：<a [href]="source()">{{source()}}</a>
+    <mat-card appearance="outlined" class="card-bg">
+      <mat-card-header>
+        <mat-card-title>技术框架</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="container">
+          <div class="row">
+            <div>
+              <ng-container *ngIf="user.userStatus.isLoggedIn">
+                源代码：<a [href]="source()">{{source()}}</a>
+                <hr>
+              </ng-container>
+              前端: Angular 18<br>
+              后端: ASP.NET Core 8.0/EF Core 8.0 <br>
+              登录: YeluCasSSO & ASP.NET Identity <br>
+              UI: Angular Material & Bootstrap 4 <br>
               <hr>
-            </ng-container>
-            前端: Angular 18<br>
-            后端: ASP.NET Core 8.0/EF Core 8.0 <br>
-            登录: YeluCasSSO & ASP.NET Identity <br>
-            UI: Angular Material & Bootstrap 4 <br>
-            <hr>
-            IDE: Visual Studio Code <br>
-            数据库: SQL Server 2022 <br>
-          </div>
-          <span class="flex-fill"></span>
-          <div>
-            <b>点餐技术讨论：</b><br>
-            <img src="/api/qrcode/dev" matTooltip="请备注：点餐开发讨论(姓名/部门)">
+              IDE: Visual Studio Code <br>
+              数据库: SQL Server 2022 <br>
+            </div>
+            <span class="flex-fill"></span>
+            <div>
+              <b>点餐技术讨论：</b><br>
+              <img src="/api/qrcode/dev" matTooltip="请备注：点餐开发讨论(姓名/部门)">
+            </div>
           </div>
         </div>
       </mat-card-content>

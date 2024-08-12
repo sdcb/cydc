@@ -50,6 +50,14 @@ body {
   }
 }
 
-.table-search-container .mat-form-field {
+.table-search-container .mat-mdc-form-field {
   width: 100%;
+}
+
+.mat-mdc-card-title {
+  font-size: 24px;
+}
+
+.mat-mdc-card-content {
+  font-size: 14px;
 }

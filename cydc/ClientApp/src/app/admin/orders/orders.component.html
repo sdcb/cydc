@@ -19,13 +19,15 @@
       <div class="row">
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <input matInput placeholder="用户名" [formControl]="userNameInput" [value]="query.userName" />
+            <mat-label>用户名</mat-label>
+            <input matInput [formControl]="userNameInput" [value]="query.userName" />
           </mat-form-field>
         </div>
 
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <mat-select placeholder="付款..." [ngModel]="query.isPayed" (ngModelChange)="applyIsPayed(payedInput.value)"
+            <mat-label>付款...</mat-label>
+            <mat-select [ngModel]="query.isPayed" (ngModelChange)="applyIsPayed(payedInput.value)"
               name="isPayed" #payedInput>
               <mat-option [value]="undefined">全部付款</mat-option>
               <mat-option [value]="true">已付</mat-option>
@@ -36,7 +38,8 @@
 
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <mat-select placeholder="地点..." [ngModel]="query.locationId" (ngModelChange)="applyLocationId(locationInput.value)"
+            <mat-label>地点...</mat-label>
+            <mat-select [ngModel]="query.locationId" (ngModelChange)="applyLocationId(locationInput.value)"
               name="location" #locationInput>
               <mat-option [value]="undefined">全部地点</mat-option>
               <mat-option *ngFor="let item of allLocation" [value]="item.id">{{item.location}}</mat-option>
@@ -46,7 +49,8 @@
 
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <mat-select placeholder="口味..." [ngModel]="query.tasteId" (ngModelChange)="applyTasteId(tasteInput.value)"
+            <mat-label>口味...</mat-label>
+            <mat-select [ngModel]="query.tasteId" (ngModelChange)="applyTasteId(tasteInput.value)"
               name="taste" #tasteInput>
               <mat-option [value]="undefined">全部口味</mat-option>
               <mat-option *ngFor="let item of allTaste" [value]="item.id">{{item.name}}</mat-option>
@@ -57,7 +61,8 @@
         <div class="col-6 col-md-3">
           <mat-form-field>
             <!-- start date datepicker -->
-            <input matInput [matDatepicker]="startPicker" placeholder="开始时间" name="startDate" [ngModel]="query.startTime"
+            <mat-label>开始时间</mat-label>
+            <input matInput [matDatepicker]="startPicker" name="startDate" [ngModel]="query.startTime"
               (ngModelChange)="applyStartTime(startDateInput.value)" #startDateInput>
             <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
             <mat-datepicker #startPicker startView="month"></mat-datepicker>
@@ -67,7 +72,8 @@
         <div class="col-6 col-md-3">
           <mat-form-field>
             <!-- start date datepicker -->
-            <input matInput [matDatepicker]="endPicker" placeholder="结束时间" name="endDate" [min]="query.startTime"
+            <mat-label>结束时间</mat-label>
+            <input matInput [matDatepicker]="endPicker" name="endDate" [min]="query.startTime"
               [ngModel]="query.endTime" (ngModelChange)="applyEndTime(endDateInput.value)" #endDateInput>
             <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
             <mat-datepicker #endPicker startView="month" [startAt]="query.startTime"></mat-datepicker>

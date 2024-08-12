@@ -12,25 +12,29 @@
       <div class="row">
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <input matInput placeholder="用户名" [formControl]="nameInput" [value]="query.name" />
+            <mat-label>用户名</mat-label>
+            <input matInput [formControl]="nameInput" [value]="query.name" />
           </mat-form-field>
         </div>
 
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <input matInput placeholder="邮箱" [formControl]="emailInput" [value]="query.email" />
+            <mat-label>邮箱</mat-label>
+            <input matInput [formControl]="emailInput" [value]="query.email" />
           </mat-form-field>
         </div>
 
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <input matInput placeholder="电话" [formControl]="phoneInput" [value]="query.phone" />
+            <mat-label>电话</mat-label>
+            <input matInput [formControl]="phoneInput" [value]="query.phone" />
           </mat-form-field>
         </div>
 
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <mat-select #operator placeholder="余额" required [value]="query.operator" (selectionChange)="applyOperator(operator.value)">
+            <mat-label>余额</mat-label>
+            <mat-select #operator required [value]="query.operator" (selectionChange)="applyOperator(operator.value)">
               <mat-option [value]="0">全部</mat-option>
               <mat-option [value]="1">&lt;0</mat-option>
               <mat-option [value]="2">=0</mat-option>

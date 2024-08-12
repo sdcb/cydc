@@ -12,20 +12,23 @@
       <div class="row">
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <input matInput placeholder="菜单内容" [formControl]="detailsInput" [value]="query.details" />
+            <mat-label>菜单内容</mat-label>
+            <input matInput [formControl]="detailsInput" [value]="query.details" />
           </mat-form-field>
         </div>
 
         <div class="col-6 col-md-3">
           <mat-form-field>
-            <input matInput placeholder="价格" type="number" [formControl]="priceInput" [value]="query.price" />
+            <mat-label>价格</mat-label>
+            <input matInput type="number" [formControl]="priceInput" [value]="query.price" />
           </mat-form-field>
         </div>
 
         <div class="col-6 col-md-3">
           <mat-form-field>
             <!-- start date datepicker -->
-            <input matInput [matDatepicker]="startPicker" placeholder="开始时间" name="startDate" [ngModel]="query.startTime"
+            <mat-label>开始时间</mat-label>
+            <input matInput [matDatepicker]="startPicker" name="startDate" [ngModel]="query.startTime"
               (ngModelChange)="applyStartTime(startDateInput.value)" #startDateInput>
             <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
             <mat-datepicker #startPicker startView="month"></mat-datepicker>
@@ -35,7 +38,8 @@
         <div class="col-6 col-md-3">
           <mat-form-field>
             <!-- start date datepicker -->
-            <input matInput [matDatepicker]="endPicker" placeholder="结束时间" name="endDate" [min]="query.startTime"
+            <mat-label>结束时间</mat-label>
+            <input matInput [matDatepicker]="endPicker" name="endDate" [min]="query.startTime"
               [ngModel]="query.endTime" (ngModelChange)="applyEndTime(endDateInput.value)" #endDateInput>
             <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
             <mat-datepicker #endPicker startView="month" [startAt]="query.startTime"></mat-datepicker>

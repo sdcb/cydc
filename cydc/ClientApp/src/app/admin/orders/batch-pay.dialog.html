@@ -9,7 +9,8 @@
 </div>
 <div mat-dialog-content>
   <mat-form-field class="w100">
-    <input matInput type="number" placeholder="用户充值金额：" [(ngModel)]="payedAmount" cdkFocusInitial>
+    <mat-label>用户充值金额：</mat-label>
+    <input matInput type="number" [(ngModel)]="payedAmount" cdkFocusInitial>
   </mat-form-field>
 
   <table *ngIf="unpayedOrders.length > 0" mat-table [dataSource]="unpayedOrders" class="w100">

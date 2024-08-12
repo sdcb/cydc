@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { OrderCreateDialog } from './create-dialog';
 import { FoodOrderApiService, FoodOrderMenu, OrderCreateDto } from '../food-order-api.service';
 import { Router } from '@angular/router';
