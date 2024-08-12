@@ -10,7 +10,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { debounce } from 'rxjs/operators';
 import { timer, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Sort } from '@angular/material/sort';
 import { GlobalLoadingService } from 'src/app/services/global-loading.service';
 import { ConfirmDialog } from 'src/app/shared/dialogs/confirm/confirm.dialog';

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuCreateDto } from './admin-menu-dtos';
-import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef, MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 
 @Component({
   selector: 'app-menu-create',
