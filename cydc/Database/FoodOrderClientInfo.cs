@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,7 +12,8 @@ namespace cydc.Database
         public int FoodOrderId { get; set; }
         [Required]
         [Column("IP")]
-        [StringLength(15)]
+        [StringLength(45)]
+        [Unicode(false)]
         public string Ip { get; set; }
         [Required]
         public string UserAgent { get; set; }
