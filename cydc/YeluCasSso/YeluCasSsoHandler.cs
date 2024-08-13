@@ -49,10 +49,9 @@ public partial class YeluCasSsoHandler(IOptionsMonitor<YeluCasSsoOptions> option
             return HandleRequestResult.Fail("Ticket should never be null.");
         }
 
-        string serviceUri = CurrentUri;
         string userInformationUrl = QueryHelpers.AddQueryString(Options.UserInformationEndpoint, new Dictionary<string, string>
         {
-            ["ticket"] = ticket, 
+            ["ticket"] = ticket,
             ["service"] = GetService(CurrentUri)
         });
         HttpResponseMessage response = await Backchannel.GetAsync(userInformationUrl);
@@ -90,7 +89,7 @@ public partial class YeluCasSsoHandler(IOptionsMonitor<YeluCasSsoOptions> option
 
     private string GetService(string url)
     {
-        var uri = new Uri(url);
+        Uri uri = new(Options.ForceHttps ? url.Replace("http://", "https://") : url);
         NameValueCollection query = HttpUtility.ParseQueryString(uri.Query);
         var leftPart = uri.GetLeftPart(UriPartial.Path);
         return QueryHelpers.AddQueryString(leftPart, "state", query["state"]);
