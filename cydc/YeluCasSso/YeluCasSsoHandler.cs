@@ -18,119 +18,114 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace Sdcb.AspNetCore.Authentication.YeluCasSso
+namespace Sdcb.AspNetCore.Authentication.YeluCasSso;
+
+public partial class YeluCasSsoHandler(IOptionsMonitor<YeluCasSsoOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : OAuthHandler<YeluCasSsoOptions>(options, logger, encoder, clock)
 {
-    public partial class YeluCasSsoHandler : OAuthHandler<YeluCasSsoOptions>
+    const string NamespaceName = "http://www.yale.edu/tp/cas";
+
+    protected new YeluCasSsoEvents Events
     {
-        const string NamespaceName = "http://www.yale.edu/tp/cas";
+        get { return (YeluCasSsoEvents)base.Events; }
+        set { base.Events = value; }
+    }
 
-        public YeluCasSsoHandler(IOptionsMonitor<YeluCasSsoOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
+    protected override async Task<HandleRequestResult> HandleRemoteAuthenticateAsync()
+    {
+        IQueryCollection query = Request.Query;
+
+        var state = query["state"];
+        var properties = Options.StateDataFormat.Unprotect(state);
+
+        if (properties == null)
         {
+            return HandleRequestResult.Fail("The oauth state was missing or invalid.");
         }
 
-        protected new YeluCasSsoEvents Events
+        string ticket = query["ticket"].FirstOrDefault();
+        string returnUrl = query["returnUrl"].FirstOrDefault();
+        if (ticket == null)
         {
-            get { return (YeluCasSsoEvents)base.Events; }
-            set { base.Events = value; }
+            return HandleRequestResult.Fail("Ticket should never be null.");
         }
 
-        protected override async Task<HandleRequestResult> HandleRemoteAuthenticateAsync()
+        string serviceUri = CurrentUri;
+        string userInformationUrl = QueryHelpers.AddQueryString(Options.UserInformationEndpoint, new Dictionary<string, string>
         {
-            IQueryCollection query = Request.Query;
+            ["ticket"] = ticket, 
+            ["service"] = GetService(CurrentUri)
+        });
+        HttpResponseMessage response = await Backchannel.GetAsync(userInformationUrl);
+        var xdoc = XDocument.Load(await response.Content.ReadAsStreamAsync());
 
-            var state = query["state"];
-            var properties = Options.StateDataFormat.Unprotect(state);
-
-            if (properties == null)
-            {
-                return HandleRequestResult.Fail("The oauth state was missing or invalid.");
-            }
-
-            string ticket = query["ticket"].FirstOrDefault();
-            string returnUrl = query["returnUrl"].FirstOrDefault();
-            if (ticket == null)
-            {
-                return HandleRequestResult.Fail("Ticket should never be null.");
-            }
-
-            string serviceUri = CurrentUri;
-            string userInformationUrl = QueryHelpers.AddQueryString(Options.UserInformationEndpoint, new Dictionary<string, string>
-            {
-                ["ticket"] = ticket, 
-                ["service"] = GetService(CurrentUri)
-            });
-            HttpResponseMessage response = await Backchannel.GetAsync(userInformationUrl);
-            var xdoc = XDocument.Load(await response.Content.ReadAsStreamAsync());
-
-            string xmlErrorMessage = GetXmlErrorMessage(xdoc);
-            if (xmlErrorMessage != null)
-            {
-                return HandleRequestResult.Fail(xmlErrorMessage);
-            }
-
-            IEnumerable<Claim> claims = GetXmlClaims(xdoc);
-            var identity = new ClaimsIdentity(claims, ClaimsIssuer);
-
-            var token = OAuthTokenResponse.Failed(new Exception("Token not available."));
-            AuthenticationTicket authenticationTicket = await CreateTicketAsync(identity, properties, token);
-            if (authenticationTicket != null)
-            {
-                return HandleRequestResult.Success(authenticationTicket);
-            }
-            else
-            {
-                return HandleRequestResult.Fail("Failed to retrieve user information from remote user.", properties);
-            }
+        string xmlErrorMessage = GetXmlErrorMessage(xdoc);
+        if (xmlErrorMessage != null)
+        {
+            return HandleRequestResult.Fail(xmlErrorMessage);
         }
 
-        protected override async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)
-        {
-            await Events.CreatingClaims(Context, identity);
+        IEnumerable<Claim> claims = GetXmlClaims(xdoc);
+        var identity = new ClaimsIdentity(claims, ClaimsIssuer);
 
-            var context = new OAuthCreatingTicketContext(new ClaimsPrincipal(identity), properties, Context, Scheme, Options, Backchannel, tokens, new JsonElement());
-            await Events.CreatingTicket(context);
-            return new AuthenticationTicket(new ClaimsPrincipal(identity), properties, Scheme.Name);
+        var token = OAuthTokenResponse.Failed(new Exception("Token not available."));
+        AuthenticationTicket authenticationTicket = await CreateTicketAsync(identity, properties, token);
+        if (authenticationTicket != null)
+        {
+            return HandleRequestResult.Success(authenticationTicket);
+        }
+        else
+        {
+            return HandleRequestResult.Fail("Failed to retrieve user information from remote user.", properties);
+        }
+    }
+
+    protected override async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)
+    {
+        await Events.CreatingClaims(Context, identity);
+
+        var context = new OAuthCreatingTicketContext(new ClaimsPrincipal(identity), properties, Context, Scheme, Options, Backchannel, tokens, new JsonElement());
+        await Events.CreatingTicket(context);
+        return new AuthenticationTicket(new ClaimsPrincipal(identity), properties, Scheme.Name);
+    }
+
+    private string GetService(string url)
+    {
+        var uri = new Uri(url);
+        NameValueCollection query = HttpUtility.ParseQueryString(uri.Query);
+        var leftPart = uri.GetLeftPart(UriPartial.Path);
+        return QueryHelpers.AddQueryString(leftPart, "state", query["state"]);
+    }
+
+    protected override string BuildChallengeUrl(AuthenticationProperties properties, string redirectUri)
+    {
+        if (Options.ForceHttps)
+        {
+            redirectUri = redirectUri.Replace("http://", "https://");
         }
 
-        private string GetService(string url)
+        string state = Options.StateDataFormat.Protect(properties);
+        var parameters = new Dictionary<string, string>
         {
-            var uri = new Uri(url);
-            NameValueCollection query = HttpUtility.ParseQueryString(uri.Query);
-            var leftPart = uri.GetLeftPart(UriPartial.Path);
-            return QueryHelpers.AddQueryString(leftPart, "state", query["state"]);
-        }
+            ["service"] = QueryHelpers.AddQueryString(redirectUri, "state", state),
+        };
+        return QueryHelpers.AddQueryString(Options.AuthorizationEndpoint, parameters);
+    }
 
-        protected override string BuildChallengeUrl(AuthenticationProperties properties, string redirectUri)
-        {
-            if (Options.ForceHttps)
-            {
-                redirectUri = redirectUri.Replace("http://", "https://");
-            }
+    private IEnumerable<Claim> GetXmlClaims(XDocument xdoc)
+    {
+        XmlNamespaceManager namespaceManager = new XmlNamespaceManager(new NameTable());
+        namespaceManager.AddNamespace("cas", NamespaceName);
 
-            string state = Options.StateDataFormat.Protect(properties);
-            var parameters = new Dictionary<string, string>
-            {
-                ["service"] = QueryHelpers.AddQueryString(redirectUri, "state", state),
-            };
-            return QueryHelpers.AddQueryString(Options.AuthorizationEndpoint, parameters);
-        }
+        return xdoc.XPathSelectElements("/cas:serviceResponse/cas:authenticationSuccess/cas:attributes//*", namespaceManager)
+            .Where(x => x.Name.NamespaceName == NamespaceName)
+            .Select(x => new Claim($"cas:{x.Name.LocalName}", x.Value));
+    }
 
-        private IEnumerable<Claim> GetXmlClaims(XDocument xdoc)
-        {
-            XmlNamespaceManager namespaceManager = new XmlNamespaceManager(new NameTable());
-            namespaceManager.AddNamespace("cas", NamespaceName);
+    private string GetXmlErrorMessage(XDocument xdoc)
+    {
+        XmlNamespaceManager namespaceManager = new XmlNamespaceManager(new NameTable());
+        namespaceManager.AddNamespace("cas", NamespaceName);
 
-            return xdoc.XPathSelectElements("/cas:serviceResponse/cas:authenticationSuccess/cas:attributes//*", namespaceManager)
-                .Where(x => x.Name.NamespaceName == NamespaceName)
-                .Select(x => new Claim($"cas:{x.Name.LocalName}", x.Value));
-        }
-
-        private string GetXmlErrorMessage(XDocument xdoc)
-        {
-            XmlNamespaceManager namespaceManager = new XmlNamespaceManager(new NameTable());
-            namespaceManager.AddNamespace("cas", NamespaceName);
-
-            return xdoc.XPathSelectElement("/cas:serviceResponse/cas:authenticationFailure", namespaceManager)?.Value;
-        }
+        return xdoc.XPathSelectElement("/cas:serviceResponse/cas:authenticationFailure", namespaceManager)?.Value;
     }
 }

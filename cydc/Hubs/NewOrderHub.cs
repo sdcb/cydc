@@ -2,22 +2,21 @@
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
-namespace cydc.Hubs
+namespace cydc.Hubs;
+
+public class NewOrderHub : Hub<NewOrderHubClient>
 {
-    public class NewOrderHub : Hub<NewOrderHubClient>
-    {
-    }
+}
 
-    public static class NewOrderHubExtensions
+public static class NewOrderHubExtensions
+{
+    public static async Task OnNewOrder(this IHubContext<NewOrderHub, NewOrderHubClient> hubContext, int foodOrderId)
     {
-        public static async Task OnNewOrder(this IHubContext<NewOrderHub, NewOrderHubClient> hubContext, int foodOrderId)
-        {
-            await hubContext.Clients.All.OnNewOrder(foodOrderId);
-        }
+        await hubContext.Clients.All.OnNewOrder(foodOrderId);
     }
+}
 
-    public interface NewOrderHubClient
-    {
-        Task OnNewOrder(int foodOrderId);
-    }
+public interface NewOrderHubClient
+{
+    Task OnNewOrder(int foodOrderId);
 }

@@ -7,51 +7,45 @@ using cydc.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace cydc.Controllers
+namespace cydc.Controllers;
+
+[Authorize]
+public class InfoController(CydcContext db) : Controller
 {
-    [Authorize]
-    public class InfoController : Controller
+    private readonly CydcContext _db = db;
+
+    [AllowAnonymous]
+    public IActionResult Ps()
     {
-        private readonly CydcContext _db;
+        return Ok(Process.GetCurrentProcess().ProcessName);
+    }
 
-        public InfoController(CydcContext db)
+    public IEnumerable<object> Menu()
+    {
+        return _db.FoodMenu.Where(x => x.Enabled).Select(x => new
         {
-            _db = db;
-        }
+            Id = x.Id, 
+            Price = x.Price, 
+            Title = x.Title, 
+            Details = x.Details, 
+        });
+    }
 
-        [AllowAnonymous]
-        public IActionResult Ps()
+    public IEnumerable<object> Address()
+    {
+        return _db.Location.Where(x => x.Enabled).Select(x => new
         {
-            return Ok(Process.GetCurrentProcess().ProcessName);
-        }
+            Id = x.Id, 
+            Location = x.Name
+        });
+    }
 
-        public IEnumerable<object> Menu()
+    public IEnumerable<object> Taste()
+    {
+        return _db.TasteType.Where(x => x.Enabled).Select(x => new
         {
-            return _db.FoodMenu.Where(x => x.Enabled).Select(x => new
-            {
-                Id = x.Id, 
-                Price = x.Price, 
-                Title = x.Title, 
-                Details = x.Details, 
-            });
-        }
-
-        public IEnumerable<object> Address()
-        {
-            return _db.Location.Where(x => x.Enabled).Select(x => new
-            {
-                Id = x.Id, 
-                Location = x.Name
-            });
-        }
-
-        public IEnumerable<object> Taste()
-        {
-            return _db.TasteType.Where(x => x.Enabled).Select(x => new
-            {
-                Id = x.Id, 
-                Name = x.Name
-            });
-        }
+            Id = x.Id, 
+            Name = x.Name
+        });
     }
 }

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace cydc.Database
+namespace cydc.Database;
+
+public class UserToken : IdentityUserToken<string>
 {
-    public class UserToken : IdentityUserToken<string>
-    {
-    }
 }

@@ -12,51 +12,46 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace cydc.Managers.Identities
+namespace cydc.Managers.Identities;
+
+public class UserManager(IUserStore<User> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<User> passwordHasher, IEnumerable<IUserValidator<User>> userValidators, IEnumerable<IPasswordValidator<User>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<User>> logger) : UserManager<User>(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
 {
-    public class UserManager : UserManager<User>
+    internal static async Task OnCreatingClaims(HttpContext httpContext, ClaimsIdentity claimsIdentity)
     {
-        public UserManager(IUserStore<User> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<User> passwordHasher, IEnumerable<IUserValidator<User>> userValidators, IEnumerable<IPasswordValidator<User>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<User>> logger) : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+        UserManager userManager = httpContext.RequestServices.GetRequiredService<UserManager>();
+        string userName = claimsIdentity.FindFirst(CasConstants.Name).Value;
+        string email = claimsIdentity.FindFirst(CasConstants.Email).Value;
+        string phone = claimsIdentity.FindFirst(CasConstants.Phone).Value;
+
+        var systemUser = 
+            await userManager.FindByEmailAsync(email) ?? 
+            await userManager.FindByNameAsync(userName);
+        if (systemUser == null)
         {
+            await userManager.CreateAsync(new User
+            {
+                UserName = userName, 
+                Email = email, 
+                PhoneNumber = phone, 
+                PhoneNumberConfirmed = true, 
+            });
+            systemUser = await userManager.FindByEmailAsync(email);
+        }
+        if (systemUser.PhoneNumber == null)
+        {
+            systemUser.PhoneNumber = phone;
+            systemUser.PhoneNumberConfirmed = true;
+            await userManager.UpdateAsync(systemUser);
         }
 
-        internal static async Task OnCreatingClaims(HttpContext httpContext, ClaimsIdentity claimsIdentity)
+        IList<string> roles = await userManager.GetRolesAsync(systemUser);
+
+        // commit
+        claimsIdentity.AddClaim(new Claim(claimsIdentity.NameClaimType, systemUser.Id.ToString()));
+        claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, systemUser.Id.ToString()));
+        foreach (var role in roles)
         {
-            UserManager userManager = httpContext.RequestServices.GetRequiredService<UserManager>();
-            string userName = claimsIdentity.FindFirst(CasConstants.Name).Value;
-            string email = claimsIdentity.FindFirst(CasConstants.Email).Value;
-            string phone = claimsIdentity.FindFirst(CasConstants.Phone).Value;
-
-            var systemUser = 
-                await userManager.FindByEmailAsync(email) ?? 
-                await userManager.FindByNameAsync(userName);
-            if (systemUser == null)
-            {
-                await userManager.CreateAsync(new User
-                {
-                    UserName = userName, 
-                    Email = email, 
-                    PhoneNumber = phone, 
-                    PhoneNumberConfirmed = true, 
-                });
-                systemUser = await userManager.FindByEmailAsync(email);
-            }
-            if (systemUser.PhoneNumber == null)
-            {
-                systemUser.PhoneNumber = phone;
-                systemUser.PhoneNumberConfirmed = true;
-                await userManager.UpdateAsync(systemUser);
-            }
-
-            IList<string> roles = await userManager.GetRolesAsync(systemUser);
-
-            // commit
-            claimsIdentity.AddClaim(new Claim(claimsIdentity.NameClaimType, systemUser.Id.ToString()));
-            claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, systemUser.Id.ToString()));
-            foreach (var role in roles)
-            {
-                claimsIdentity.AddClaim(new Claim(claimsIdentity.RoleClaimType, role));
-            }
+            claimsIdentity.AddClaim(new Claim(claimsIdentity.RoleClaimType, role));
         }
     }
 }

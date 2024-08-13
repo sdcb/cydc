@@ -10,53 +10,47 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace cydc.Controllers
+namespace cydc.Controllers;
+
+public class UserController(
+    SignInManager<User> signInManager) : Controller
 {
-    public class UserController : Controller
+    private readonly SignInManager<User> _signInManager = signInManager;
+
+    public UserStatus Status()
     {
-        private readonly SignInManager<User> _signInManager;
-
-        public UserController(
-            SignInManager<User> signInManager)
+        return new UserStatus
         {
-            _signInManager = signInManager;
-        }
-
-        public UserStatus Status()
-        {
-            return new UserStatus
-            {
-                IsLoggedIn = User.Identity.IsAuthenticated,
-                Name = User.FindFirst(x => x.Type == ClaimTypes.Name)?.Value,
-                IsAdmin = User.IsInRole("Admin"),
-            };
-        }
-
-        public async Task Logout()
-        {
-            await _signInManager.SignOutAsync();
-        }
-
-        public IActionResult Login(string fromUrl)
-        {
-            if (!User.Identity.IsAuthenticated)
-            {
-                string redirectUrl = "/Identity/Account/ExternalLogin?handler=Callback&returnUrl=" + WebUtility.UrlEncode(fromUrl);
-                AuthenticationProperties properties = _signInManager.ConfigureExternalAuthenticationProperties(
-                    YeluCasSsoDefaults.AuthenticationScheme, 
-                    redirectUrl);
-                return new ChallengeResult(YeluCasSsoDefaults.AuthenticationScheme, properties);
-            }
-            return Redirect(fromUrl);
-        }
+            IsLoggedIn = User.Identity.IsAuthenticated,
+            Name = User.FindFirst(x => x.Type == ClaimTypes.Name)?.Value,
+            IsAdmin = User.IsInRole("Admin"),
+        };
     }
 
-    public class UserStatus
+    public async Task Logout()
     {
-        public bool IsLoggedIn { get; set; }
-
-        public string Name { get; set; }
-
-        public bool IsAdmin { get; set; }
+        await _signInManager.SignOutAsync();
     }
+
+    public IActionResult Login(string fromUrl)
+    {
+        if (!User.Identity.IsAuthenticated)
+        {
+            string redirectUrl = "/Identity/Account/ExternalLogin?handler=Callback&returnUrl=" + WebUtility.UrlEncode(fromUrl);
+            AuthenticationProperties properties = _signInManager.ConfigureExternalAuthenticationProperties(
+                YeluCasSsoDefaults.AuthenticationScheme, 
+                redirectUrl);
+            return new ChallengeResult(YeluCasSsoDefaults.AuthenticationScheme, properties);
+        }
+        return Redirect(fromUrl);
+    }
+}
+
+public class UserStatus
+{
+    public bool IsLoggedIn { get; set; }
+
+    public string Name { get; set; }
+
+    public bool IsAdmin { get; set; }
 }

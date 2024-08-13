@@ -5,16 +5,10 @@ using System.Threading.Tasks;
 
 namespace cydc.Infrastructure.Middlewares
 {
-    public class AntiforgeryTokenMiddleware
+    public class AntiforgeryTokenMiddleware(RequestDelegate next, IAntiforgery antiforgery)
     {
-        private readonly RequestDelegate _next;
-        private readonly IAntiforgery _antiforgery;
-
-        public AntiforgeryTokenMiddleware(RequestDelegate next, IAntiforgery antiforgery)
-        {
-            _next = next;
-            _antiforgery = antiforgery;
-        }
+        private readonly RequestDelegate _next = next;
+        private readonly IAntiforgery _antiforgery = antiforgery;
 
         public Task Invoke(HttpContext context)
         {
