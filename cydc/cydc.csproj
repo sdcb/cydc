@@ -31,7 +31,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.3" />
     <PackageReference Include="qcloud.qcloudsms_csharp" Version="0.1.6" />
     <PackageReference Include="QRCoder" Version="1.6.0" />
-    <PackageReference Include="Sdcb.AspNetCore.Authentication.YeluCasSso" Version="1.1.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.4" />
   </ItemGroup>
 

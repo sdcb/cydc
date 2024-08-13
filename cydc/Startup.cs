@@ -57,6 +57,7 @@ namespace cydc
             {
                 o.YeluCasSsoEndpoint = Configuration["YeluCasSsoEndpoint"];
                 o.Events.OnCreatingClaims = UserManager.OnCreatingClaims;
+                o.ForceHttps = true;
             });
         }
 
