@@ -29,7 +29,7 @@ jobs:
 
       - name: Tag container and push to Docker Hub
         run: |
-          docker tag cydc ${{ secrets.DOCKER_USERNAME }}/cydc:latest
           docker tag cydc ${{ secrets.DOCKER_USERNAME }}/cydc:r-${{ github.run_number }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/cydc:latest
+          docker tag cydc ${{ secrets.DOCKER_USERNAME }}/cydc:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/cydc:r-${{ github.run_number }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/cydc:latest
