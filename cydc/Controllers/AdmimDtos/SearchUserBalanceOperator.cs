@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace cydc.Controllers.AdmimDtos;
+﻿namespace cydc.Controllers.AdmimDtos;
 
 public enum SearchUserBalanceOperator
 {

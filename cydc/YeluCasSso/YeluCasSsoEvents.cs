@@ -37,7 +37,7 @@ public sealed class YeluCasSsoEvents : OAuthEvents
             .ToList());
     }
 
-    public static Dictionary<string, string> CasClaimsMap = new Dictionary<string, string>
+    public static Dictionary<string, string> CasClaimsMap = new()
     {
         [CasConstants.Id] = ClaimTypes.NameIdentifier,
         [CasConstants.Name] = ClaimTypes.Name,

@@ -1,14 +1,12 @@
 ﻿using cydc.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Sdcb.AspNetCore.Authentication.YeluCasSso;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -23,7 +21,7 @@ public class UserManager(IUserStore<User> store, IOptions<IdentityOptions> optio
         string email = claimsIdentity.FindFirst(CasConstants.Email).Value;
         string phone = claimsIdentity.FindFirst(CasConstants.Phone).Value;
 
-        var systemUser = 
+        User systemUser = 
             await userManager.FindByEmailAsync(email) ?? 
             await userManager.FindByNameAsync(userName);
         if (systemUser == null)
@@ -49,7 +47,7 @@ public class UserManager(IUserStore<User> store, IOptions<IdentityOptions> optio
         // commit
         claimsIdentity.AddClaim(new Claim(claimsIdentity.NameClaimType, systemUser.Id.ToString()));
         claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, systemUser.Id.ToString()));
-        foreach (var role in roles)
+        foreach (string role in roles)
         {
             claimsIdentity.AddClaim(new Claim(claimsIdentity.RoleClaimType, role));
         }

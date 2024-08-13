@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using cydc.Controllers.AdmimDtos;
-using cydc.Database;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QRCoder;
 
@@ -34,9 +31,9 @@ public class QrCodeController : Controller
 
     private byte[] GetQRImage(string content)
     {
-        using (var qrCodeGenerator = new QRCodeGenerator())
+        using (QRCodeGenerator qrCodeGenerator = new())
         using (QRCodeData data = qrCodeGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.L))
-        using (var qrCode = new PngByteQRCode(data))
+        using (PngByteQRCode qrCode = new(data))
         {
             return qrCode.GetGraphic(4);
         }

@@ -22,9 +22,9 @@ public class FoodOrderCreateDto
 
     public async Task<FoodOrder> Create(CydcContext db, int userId, FoodOrderClientInfo clientInfo)
     {
-        var menu = await db.FoodMenu.FindAsync(MenuId);
-        var dateNow = DateTime.Now;
-        var foodOrder = new FoodOrder
+        FoodMenu menu = await db.FoodMenu.FindAsync(MenuId);
+        DateTime dateNow = DateTime.Now;
+        FoodOrder foodOrder = new()
         {
             OrderUserId = userId, 
             OrderTime = dateNow, 

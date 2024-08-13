@@ -14,7 +14,7 @@ namespace cydc.Infrastructure.Middlewares
         {
             if (context.Request.Path == "/api/user/status")
             {
-                var tokens = _antiforgery.GetAndStoreTokens(context);
+                AntiforgeryTokenSet tokens = _antiforgery.GetAndStoreTokens(context);
                 context.Response.Cookies.Append("XSRF-TOKEN", tokens.RequestToken, new CookieOptions
                 {
                     HttpOnly = false, 

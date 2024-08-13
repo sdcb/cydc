@@ -8,9 +8,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using qcloudsms_csharp;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace cydc.Controllers;
@@ -47,7 +45,7 @@ public class SmsController(
 
         string[] parameters = new[] { user.UserName, (-user.Balance).ToString("N2") };
 
-        var smsSendLog = new SmsSendLog
+        SmsSendLog smsSendLog = new()
         {
             OperationUserId = int.Parse(User.GetUserId()), 
             ReceiveUserId = toUserId, 
@@ -59,8 +57,8 @@ public class SmsController(
         _db.SmsSendLog.Add(smsSendLog);
         await _db.SaveChangesAsync();
 
-        var client = new SmsSingleSender(_smsConfig.AppId, _smsConfig.AppKey);
-        var result = client.sendWithParam("86", user.Phone, 
+        SmsSingleSender client = new(_smsConfig.AppId, _smsConfig.AppKey);
+        SmsSingleSenderResult result = client.sendWithParam("86", user.Phone, 
             templateId: _smsTemplateConfig.RemindTemplateId, 
             parameters: parameters, 
             sign: _smsTemplateConfig.Sign, 

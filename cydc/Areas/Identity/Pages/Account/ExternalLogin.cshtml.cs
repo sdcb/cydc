@@ -48,8 +48,8 @@ public class ExternalLoginModel(
     public IActionResult OnPost(string provider, string returnUrl = null)
     {
         // Request a redirect to the external login provider.
-        var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
-        var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        string redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
+        Microsoft.AspNetCore.Authentication.AuthenticationProperties properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
         return new ChallengeResult(provider, properties);
     }
 
@@ -62,7 +62,7 @@ public class ExternalLoginModel(
             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
 
-        var info = await _signInManager.GetExternalLoginInfoAsync();
+        ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
             ErrorMessage = "Error loading external login information.";
@@ -70,7 +70,7 @@ public class ExternalLoginModel(
         }
 
         // Sign in the user with this external login provider if the user already has a login.
-        var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+        Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
         if (result.Succeeded)
         {
             _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
@@ -120,7 +120,7 @@ public class ExternalLoginModel(
                 Email = info.Principal.FindFirstValue(CasConstants.Email),
             };
 
-            var result = await _userManager.CreateAsync(user);
+            IdentityResult result = await _userManager.CreateAsync(user);
             if (!result.Succeeded) return false;
         }
 
@@ -128,7 +128,7 @@ public class ExternalLoginModel(
         if (logins.All(x => x.LoginProvider != YeluCasSsoDefaults.AuthenticationScheme))
         {
             _logger.LogInformation($"User created an account using {info.LoginProvider} provider.");
-            var result = await _userManager.AddLoginAsync(user, info);
+            IdentityResult result = await _userManager.AddLoginAsync(user, info);
             if (!result.Succeeded) return false;
         }
 
@@ -140,7 +140,7 @@ public class ExternalLoginModel(
     {
         returnUrl = returnUrl ?? Url.Content("~/");
         // Get the information about the user from the external login provider
-        var info = await _signInManager.GetExternalLoginInfoAsync();
+        ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
             ErrorMessage = "Error loading external login information during confirmation.";
@@ -149,8 +149,8 @@ public class ExternalLoginModel(
 
         if (ModelState.IsValid)
         {
-            var user = new User { UserName = Input.Email, Email = Input.Email };
-            var result = await _userManager.CreateAsync(user);
+            User user = new() { UserName = Input.Email, Email = Input.Email };
+            IdentityResult result = await _userManager.CreateAsync(user);
             if (result.Succeeded)
             {
                 result = await _userManager.AddLoginAsync(user, info);
@@ -161,7 +161,7 @@ public class ExternalLoginModel(
                     return LocalRedirect(returnUrl);
                 }
             }
-            foreach (var error in result.Errors)
+            foreach (IdentityError error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }

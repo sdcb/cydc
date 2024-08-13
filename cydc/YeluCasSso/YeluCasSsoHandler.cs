@@ -34,8 +34,8 @@ public partial class YeluCasSsoHandler(IOptionsMonitor<YeluCasSsoOptions> option
     {
         IQueryCollection query = Request.Query;
 
-        var state = query["state"];
-        var properties = Options.StateDataFormat.Unprotect(state);
+        Microsoft.Extensions.Primitives.StringValues state = query["state"];
+        AuthenticationProperties properties = Options.StateDataFormat.Unprotect(state);
 
         if (properties == null)
         {
@@ -55,7 +55,7 @@ public partial class YeluCasSsoHandler(IOptionsMonitor<YeluCasSsoOptions> option
             ["service"] = GetService(CurrentUri)
         });
         HttpResponseMessage response = await Backchannel.GetAsync(userInformationUrl);
-        var xdoc = XDocument.Load(await response.Content.ReadAsStreamAsync());
+        XDocument xdoc = XDocument.Load(await response.Content.ReadAsStreamAsync());
 
         string xmlErrorMessage = GetXmlErrorMessage(xdoc);
         if (xmlErrorMessage != null)
@@ -64,9 +64,9 @@ public partial class YeluCasSsoHandler(IOptionsMonitor<YeluCasSsoOptions> option
         }
 
         IEnumerable<Claim> claims = GetXmlClaims(xdoc);
-        var identity = new ClaimsIdentity(claims, ClaimsIssuer);
+        ClaimsIdentity identity = new(claims, ClaimsIssuer);
 
-        var token = OAuthTokenResponse.Failed(new Exception("Token not available."));
+        OAuthTokenResponse token = OAuthTokenResponse.Failed(new Exception("Token not available."));
         AuthenticationTicket authenticationTicket = await CreateTicketAsync(identity, properties, token);
         if (authenticationTicket != null)
         {
@@ -82,7 +82,7 @@ public partial class YeluCasSsoHandler(IOptionsMonitor<YeluCasSsoOptions> option
     {
         await Events.CreatingClaims(Context, identity);
 
-        var context = new OAuthCreatingTicketContext(new ClaimsPrincipal(identity), properties, Context, Scheme, Options, Backchannel, tokens, new JsonElement());
+        OAuthCreatingTicketContext context = new(new ClaimsPrincipal(identity), properties, Context, Scheme, Options, Backchannel, tokens, new JsonElement());
         await Events.CreatingTicket(context);
         return new AuthenticationTicket(new ClaimsPrincipal(identity), properties, Scheme.Name);
     }
@@ -91,7 +91,7 @@ public partial class YeluCasSsoHandler(IOptionsMonitor<YeluCasSsoOptions> option
     {
         Uri uri = new(Options.ForceHttps ? url.Replace("http://", "https://") : url);
         NameValueCollection query = HttpUtility.ParseQueryString(uri.Query);
-        var leftPart = uri.GetLeftPart(UriPartial.Path);
+        string leftPart = uri.GetLeftPart(UriPartial.Path);
         return QueryHelpers.AddQueryString(leftPart, "state", query["state"]);
     }
 
@@ -103,7 +103,7 @@ public partial class YeluCasSsoHandler(IOptionsMonitor<YeluCasSsoOptions> option
         }
 
         string state = Options.StateDataFormat.Protect(properties);
-        var parameters = new Dictionary<string, string>
+        Dictionary<string, string> parameters = new()
         {
             ["service"] = QueryHelpers.AddQueryString(redirectUri, "state", state),
         };
@@ -112,7 +112,7 @@ public partial class YeluCasSsoHandler(IOptionsMonitor<YeluCasSsoOptions> option
 
     private IEnumerable<Claim> GetXmlClaims(XDocument xdoc)
     {
-        XmlNamespaceManager namespaceManager = new XmlNamespaceManager(new NameTable());
+        XmlNamespaceManager namespaceManager = new(new NameTable());
         namespaceManager.AddNamespace("cas", NamespaceName);
 
         return xdoc.XPathSelectElements("/cas:serviceResponse/cas:authenticationSuccess/cas:attributes//*", namespaceManager)
@@ -122,7 +122,7 @@ public partial class YeluCasSsoHandler(IOptionsMonitor<YeluCasSsoOptions> option
 
     private string GetXmlErrorMessage(XDocument xdoc)
     {
-        XmlNamespaceManager namespaceManager = new XmlNamespaceManager(new NameTable());
+        XmlNamespaceManager namespaceManager = new(new NameTable());
         namespaceManager.AddNamespace("cas", NamespaceName);
 
         return xdoc.XPathSelectElement("/cas:serviceResponse/cas:authenticationFailure", namespaceManager)?.Value;

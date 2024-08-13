@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -69,10 +68,10 @@ public class LoginModel(SignInManager<User> signInManager, UserManager userManag
         {
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-            var result = await _signInManager.PasswordSignInAsync(Input.Name, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+            Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(Input.Name, Input.Password, Input.RememberMe, lockoutOnFailure: true);
             if (!result.Succeeded && Input.Name.Contains("@"))
             {
-                var user = await _userManager.FindByEmailAsync(Input.Name); // reguard name as email
+                User user = await _userManager.FindByEmailAsync(Input.Name); // reguard name as email
                 if (user != null)
                 {
                     result = await _signInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, lockoutOnFailure: true);

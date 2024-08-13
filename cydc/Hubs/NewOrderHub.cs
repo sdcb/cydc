@@ -1,5 +1,4 @@
-﻿using cydc.Controllers.AdmimDtos;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
 namespace cydc.Hubs;

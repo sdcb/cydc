@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using cydc.Database;
@@ -51,7 +49,7 @@ public class DataManageController(CydcContext db) : Controller
 
     public async Task<int> CreateLocation([FromBody][Required]string name)
     {
-        var location = new Location
+        Location location = new()
         {
             Enabled = true, 
             Name = name
@@ -97,7 +95,7 @@ public class DataManageController(CydcContext db) : Controller
 
     public async Task<int> CreateTaste([FromBody][Required]string name)
     {
-        var taste = new TasteType
+        TasteType taste = new()
         {
             Enabled = true, 
             Name = name, 

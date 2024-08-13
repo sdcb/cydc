@@ -24,8 +24,8 @@ public class AdminController(
 
     public async Task<PagedResult<AdminUserDto>> Users(AdminUserQuery searchDto)
     {
-        var data = await searchDto.DoQuery(_db);
-        foreach (var item in data.PagedData)
+        PagedResult<AdminUserDto> data = await searchDto.DoQuery(_db);
+        foreach (AdminUserDto item in data.PagedData)
         {
             item.Phone = item.Phone switch
             {
@@ -44,21 +44,21 @@ public class AdminController(
 
     public async Task<IActionResult> ExportOrders(FoodOrderQuery query)
     {
-        var data = await query.DoQuery(_db);
+        PagedResult<FoodOrderDto> data = await query.DoQuery(_db);
 
-        using var stream = new MemoryStream();
-        using var excel = new ExcelPackage(stream);
+        using MemoryStream stream = new();
+        using ExcelPackage excel = new(stream);
         ExcelWorksheet sheet = excel.Workbook.Worksheets.Add("Sheet1");
         PropertyInfo[] props = typeof(FoodOrderDto).GetProperties();
-        for (var i = 0; i < props.Length; ++i)
+        for (int i = 0; i < props.Length; ++i)
         {
             sheet.Cells[1, i + 1].Value = props[i].Name;
         }
-        for (var i = 0; i < data.PagedData.Count; ++i)
+        for (int i = 0; i < data.PagedData.Count; ++i)
         {
-            for (var j = 0; j < props.Length; ++j)
+            for (int j = 0; j < props.Length; ++j)
             {
-                var value = props[j].GetValue(data.PagedData[i]);
+                object value = props[j].GetValue(data.PagedData[i]);
                 sheet.Cells[i + 2, j + 1].Value = value;
                 sheet.Cells[i + 2, j + 1].Style.Numberformat.Format = value?.GetType() switch
                 {
@@ -67,7 +67,7 @@ public class AdminController(
                 };
             }
         }
-        for (var i = 0; i < props.Length; ++i)
+        for (int i = 0; i < props.Length; ++i)
         {
             sheet.Column(i + 1).AutoFit();
         }
@@ -91,7 +91,7 @@ public class AdminController(
     {
         User user = await _userManager.FindByIdAsync(userId);
         string token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var ok = await _userManager.ResetPasswordAsync(user, token, password);
+        Microsoft.AspNetCore.Identity.IdentityResult ok = await _userManager.ResetPasswordAsync(user, token, password);
         return ok.Succeeded;
     }
 
@@ -111,7 +111,7 @@ public class AdminController(
         if (foodOrder.FoodOrderPayment != null) return BadRequest("Payment already exists.");
         if (foodOrder.AccountDetails.Any(x => x.Amount > 0)) return BadRequest("Account already exists.");
 
-        foreach (var item in foodOrder.AccountDetails)
+        foreach (AccountDetails item in foodOrder.AccountDetails)
         {
             _db.Entry(item).State = EntityState.Deleted;
         }
@@ -129,14 +129,14 @@ public class AdminController(
         if (foodOrder.FoodOrderPayment != null) return BadRequest("Payment already exists.");
         if (foodOrder.AccountDetails.Sum(x => x.Amount) >= 0) return BadRequest("No amount exists.");
 
-        var payment = new FoodOrderPayment
+        FoodOrderPayment payment = new()
         {
             FoodOrderId = orderId,
             PayedTime = DateTime.Now,
         };
         _db.Entry(payment).State = EntityState.Added;
 
-        var accounting = new AccountDetails
+        AccountDetails accounting = new()
         {
             Amount = -foodOrder.AccountDetails.Sum(x => x.Amount),
             CreateTime = DateTime.Now,
@@ -151,7 +151,7 @@ public class AdminController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> BatchPay([Required]int userId, [Required]decimal amount, [FromBody]int[] orderIds)
     {
-        foreach (var orderId in orderIds)
+        foreach (int orderId in orderIds)
         {
             FoodOrder foodOrder = await _db.FoodOrder
                             .Include(x => x.FoodOrderPayment)
@@ -160,7 +160,7 @@ public class AdminController(
             if (foodOrder.FoodOrderPayment != null) return BadRequest("Payment already exists.");
             if (foodOrder.AccountDetails.Sum(x => x.Amount) >= 0) return BadRequest("No amount exists.");
 
-            var payment = new FoodOrderPayment
+            FoodOrderPayment payment = new()
             {
                 FoodOrderId = orderId,
                 PayedTime = DateTime.Now,
@@ -168,7 +168,7 @@ public class AdminController(
             _db.Entry(payment).State = EntityState.Added;
         }
 
-        var accounting = new AccountDetails
+        AccountDetails accounting = new()
         {
             Amount = amount,
             CreateTime = DateTime.Now,

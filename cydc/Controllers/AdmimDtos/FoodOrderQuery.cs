@@ -78,7 +78,7 @@ public class FoodOrderQuery : SortedPagedQuery
         if (TasteId != null)
             rawQuery = rawQuery.Where(x => x.TasteId == TasteId.Value);
 
-        var query = FoodOrderDto.FromFoodOrder(rawQuery).ToSorted(this);
+        IQueryable<FoodOrderDto> query = FoodOrderDto.FromFoodOrder(rawQuery).ToSorted(this);
 
         return await query.ToPagedResultAsync(this);
     }

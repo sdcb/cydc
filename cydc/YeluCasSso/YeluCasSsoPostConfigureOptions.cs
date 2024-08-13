@@ -22,7 +22,7 @@ public partial class YeluCasSsoPostConfigureOptions(IDataProtectionProvider data
 
         if (options.StateDataFormat == null)
         {
-            var dataProtector = options.DataProtectionProvider.CreateProtector(
+            IDataProtector dataProtector = options.DataProtectionProvider.CreateProtector(
                 typeof(YeluCasSsoHandler).FullName, name, "v1");
             options.StateDataFormat = new PropertiesDataFormat(dataProtector);
         }

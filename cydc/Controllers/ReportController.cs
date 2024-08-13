@@ -33,7 +33,7 @@ public class ReportController(
                 Count = x.Count(),
             })
             .ToDictionary(k => k.DayOfWeek, v => v.Count);
-        var total = IsAdmin ? 100.0f : dayOrdersNotAll.Sum(x => x.Value);
+        float total = IsAdmin ? 100.0f : dayOrdersNotAll.Sum(x => x.Value);
 
         return Ok(new[] { 1, 2, 3, 4, 5, 6, 0 }
             .Select(x => (DayOfWeek)x)
@@ -55,7 +55,7 @@ public class ReportController(
                 Count = x.Count(),
             })
             .ToDictionaryAsync(k => k.Hour, v => v.Count);
-        var total = IsAdmin ? 100.0f : hourOrdersNotAll.Sum(x => x.Value);
+        float total = IsAdmin ? 100.0f : hourOrdersNotAll.Sum(x => x.Value);
 
         return Ok(Enumerable.Range(7, 6)
             .Select(x => hourOrdersNotAll.ContainsKey(x) ? hourOrdersNotAll[x] : 0)
@@ -67,7 +67,7 @@ public class ReportController(
     {
         if (days > MaxDay) return BadRequest($"Days should never greater than {MaxDay}.");
 
-        var total = IsAdmin ? 100.0f : await _db.FoodOrder
+        float total = IsAdmin ? 100.0f : await _db.FoodOrder
             .Where(x => x.OrderTime > DateTime.Now.AddDays(-days))
             .CountAsync();
         return Ok(await _db.FoodOrder
@@ -85,10 +85,10 @@ public class ReportController(
     {
         if (days > MaxDay) return BadRequest($"Days should never greater than {MaxDay}.");
 
-        var total = IsAdmin ? 100.0f : await _db.FoodOrder
+        float total = IsAdmin ? 100.0f : await _db.FoodOrder
             .Where(x => x.OrderTime > DateTime.Now.AddDays(-days))
             .CountAsync();
-        var data = await _db.FoodOrder
+        Dictionary<string, float> data = await _db.FoodOrder
             .Where(f => f.OrderTime > DateTime.Now.AddDays(-days))
             .GroupBy(x => x.Location.Name)
             .Select(x => new
